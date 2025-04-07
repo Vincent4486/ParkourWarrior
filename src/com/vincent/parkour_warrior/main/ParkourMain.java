@@ -40,8 +40,8 @@ public class ParkourMain extends JPanel implements Runnable{
 	 */
     public int[] mapNumber = {};
 	public String[] mapPath = {"/map/map0.txt"};
-	public boolean[] isDefaltMap = {};
-	public boolean[] isStartMap = {};
+	public int[] mapType = {};
+	public boolean[] isDefaultMap = {};
 	public boolean[] haveFinishedMap = {};
 	public int[] recordTimeMinutes = {};
 	public int[] recordTimeSeconds = {};
