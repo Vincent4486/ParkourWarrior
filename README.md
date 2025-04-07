@@ -15,3 +15,14 @@ Format:
 <mapnumber>.record_time_minutes="<int time>"
 <mapnumber>.record_time_seconds="<int time>"
 <mapnumber>.record_time_miliseconds="<int time>"
+
+Tilenumbers:
+0 = brick <solid>
+1 = cloud
+2 = flag <end point>
+3 = grass <solid>
+4 = sand <solid>
+5 = sky 
+6 = water <die if touch>
+7 = sky <solid>
+
