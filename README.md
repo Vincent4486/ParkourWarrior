@@ -8,13 +8,13 @@ Making maps:
 3) Save this file and rename it whatever you want, then run the game at lest once and open the "ParkourWarrior.properties" file, use the format below to write the properties.
 
 Format:
-<mapnumber>.path=<path\to\file.txt>
-<mapnumber>.map_type=custom    //This must be "custom"
-<mapnumber>.is_default_map=false  //This must be "false"
-<mapnumber>.hava_finished_map=<boolean>
-<mapnumber>.record_time_minutes=<int time>
-<mapnumber>.record_time_seconds=<int time>
-<mapnumber>.record_time_miliseconds=<int time>
+mapnumber.path=<path\to\file.txt>
+mapnumber.map_type=custom    //This must be "custom"
+mapnumber.is_default_map=false  //This must be "false"
+mapnumber.hava_finished_map=<boolean>
+mapnumber.record_time_minutes=<int time>
+mapnumber.record_time_seconds=<int time>
+mapnumber.record_time_miliseconds=<int time>
 
 Tilenumbers:
 0 = brick <solid>;
