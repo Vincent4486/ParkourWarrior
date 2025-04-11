@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
@@ -64,11 +65,11 @@ public class TileManager {
 		
 	}
 	
-	public void loadMap(String[] mapPath) {
+	public void loadMap(ArrayList<String> mapPath) {
 		
 		try {
 			
-			InputStream inputStream = getClass().getResourceAsStream(mapPath[0]);
+			InputStream inputStream = getClass().getResourceAsStream(mapPath.get(0));
 			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 			
 			int column = 0;

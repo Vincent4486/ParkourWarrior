@@ -73,7 +73,7 @@ public class Player implements KeyListener{
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
 		
-		if(parkourMain.currentMap == parkourMain.playing) {
+		if(parkourMain.currentMapState == parkourMain.play) {
 			
 		   switch(e.getKeyCode()) {
 		   case KeyEvent.VK_A:goLeft = true;break;
@@ -90,14 +90,6 @@ public class Player implements KeyListener{
                break;
 		   }
 		
-		}
-		if(parkourMain.currentMap == parkourMain.titleScreen) {
-			
-			switch(e.getKeyCode()) {
-			case KeyEvent.VK_W:
-				
-			}
-			
 		}
 		
 	}

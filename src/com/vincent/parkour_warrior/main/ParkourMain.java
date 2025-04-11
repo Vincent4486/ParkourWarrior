@@ -2,10 +2,10 @@ package com.vincent.parkour_warrior.main;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.net.URL;
+import java.util.ArrayList;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -38,26 +38,23 @@ public class ParkourMain extends JPanel implements Runnable{
 	 * public int recordTimeMiliseconds is 2 digit miliseconds.
 	 * public int currentMap means current map number, number is in properties file.
 	 */
-    public int[] mapNumber = {};
-	public String[] mapPath = {"/map/map0.txt"};
-	public int[] mapType = {};
-	public boolean[] isDefaultMap = {};
-	public boolean[] haveFinishedMap = {};
-	public int[] recordTimeMinutes = {};
-	public int[] recordTimeSeconds = {};
-	public int[] recordTimeMiliseconds = {};
+    public ArrayList<Integer> mapNumber;
+	public ArrayList<String> mapPath;
+	public ArrayList<Integer> mapType;
+	public ArrayList<Boolean> isDefaultMap;
+	public ArrayList<Boolean> haveFinishedMap;
+	public ArrayList<Integer> recordTimeMinutes;
+	public ArrayList<Integer> recordTimeSeconds;
+	public ArrayList<Integer> recordTimeMiliseconds;
 	
-	public int currentMap = 0;
+	public int currentMapState = 0;
 	public int choosedMap = 2;
-	public final int titleScreen = 0;
-	public final int chooseMap = 1;
-	public final int credits = 2;
-	public final int playing = 3;
+	public final int title = 0;
+	public final int play = 1;
 	
 	Thread thread;
 	URL soundURL;
-	Clip sound;
-	Font pixel;
+	Clip soundClip;
 	
 	public Player player = new Player(this);
 	public TileManager tileManager = new TileManager(this);
@@ -68,22 +65,8 @@ public class ParkourMain extends JPanel implements Runnable{
 		
 		thread = new Thread(this);
 		
-		soundURL = getClass().getResource("/sound/ParkourWarrior.wav");
-		
-		try {
-			
-			AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundURL);
-			sound = AudioSystem.getClip();
-			sound.open(audioInputStream);
-			
-		}catch(Exception e) {
-			
-			e.printStackTrace();
-			
-		}
-		
-		sound.start();
-		sound.loop(Clip.LOOP_CONTINUOUSLY);
+		soundClip.start();
+		soundClip.loop(Clip.LOOP_CONTINUOUSLY);
 	
 		this.setPreferredSize(new Dimension(screenWidth, screenHeight));
 		this.setBackground(Color.black);
@@ -140,23 +123,32 @@ public class ParkourMain extends JPanel implements Runnable{
 		
 		Graphics2D graphics2D = (Graphics2D)g;
 		
-		switch(currentMap) {
-		case titleScreen:
-			nonPlayingScreens.drawTitleScreen(graphics2D);
-			break;
-		case chooseMap:
-			nonPlayingScreens.drawChooseMapScreen(graphics2D);
-			break;
-		case credits:
-			nonPlayingScreens.drawCreditsScreen(graphics2D);
-			break;
-		case playing:
+		if(currentMapState == play) {
+			
 			tileManager.drawTile(graphics2D);
 			player.drawPlayer(graphics2D);
-			break;
+			
 		}
-
+	
 		graphics2D.dispose();
+		
+	}
+	
+	public void getSound() {
+		
+        soundURL = getClass().getResource("/sound/ParkourWarrior.wav");
+		
+		try {
+			
+			AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundURL);
+			soundClip = AudioSystem.getClip();
+			soundClip.open(audioInputStream);
+			
+		}catch(Exception e) {
+			
+			e.printStackTrace();
+			
+		}
 		
 	}
 

@@ -32,24 +32,10 @@ public class NonPlayingScreens{
 		graphics2D.drawString("PLAY", 
 		parkourMain.screenWidth / 2 - (int)graphics2D.getFontMetrics().getStringBounds("PLAY", graphics2D).getWidth() / 2, 
 		parkourMain.tileSize * 7);
-		if(parkourMain.choosedMap == parkourMain.chooseMap) {
-			
-			graphics2D.drawString(">", 
-					parkourMain.screenWidth / 2 - (int)graphics2D.getFontMetrics().getStringBounds(">", graphics2D).getWidth() / 2 - 70, 
-					parkourMain.tileSize * 7);
-			
-		}
 
 		graphics2D.drawString("CREDITS", 
 		parkourMain.screenWidth / 2 - (int)graphics2D.getFontMetrics().getStringBounds("CREDITS", graphics2D).getWidth() / 2, 
 		parkourMain.tileSize * 7 + 48);
-        if(parkourMain.choosedMap == parkourMain.credits) {
-			
-			graphics2D.drawString(">", 
-					parkourMain.screenWidth / 2 - (int)graphics2D.getFontMetrics().getStringBounds(">", graphics2D).getWidth() / 2 - 70, 
-					parkourMain.tileSize * 7);
-			
-		}
         
         graphics2D.setFont(graphics2D.getFont().deriveFont(Font.BOLD, 20));
 
