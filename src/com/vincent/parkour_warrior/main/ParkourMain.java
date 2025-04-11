@@ -47,23 +47,45 @@ public class ParkourMain extends JPanel implements Runnable{
 	public ArrayList<Integer> recordTimeSeconds;
 	public ArrayList<Integer> recordTimeMiliseconds;
 	
-	public int currentMapState = 0;
+	public int currentMapState = 1;
+	public int currentMap = 1;
 	public int choosedMap = 2;
 	public final int title = 0;
 	public final int play = 1;
+	public final int defaultPlayMap = 1;
+	public final int customPlayMap = 2;
 	
 	Thread thread;
 	URL soundURL;
 	Clip soundClip;
 	
-	public Player player = new Player(this);
-	public TileManager tileManager = new TileManager(this);
-	public PropertiesData propertiesData = new PropertiesData(this);
-	public NonPlayingScreens nonPlayingScreens = new NonPlayingScreens(this);
+	public Player player;
+	public TileManager tileManager;
+	public PropertiesData propertiesData;
+	public NonPlayingScreens nonPlayingScreens;
 	
 	public ParkourMain() {
 		
+		mapNumber = new ArrayList<>();
+		mapPath = new ArrayList<>();
+	    mapType = new ArrayList<>();
+	    isDefaultMap = new ArrayList<>();
+	    haveFinishedMap = new ArrayList<>();
+	    recordTimeMinutes = new ArrayList<>();
+	    recordTimeSeconds = new ArrayList<>();
+	    recordTimeMiliseconds = new ArrayList<>();
+	    
+	    propertiesData = new PropertiesData(this);
+	    propertiesData.loadProperties();
+	    nonPlayingScreens = new NonPlayingScreens(this);
+		player = new Player(this);
+	    tileManager = new TileManager(this);
+	    
+		tileManager.loadMap(mapPath);
+		
 		thread = new Thread(this);
+		
+		getSound();
 		
 		soundClip.start();
 		soundClip.loop(Clip.LOOP_CONTINUOUSLY);

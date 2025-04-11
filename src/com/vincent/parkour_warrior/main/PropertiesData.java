@@ -2,6 +2,7 @@ package com.vincent.parkour_warrior.main;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -22,9 +23,8 @@ public class PropertiesData {
 		 * map_number, map_path, map_type, is_default_map, have_finished_map, record_time_minutes, record_time_seconds, record_time_milis
 		 */
 		
-		try {
-			
-			FileInputStream propertiesFile = new FileInputStream(".\\ParkourWarrior.properties");
+		try (FileInputStream propertiesFile = new FileInputStream("ParkourWarrior.properties")){
+
 			Properties properties = new Properties();
 			
 			properties.load(propertiesFile);
@@ -44,6 +44,8 @@ public class PropertiesData {
 				parkourMain.recordTimeSeconds.add(Integer.parseInt(data[6]));
 				parkourMain.recordTimeMiliseconds.add(Integer.parseInt(data[7]));
 				
+				number++;
+				
 			}
 			
 		}catch(FileNotFoundException e) {
@@ -60,6 +62,39 @@ public class PropertiesData {
 	
 	public void saveProperties() {}
 	
-	public void createPropertiesFile() {}
+	public void createPropertiesFile() {
+		
+		try (FileOutputStream propertiesFile = new FileOutputStream("ParkourWarrior.properties")){
+			
+			Properties properties = new Properties();
+			
+			properties.setProperty("0", "0 null 0 true false 0 0 0");
+			
+			for(int i = 1; i < 2; i++) {
+				
+				properties.setProperty(Integer.toString(i), 
+						Integer.toString(i) +
+						" /map/map" + Integer.toString(i - 1) + ".txt" +
+						" 1"+
+						" true" + 
+						" false"+
+						" 0 0 0"
+						);
+				
+			}
+			
+			properties.store(propertiesFile, null);
+			
+			loadProperties();
+			
+		}catch(IOException e) {
+			
+			System.err.println(e.getMessage());
+			
+			e.printStackTrace();
+			
+		}
+		
+	}
 
 }

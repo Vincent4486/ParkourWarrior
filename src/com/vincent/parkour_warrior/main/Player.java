@@ -218,7 +218,7 @@ public class Player implements KeyListener{
 			
 			if(worldX % parkourMain.tileSize == 0) {
 					
-				tileNumber1 = parkourMain.tileManager.mapTileNumber[worldX / parkourMain.tileSize][worldY / parkourMain.tileSize - 1];
+				tileNumber1 = parkourMain.tileManager.mapTileNumber[parkourMain.currentMap][worldX / parkourMain.tileSize][worldY / parkourMain.tileSize - 1];
 				
 				if(parkourMain.tileManager.tile[tileNumber1].solidTile == true) {
 						
@@ -232,8 +232,8 @@ public class Player implements KeyListener{
 					
 			}else {
 					
-				tileNumber1 = parkourMain.tileManager.mapTileNumber[(worldX - (worldX % parkourMain.tileSize)) / parkourMain.tileSize][worldY / parkourMain.tileSize - 1];
-		        tileNumber2 = parkourMain.tileManager.mapTileNumber[(worldX - (worldX % parkourMain.tileSize)) / parkourMain.tileSize + 1][worldY / parkourMain.tileSize - 1];
+				tileNumber1 = parkourMain.tileManager.mapTileNumber[parkourMain.currentMap][(worldX - (worldX % parkourMain.tileSize)) / parkourMain.tileSize][worldY / parkourMain.tileSize - 1];
+		        tileNumber2 = parkourMain.tileManager.mapTileNumber[parkourMain.currentMap][(worldX - (worldX % parkourMain.tileSize)) / parkourMain.tileSize + 1][worldY / parkourMain.tileSize - 1];
 		        
 		        if(parkourMain.tileManager.tile[tileNumber1].solidTile == true || parkourMain.tileManager.tile[tileNumber2].solidTile == true) {
 		            	
@@ -261,7 +261,7 @@ public class Player implements KeyListener{
 				
 			if(worldX % parkourMain.tileSize == 0) {
 					
-				tileNumber1 = parkourMain.tileManager.mapTileNumber[worldX / parkourMain.tileSize][worldY / parkourMain.tileSize + 1];
+				tileNumber1 = parkourMain.tileManager.mapTileNumber[parkourMain.currentMap][worldX / parkourMain.tileSize][worldY / parkourMain.tileSize + 1];
 
 				if(parkourMain.tileManager.tile[tileNumber1].solidTile == true) {
 						
@@ -275,8 +275,8 @@ public class Player implements KeyListener{
 					
 			}else {
 					
-				tileNumber1 = parkourMain.tileManager.mapTileNumber[(worldX - (worldX % parkourMain.tileSize)) / parkourMain.tileSize][worldY / parkourMain.tileSize + 1];
-		        tileNumber2 = parkourMain.tileManager.mapTileNumber[(worldX - (worldX % parkourMain.tileSize)) / parkourMain.tileSize + 1][worldY / parkourMain.tileSize + 1];
+				tileNumber1 = parkourMain.tileManager.mapTileNumber[parkourMain.currentMap][(worldX - (worldX % parkourMain.tileSize)) / parkourMain.tileSize][worldY / parkourMain.tileSize + 1];
+		        tileNumber2 = parkourMain.tileManager.mapTileNumber[parkourMain.currentMap][(worldX - (worldX % parkourMain.tileSize)) / parkourMain.tileSize + 1][worldY / parkourMain.tileSize + 1];
 
 		        if(parkourMain.tileManager.tile[tileNumber1].solidTile == true || parkourMain.tileManager.tile[tileNumber2].solidTile == true) {
 		            	
@@ -306,7 +306,7 @@ public class Player implements KeyListener{
 				
 				if(worldY % parkourMain.tileSize == 0) {
 					
-					tileNumber1 = parkourMain.tileManager.mapTileNumber[worldX / parkourMain.tileSize - 1][worldY / parkourMain.tileSize];
+					tileNumber1 = parkourMain.tileManager.mapTileNumber[parkourMain.currentMap][worldX / parkourMain.tileSize - 1][worldY / parkourMain.tileSize];
 					
 					if(parkourMain.tileManager.tile[tileNumber1].solidTile == true) {
 						
@@ -316,8 +316,8 @@ public class Player implements KeyListener{
 					
 				}else {
 					
-					tileNumber1 = parkourMain.tileManager.mapTileNumber[worldX / parkourMain.tileSize - 1][(worldY - (worldY % parkourMain.tileSize)) / parkourMain.tileSize];
-					tileNumber2 = parkourMain.tileManager.mapTileNumber[worldX / parkourMain.tileSize - 1][(worldY - (worldY % parkourMain.tileSize)) / parkourMain.tileSize + 1];
+					tileNumber1 = parkourMain.tileManager.mapTileNumber[parkourMain.currentMap][worldX / parkourMain.tileSize - 1][(worldY - (worldY % parkourMain.tileSize)) / parkourMain.tileSize];
+					tileNumber2 = parkourMain.tileManager.mapTileNumber[parkourMain.currentMap][worldX / parkourMain.tileSize - 1][(worldY - (worldY % parkourMain.tileSize)) / parkourMain.tileSize + 1];
 					
 					if(parkourMain.tileManager.tile[tileNumber1].solidTile == true || parkourMain.tileManager.tile[tileNumber2].solidTile == true) {
 						
@@ -341,7 +341,7 @@ public class Player implements KeyListener{
 				
 				if(worldY % parkourMain.tileSize == 0) {
 					
-					tileNumber1 = parkourMain.tileManager.mapTileNumber[worldX / parkourMain.tileSize + 1][worldY / parkourMain.tileSize];
+					tileNumber1 = parkourMain.tileManager.mapTileNumber[parkourMain.currentMap][worldX / parkourMain.tileSize + 1][worldY / parkourMain.tileSize];
 					
 					if(parkourMain.tileManager.tile[tileNumber1].solidTile == true) {
 						
@@ -351,8 +351,8 @@ public class Player implements KeyListener{
 					
 				}else {
 					
-					tileNumber1 = parkourMain.tileManager.mapTileNumber[worldX / parkourMain.tileSize + 1][(worldY - (worldY % parkourMain.tileSize)) / parkourMain.tileSize];
-					tileNumber2 = parkourMain.tileManager.mapTileNumber[worldX / parkourMain.tileSize + 1][(worldY - (worldY % parkourMain.tileSize)) / parkourMain.tileSize + 1];
+					tileNumber1 = parkourMain.tileManager.mapTileNumber[parkourMain.currentMap][worldX / parkourMain.tileSize + 1][(worldY - (worldY % parkourMain.tileSize)) / parkourMain.tileSize];
+					tileNumber2 = parkourMain.tileManager.mapTileNumber[parkourMain.currentMap][worldX / parkourMain.tileSize + 1][(worldY - (worldY % parkourMain.tileSize)) / parkourMain.tileSize + 1];
 					
                     if(parkourMain.tileManager.tile[tileNumber1].solidTile == true || parkourMain.tileManager.tile[tileNumber2].solidTile == true) {
 						

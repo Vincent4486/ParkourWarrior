@@ -14,7 +14,7 @@ public class TileManager {
 	ParkourMain parkourMain;
 	public Tile[] tile;
 	
-	int mapTileNumber[][];
+	int mapTileNumber[][][];
 	
 	public int tileNumber;
 	
@@ -24,11 +24,9 @@ public class TileManager {
 		
 		tile = new Tile[15];
 		
-		mapTileNumber = new int[parkourMain.maxWorldColumn][parkourMain.maxWorldRow];
+		mapTileNumber = new int[parkourMain.mapNumber.size()][parkourMain.maxWorldColumn][parkourMain.maxWorldRow];
 		
 		getTile();
-		
-		loadMap(parkourMain.mapPath);
 		
 	}
 	
@@ -45,7 +43,7 @@ public class TileManager {
 		
 		while(column < parkourMain.maxWorldColumn && row < parkourMain.maxHeightTiles) {
 			
-			tileNumber = mapTileNumber[column][row];
+			tileNumber = mapTileNumber[parkourMain.currentMap][column][row];
 			
 			int worldX = column * parkourMain.tileSize;
 			int screenX = worldX - parkourMain.player.worldX + parkourMain.player.screenX;
@@ -65,46 +63,63 @@ public class TileManager {
 		
 	}
 	
+	public void updateTile() {
+		
+	}
+	
 	public void loadMap(ArrayList<String> mapPath) {
 		
-		try {
+		System.out.println(parkourMain.mapNumber.size());
+		int number1 = 0;
+		
+		for(int i = 0; i < parkourMain.mapPath.size(); i++) {
 			
-			InputStream inputStream = getClass().getResourceAsStream(mapPath.get(0));
-			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+			System.out.println(parkourMain.mapNumber.get(i));
 			
-			int column = 0;
-			int row = 0;
-			
-			while(column < parkourMain.maxWorldColumn && row < parkourMain.maxWorldRow) {
-
-				String line = bufferedReader.readLine();
+			if(parkourMain.mapType.get(i) == parkourMain.defaultPlayMap) {
 				
-				while(column < parkourMain.maxWorldColumn) {
+				try (InputStream inputStream = getClass().getResourceAsStream(mapPath.get(i))){
+					
+					BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+					
+					int column = 0;
+					int row = 0;
+					
+					while(column < parkourMain.maxWorldColumn && row < parkourMain.maxWorldRow) {
 
-					String numbers[] = line.split(" ");
+						String line = bufferedReader.readLine();
+						
+						while(column < parkourMain.maxWorldColumn) {
+
+							String numbers[] = line.split(" ");
+							
+							int number = Integer.parseInt(numbers[column]);
+							
+							mapTileNumber[number1][column][row] = number;
+							
+							column++;
+							
+						}
+						
+						if(column == parkourMain.maxWorldColumn) {
+							
+							column = 0;
+							row ++;
+							
+						}
+						
+					}
 					
-					int number = Integer.parseInt(numbers[column]);
+				    bufferedReader.close();
 					
-					mapTileNumber[column][row] = number;
+				}catch(Exception e) {
 					
-					column++;
+					e.printStackTrace();
 					
 				}
-				
-				if(column == parkourMain.maxWorldColumn) {
-					
-					column = 0;
-					row ++;
-					
-				}
+				number1++;
 				
 			}
-			
-		    bufferedReader.close();
-			
-		}catch(Exception e) {
-			
-			e.printStackTrace();
 			
 		}
 		
