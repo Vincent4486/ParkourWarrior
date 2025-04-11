@@ -47,9 +47,8 @@ public class ParkourMain extends JPanel implements Runnable{
 	public ArrayList<Integer> recordTimeSeconds;
 	public ArrayList<Integer> recordTimeMiliseconds;
 	
-	public int currentMapState = 1;
-	public int currentMap = 1;
-	public int choosedMap = 2;
+	public int currentMapState = 0;
+	public int currentMap = 0;
 	public final int title = 0;
 	public final int play = 1;
 	public final int defaultPlayMap = 1;
@@ -62,7 +61,7 @@ public class ParkourMain extends JPanel implements Runnable{
 	public Player player;
 	public TileManager tileManager;
 	public PropertiesData propertiesData;
-	public TitleScreen nonPlayingScreens;
+	public TitleScreen titleScreen;
 	
 	public ParkourMain() {
 		
@@ -77,7 +76,7 @@ public class ParkourMain extends JPanel implements Runnable{
 	    
 	    propertiesData = new PropertiesData(this);
 	    propertiesData.loadProperties();
-	    nonPlayingScreens = new TitleScreen(this);
+	    titleScreen = new TitleScreen(this);
 		player = new Player(this);
 	    tileManager = new TileManager(this);
 	    
@@ -153,7 +152,7 @@ public class ParkourMain extends JPanel implements Runnable{
 		}
 		else if(currentMapState == title) {
 			
-			
+			titleScreen.drawTitleScreen(graphics2D);
 			
 		}
 	

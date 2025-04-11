@@ -2,6 +2,7 @@ package com.vincent.parkour_warrior.main;
 
 import java.awt.Graphics2D;
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -69,16 +70,61 @@ public class TileManager {
 	
 	public void loadMap(ArrayList<String> mapPath) {
 		
-		System.out.println(parkourMain.mapNumber.size());
+		//System.out.println(parkourMain.mapNumber.size());
 		int number1 = 0;
 		
 		for(int i = 0; i < parkourMain.mapPath.size(); i++) {
 			
-			System.out.println(parkourMain.mapNumber.get(i));
+			//System.out.println(parkourMain.mapNumber.get(i));
 			
 			if(parkourMain.mapType.get(i) == parkourMain.defaultPlayMap) {
 				
 				try (InputStream inputStream = getClass().getResourceAsStream(mapPath.get(i))){
+					
+					BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+					
+					int column = 0;
+					int row = 0;
+					
+					while(column < parkourMain.maxWorldColumn && row < parkourMain.maxWorldRow) {
+
+						String line = bufferedReader.readLine();
+						
+						while(column < parkourMain.maxWorldColumn) {
+
+							String numbers[] = line.split(" ");
+							
+							int number = Integer.parseInt(numbers[column]);
+							
+							mapTileNumber[number1][column][row] = number;
+							
+							column++;
+							
+						}
+						
+						if(column == parkourMain.maxWorldColumn) {
+							
+							column = 0;
+							row ++;
+							
+						}
+						
+					}
+					
+				    bufferedReader.close();
+					
+				}catch(Exception e) {
+					
+					e.printStackTrace();
+					
+				}
+				number1++;
+				
+			}
+			
+            if(parkourMain.mapType.get(i) == parkourMain.customPlayMap) {
+				
+				try (InputStream inputStream = new FileInputStream(parkourMain.mapPath.get(i));){
 					
 					BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 					
