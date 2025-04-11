@@ -62,7 +62,7 @@ public class ParkourMain extends JPanel implements Runnable{
 	public Player player;
 	public TileManager tileManager;
 	public PropertiesData propertiesData;
-	public NonPlayingScreens nonPlayingScreens;
+	public TitleScreen nonPlayingScreens;
 	
 	public ParkourMain() {
 		
@@ -77,7 +77,7 @@ public class ParkourMain extends JPanel implements Runnable{
 	    
 	    propertiesData = new PropertiesData(this);
 	    propertiesData.loadProperties();
-	    nonPlayingScreens = new NonPlayingScreens(this);
+	    nonPlayingScreens = new TitleScreen(this);
 		player = new Player(this);
 	    tileManager = new TileManager(this);
 	    
@@ -149,6 +149,11 @@ public class ParkourMain extends JPanel implements Runnable{
 			
 			tileManager.drawTile(graphics2D);
 			player.drawPlayer(graphics2D);
+			
+		}
+		else if(currentMapState == title) {
+			
+			
 			
 		}
 	
