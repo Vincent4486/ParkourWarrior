@@ -136,7 +136,7 @@ public class ParkourMain extends JPanel implements Runnable{
 	public void update() {
 		
 		player.updatePlayer();
-        System.out.println(currentMapState);		
+    	
 	}
 	
 	public void paintComponent(Graphics g) {
@@ -156,12 +156,6 @@ public class ParkourMain extends JPanel implements Runnable{
 			titleScreen.drawTitleScreen(graphics2D);
 			
 		}
-			
-
-
-                                            
-                                            
-
 	
 		graphics2D.dispose();
 		

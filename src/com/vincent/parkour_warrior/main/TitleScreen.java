@@ -43,7 +43,7 @@ public class TitleScreen{
         
         graphics2D.setFont(graphics2D.getFont().deriveFont(Font.PLAIN, 15));
         graphics2D.setColor(Color.white);
-        graphics2D.drawString("Press W and S to move, press ENTER to select", centerTextX("Press W and S to move, press ENTER to select", graphics2D), 500);
+        graphics2D.drawString("Press W and S to move, press ENTER to select, press A to add map ,press D to remove map", centerTextX("Press W and S to move, press ENTER to select, press A to add map , press D to remove map", graphics2D), 500);
         
 	}
 	
