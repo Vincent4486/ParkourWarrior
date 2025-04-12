@@ -51,6 +51,7 @@ public class ParkourMain extends JPanel implements Runnable{
 	public int currentMap = 1;
 	public final int title = 0;
 	public final int play = 1;
+	public final int pause = 2;
 	public final int defaultPlayMap = 1;
 	public final int customPlayMap = 2;
 	
@@ -135,7 +136,7 @@ public class ParkourMain extends JPanel implements Runnable{
 	public void update() {
 		
 		player.updatePlayer();
-		
+        System.out.println(currentMapState);		
 	}
 	
 	public void paintComponent(Graphics g) {
@@ -153,6 +154,12 @@ public class ParkourMain extends JPanel implements Runnable{
 		else if(currentMapState == title) {
 			
 			titleScreen.drawTitleScreen(graphics2D);
+			
+		}else if(currentMapState == pause) {
+			
+			tileManager.drawTile(graphics2D);
+			player.drawPlayer(graphics2D);
+			titleScreen.drawPauseScreen(graphics2D);
 			
 		}
 	

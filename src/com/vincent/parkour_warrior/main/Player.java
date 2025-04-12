@@ -88,6 +88,11 @@ public class Player implements KeyListener{
                 
                }
                break;
+		   case KeyEvent.VK_ESCAPE:
+			   
+			   if(parkourMain.currentMapState == parkourMain.play) {parkourMain.currentMapState = parkourMain.pause;}
+			   else{parkourMain.currentMapState = parkourMain.play;}
+			   
 		   }
 		
 		}
