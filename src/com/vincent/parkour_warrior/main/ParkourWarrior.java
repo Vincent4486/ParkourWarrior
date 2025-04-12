@@ -14,6 +14,7 @@ public class ParkourWarrior {
 
 		ParkourMain parkourMain = new ParkourMain();
 		frame.add(parkourMain);
+		frame.setIconImage(parkourMain.ico.getImage());
 		
 		frame.pack();
 		frame.setVisible(true);

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
@@ -59,12 +60,16 @@ public class ParkourMain extends JPanel implements Runnable{
 	URL soundURL;
 	Clip soundClip;
 	
+	public ImageIcon ico;
+	
 	public Player player;
 	public TileManager tileManager;
 	public PropertiesData propertiesData;
 	public TitleScreen titleScreen;
 	
 	public ParkourMain() {
+		
+		ico = new ImageIcon(getClass().getResource("/player/right1.png"));
 		
 		mapNumber = new ArrayList<>();
 		mapPath = new ArrayList<>();
