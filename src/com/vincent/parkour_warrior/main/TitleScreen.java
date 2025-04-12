@@ -47,14 +47,6 @@ public class TitleScreen{
         
 	}
 	
-	public void drawPauseScreen(Graphics2D graphics2D) {
-		
-		graphics2D.setColor(Color.black);
-		graphics2D.setFont(graphics2D.getFont().deriveFont(Font.BOLD, 78));
-		graphics2D.drawString("PAUSED", centerTextX("PAUSED", graphics2D), centerTextY("PAUSED", graphics2D));
-		
-	}
-	
 	public int centerTextX(String text, Graphics2D graphics2D) {
 		
 		int x = parkourMain.screenWidth / 2 - (int)graphics2D.getFontMetrics().getStringBounds(text, graphics2D).getWidth() / 2;
