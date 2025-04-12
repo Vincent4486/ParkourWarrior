@@ -108,6 +108,14 @@ public class Player implements KeyListener{
             	parkourMain.currentMap = parkourMain.titleScreen.choosedMap;
             	parkourMain.currentMapState = parkourMain.play;
             	
+            }else if (e.getKeyCode() == KeyEvent.VK_A) {
+				
+            	parkourMain.propertiesData.addMap();
+            	
+            }else if (e.getKeyCode() == KeyEvent.VK_D) {
+				
+            	parkourMain.propertiesData.removeMap();
+            	
             }
 			
 		}
