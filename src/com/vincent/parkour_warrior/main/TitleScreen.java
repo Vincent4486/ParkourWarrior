@@ -22,27 +22,29 @@ public class TitleScreen{
 		graphics2D.setColor(Color.white);
 		graphics2D.drawString("Parkour Warrior", centerText("Parkour Warrior", graphics2D), 150);
 		
-		int centerIndex = choosedMap; // Center the selected map
-        int startIndex = Math.max(0, centerIndex - 1); // Start index for three maps
-        int endIndex = Math.min(parkourMain.mapPath.size() - 1, centerIndex + 1); // End index for three maps
+		int centerIndex = choosedMap; 
+        int startIndex = Math.max(0, centerIndex - 1); 
+        int endIndex = Math.min(parkourMain.mapPath.size() - 1, centerIndex + 1); 
         
         graphics2D.setFont(graphics2D.getFont().deriveFont(Font.PLAIN, 24));
 
-        // Draw the selected map
         graphics2D.setColor(Color.white);
         graphics2D.drawString("Select a Map:", centerText("Select a Map:", graphics2D), 312);
 
-        // Draw three maps centered around the selected map
         for (int i = startIndex; i <= endIndex; i++) {
-            int yPosition = 8*48 + (i - centerIndex) * 30; // Calculate vertical position based on selection
+            int yPosition = 8*48 + (i - centerIndex) * 30;
             if (i == choosedMap) {
-            	graphics2D.setColor(Color.red); // Highlight selected map
+            	graphics2D.setColor(Color.red); 
             } else {
             	graphics2D.setColor(Color.white);
             }
             graphics2D.drawString(parkourMain.mapPath.get(i), centerText(parkourMain.mapPath.get(i), graphics2D), yPosition); // Draw each map
         }
-		
+        
+        graphics2D.setFont(graphics2D.getFont().deriveFont(Font.PLAIN, 15));
+        graphics2D.setColor(Color.white);
+        graphics2D.drawString("Press W and S to move, press ENTER to select", centerText("Press W and S to move, press ENTER to select", graphics2D), 500);
+        
 	}
 	
 	public int centerText(String text, Graphics2D graphics2D) {
