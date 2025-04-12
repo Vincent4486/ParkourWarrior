@@ -68,8 +68,6 @@ public class PropertiesData {
 			
 			Properties properties = new Properties();
 			
-			properties.setProperty("0", "0 null 0 true false 0 0 0");
-			
 			for(int i = 1; i < 2; i++) {
 				
 				properties.setProperty(Integer.toString(i), 

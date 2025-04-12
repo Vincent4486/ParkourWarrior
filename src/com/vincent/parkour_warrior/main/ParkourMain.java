@@ -48,7 +48,7 @@ public class ParkourMain extends JPanel implements Runnable{
 	public ArrayList<Integer> recordTimeMiliseconds;
 	
 	public int currentMapState = 0;
-	public int currentMap = 0;
+	public int currentMap = 1;
 	public final int title = 0;
 	public final int play = 1;
 	public final int defaultPlayMap = 1;

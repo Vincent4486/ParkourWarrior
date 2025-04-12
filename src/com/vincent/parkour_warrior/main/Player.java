@@ -92,6 +92,16 @@ public class Player implements KeyListener{
 		
 		}
 		
+		if(parkourMain.currentMapState == parkourMain.title) {
+			
+			if (e.getKeyCode() == KeyEvent.VK_W) {
+                parkourMain.titleScreen.choosedMap = (parkourMain.titleScreen.choosedMap - 1 + parkourMain.mapPath.size()) % parkourMain.mapPath.size();
+            } else if (e.getKeyCode() == KeyEvent.VK_S) {
+            	parkourMain.titleScreen.choosedMap = (parkourMain.titleScreen.choosedMap + 1) % parkourMain.mapPath.size();
+            }
+			
+		}
+		
 	}
 
 	@Override
