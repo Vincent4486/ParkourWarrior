@@ -88,7 +88,7 @@ public class Player implements KeyListener{
                 
                }
                break;
-		   case KeyEvent.VK_ESCAPE:parkourMain.currentMapState = parkourMain.title;break;
+		   case KeyEvent.VK_ESCAPE:parkourMain.parkourTimer.saveTime();parkourMain.currentMapState = parkourMain.title;break;
 		   }
 		
 		}
@@ -107,6 +107,7 @@ public class Player implements KeyListener{
             	
             	parkourMain.currentMap = parkourMain.titleScreen.choosedMap;
             	parkourMain.currentMapState = parkourMain.play;
+            	parkourMain.timerStartTime = System.nanoTime();
             	
             }else if (e.getKeyCode() == KeyEvent.VK_A) {
 				
@@ -134,6 +135,10 @@ public class Player implements KeyListener{
 	}
 	
 	public void updatePlayer() {
+		
+		parkourMain.parkourTimer.timerTimeMinutesStr = Long.toString(parkourMain.parkourTimer.timerTimeMinutes);
+		parkourMain.parkourTimer.timerTimeSecondsStr = Long.toString(parkourMain.parkourTimer.timerTimeSeconds);
+		parkourMain.parkourTimer.timerTimeMilisecondsStr = Long.toString(parkourMain.parkourTimer.timerTimeMiliseconds);
 
 		if(goLeft == true) {
 			
@@ -154,7 +159,6 @@ public class Player implements KeyListener{
 		detectCollisionDown();
 		detectCollisionLeft();
 		detectCollisionRight();
-	    //System.out.println(collideLeft + "  " + collideRight + "  " + collideUp + "  " + collideDown + "  " + falling);
 		
 		fall();
 		jump();

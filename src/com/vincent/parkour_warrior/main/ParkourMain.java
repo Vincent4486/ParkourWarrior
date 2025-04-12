@@ -56,6 +56,9 @@ public class ParkourMain extends JPanel implements Runnable{
 	public final int defaultPlayMap = 1;
 	public final int customPlayMap = 2;
 	
+	public long timerStartTime;
+	public final double FPS = 1000000000 / 60;
+	
 	Thread thread;
 	URL soundURL;
 	Clip soundClip;
@@ -66,6 +69,7 @@ public class ParkourMain extends JPanel implements Runnable{
 	public TileManager tileManager;
 	public PropertiesData propertiesData;
 	public TitleScreen titleScreen;
+	public ParkourTimer parkourTimer;
 	
 	public ParkourMain() {
 		
@@ -82,6 +86,8 @@ public class ParkourMain extends JPanel implements Runnable{
 	    
 	    propertiesData = new PropertiesData(this);
 	    propertiesData.loadProperties();
+	    
+	    parkourTimer = new ParkourTimer(this);
 	    titleScreen = new TitleScreen(this);
 		player = new Player(this);
 	    tileManager = new TileManager(this);
@@ -140,8 +146,13 @@ public class ParkourMain extends JPanel implements Runnable{
 	
 	public void update() {
 		
-		player.updatePlayer();
-    	
+		if(currentMapState == play) {
+			
+			player.updatePlayer();
+			parkourTimer.runTimer(timerStartTime, FPS);
+			
+		}
+
 	}
 	
 	public void paintComponent(Graphics g) {
@@ -154,6 +165,7 @@ public class ParkourMain extends JPanel implements Runnable{
 			
 			tileManager.drawTile(graphics2D);
 			player.drawPlayer(graphics2D);
+			parkourTimer.drawTimer(graphics2D);
 			
 		}
 		else if(currentMapState == title) {
