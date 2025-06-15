@@ -5,30 +5,61 @@ plugins {
 
 group = 'com.vincent'
 version = '1.0.0'
-sourceCompatibility = '11'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    // Add any library dependencies here
+    // Add any library dependencies here, for example:
+    // implementation 'org.example:library:1.0.0'
+}
+
+// Configure the main source set to use "src" as the directory for Java sources 
+// and "res" for resources.
+sourceSets {
+    main {
+        java {
+            // Adjust this if your source files are directly under "src", or use "src/java" if organized that way.
+            srcDirs = ['src']
+        }
+        resources {
+            srcDirs = ['res']
+        }
+    }
 }
 
 application {
-    // Set your fully qualified main class name in quotes.
+    // Set your fully qualified main class name.
+    // Make sure the package declaration at the top of your Java file matches this.
     mainClass = 'com.vincent.parkour_warrior.main.ParkourWarrior'
+}
+
+// Set Java source and target compatibility using the new DSL.
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 }
 
 jar {
     manifest {
         attributes(
-            'Main-Class': 'com.vincent.parkour_warrior.main.ParkourWarrior', // Wrap in quotes
-            'Implementation-Title': project.name,                           // Uses the project name
-            'Implementation-Version': 'Beta1_0'                               // Wrap in quotes
+            'Main-Class': 'com.vincent.parkour_warrior.main.ParkourWarrior',
+            'Implementation-Title': project.name,
+            'Implementation-Version': 'Beta1_0'
         )
     }
 
+    // Include the compiled class files and resources.
+    from sourceSets.main.output
+
+    // Explicitly include the "res" folder from the project root if needed.
+    // This copies the folder from your project root into the jar under "res".
+    from('res') {
+        into 'res'
+    }
+
+    // Package the runtime dependencies (creating a fat jar).
     from {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
