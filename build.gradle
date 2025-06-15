@@ -1,0 +1,37 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group = 'com.vincent'
+version = '1.0.0'
+sourceCompatibility = '11'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Add any library dependencies here
+}
+
+application {
+    // Set your fully qualified main class name in quotes.
+    mainClass = 'com.vincent.parkour_warrior.main.ParkourWarrior'
+}
+
+jar {
+    manifest {
+        attributes(
+            'Main-Class': 'com.vincent.parkour_warrior.main.ParkourWarrior', // Wrap in quotes
+            'Implementation-Title': project.name,                           // Uses the project name
+            'Implementation-Version': 'Beta1_0'                               // Wrap in quotes
+        )
+    }
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+   
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}

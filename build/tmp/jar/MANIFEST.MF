@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Main-Class: com.vincent.parkour_warrior.main.ParkourWarrior
+Implementation-Title: ParkourWarrior
+Implementation-Version: Beta1_0
+
