@@ -120,6 +120,21 @@ public class Player implements KeyListener{
             }
 			
 		}
+		if(e.getKeyCode() == KeyEvent.VK_Q) {
+			
+			if(parkourMain.musicOn == true) {
+				
+				parkourMain.musicOn = false;
+				parkourMain.soundClip.stop();
+				
+			}else {
+				
+				parkourMain.musicOn = true;
+				parkourMain.soundClip.start();;
+				
+			}
+			
+		}
 		
 	}
 

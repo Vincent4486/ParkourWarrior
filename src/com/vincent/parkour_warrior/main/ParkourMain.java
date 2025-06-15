@@ -48,6 +48,8 @@ public class ParkourMain extends JPanel implements Runnable{
 	public ArrayList<Integer> recordTimeSeconds;
 	public ArrayList<Integer> recordTimeMiliseconds;
 	
+	public boolean musicOn;
+	
 	public int currentMapState = 0;
 	public int currentMap = 1;
 	public final int title = 0;
@@ -99,6 +101,7 @@ public class ParkourMain extends JPanel implements Runnable{
 		getSound();
 		
 		soundClip.start();
+		musicOn = true;
 		soundClip.loop(Clip.LOOP_CONTINUOUSLY);
 	
 		this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -169,7 +172,7 @@ public class ParkourMain extends JPanel implements Runnable{
 			
 		}
 		else if(currentMapState == title) {
-			
+		
 			titleScreen.drawTitleScreen(graphics2D);
 			
 		}
