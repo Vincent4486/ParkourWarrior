@@ -43,23 +43,30 @@ public class ParkourTimer {
 	}
 	
 	public void saveTime() {
-		
-		if(timerTimeMinutes < parkourMain.recordTimeMinutes.get(parkourMain.currentMap)) {
-			
-			parkourMain.recordTimeMinutes.set(parkourMain.currentMap, (int)timerTimeMinutes);
-			
-		}else if(timerTimeSeconds < parkourMain.recordTimeSeconds.get(parkourMain.currentMap)) {
-			
-			parkourMain.recordTimeSeconds.set(parkourMain.currentMap, (int)timerTimeSeconds);
-			
-		}else if(timerTimeMiliseconds < parkourMain.recordTimeMiliseconds.get(parkourMain.currentMap)) {
-			
-			parkourMain.recordTimeMiliseconds.set(parkourMain.currentMap, (int)timerTimeMiliseconds);
-			
-		}
-		//System.out.println(parkourMain.recordTimeMiliseconds.get(parkourMain.currentMap));
-		parkourMain.propertiesData.saveProperties();
-		
+	int currentMap = parkourMain.currentMap;
+	int recordMinutes = parkourMain.recordTimeMinutes.get(currentMap);
+	int recordSeconds = parkourMain.recordTimeSeconds.get(currentMap);
+	int recordMilis = parkourMain.recordTimeMiliseconds.get(currentMap);
+
+	// If the record is zero, treat it as uninitialized and set to max value
+	if (recordMinutes == 0 && recordSeconds == 0 && recordMilis == 0) {
+		recordMinutes = Integer.MAX_VALUE;
+		recordSeconds = Integer.MAX_VALUE;
+		recordMilis = Integer.MAX_VALUE;
+		parkourMain.recordTimeMinutes.set(currentMap, Integer.MAX_VALUE);
+		parkourMain.recordTimeSeconds.set(currentMap, Integer.MAX_VALUE);
+		parkourMain.recordTimeMiliseconds.set(currentMap, Integer.MAX_VALUE);
+	}
+
+	if (
+		timerTimeMinutes < recordMinutes ||
+		(timerTimeMinutes == recordMinutes && timerTimeSeconds < recordSeconds) ||
+		(timerTimeMinutes == recordMinutes && timerTimeSeconds == recordSeconds && timerTimeMiliseconds < recordMilis)
+	) {
+		parkourMain.recordTimeMinutes.set(currentMap, (int)timerTimeMinutes);
+		parkourMain.recordTimeSeconds.set(currentMap, (int)timerTimeSeconds);
+		parkourMain.recordTimeMiliseconds.set(currentMap, (int)timerTimeMiliseconds);
+	}
 	}
 
 }

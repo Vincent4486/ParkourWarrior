@@ -24,12 +24,12 @@ public class Player implements KeyListener{
 	public boolean collideRight;
 	
 	public int worldX = 480;
-	public int worldY = 376;
+	public int worldY = 376; // Starting Y position, can be adjusted as needed
 	public int maxJumpHeight;
 	public int jumpHeight = 60;
-	public int jumpSpeed = 4;
-	public int fallSpeed = 4;
-	public final int speed = 4;
+public int jumpSpeed = 4;
+public int fallSpeed = 4;
+public int walkSpeed = 4;
 	public final int screenX;
 	int imageCount = 0;
 	int imageNumber = 0;
@@ -80,15 +80,15 @@ public class Player implements KeyListener{
 		   case KeyEvent.VK_D:goRight = true;break;
 		   case KeyEvent.VK_SPACE:
 
-               if (!askJump) {
-            	
-                   maxJumpHeight = worldY - jumpHeight;
+			   if (!askJump) {
+				
+				   maxJumpHeight = worldY - jumpHeight;
 
-                   askJump = true;
-                
-               }
-               break;
-		   case KeyEvent.VK_ESCAPE:parkourMain.currentMapState = parkourMain.title;break;
+				   askJump = true;
+				
+			   }
+			   break;
+		   case KeyEvent.VK_ESCAPE:parkourMain.currentMapState = parkourMain.title;worldX = 480; worldY= 376;break;
 		   }
 		
 		}
@@ -97,27 +97,27 @@ public class Player implements KeyListener{
 			
 			if (e.getKeyCode() == KeyEvent.VK_W) {
 				
-                parkourMain.titleScreen.choosedMap = (parkourMain.titleScreen.choosedMap - 1 + parkourMain.mapPath.size()) % parkourMain.mapPath.size();
-            
+				parkourMain.titleScreen.choosedMap = (parkourMain.titleScreen.choosedMap - 1 + parkourMain.mapPath.size()) % parkourMain.mapPath.size();
+			
 			} else if (e.getKeyCode() == KeyEvent.VK_S) {
 				
-            	parkourMain.titleScreen.choosedMap = (parkourMain.titleScreen.choosedMap + 1) % parkourMain.mapPath.size();
-            	
-            } else if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-            	
-            	parkourMain.currentMap = parkourMain.titleScreen.choosedMap;
-            	parkourMain.currentMapState = parkourMain.play;
-            	parkourMain.timerStartTime = System.nanoTime();
-            	
-            }else if (e.getKeyCode() == KeyEvent.VK_A) {
+				parkourMain.titleScreen.choosedMap = (parkourMain.titleScreen.choosedMap + 1) % parkourMain.mapPath.size();
 				
-            	parkourMain.propertiesData.addMap();
-            	
-            }else if (e.getKeyCode() == KeyEvent.VK_D) {
+			} else if(e.getKeyCode() == KeyEvent.VK_ENTER) {
 				
-            	parkourMain.propertiesData.removeMap();
-            	
-            }
+				parkourMain.currentMap = parkourMain.titleScreen.choosedMap;
+				parkourMain.currentMapState = parkourMain.play;
+				parkourMain.timerStartTime = System.nanoTime();
+				
+			}else if (e.getKeyCode() == KeyEvent.VK_A) {
+				
+				parkourMain.propertiesData.addMap();
+				
+			}else if (e.getKeyCode() == KeyEvent.VK_D) {
+				
+				parkourMain.propertiesData.removeMap();
+				
+			}
 			
 		}
 		if(e.getKeyCode() == KeyEvent.VK_Q) {
@@ -160,15 +160,15 @@ public class Player implements KeyListener{
 			playerDirection = 1;
 			
 		}
-	    
+		
 		if(goRight == true) {
-	    	
-	    	playerDirection = 2;
-	    	
-	    }
+			
+			playerDirection = 2;
+			
+		}
 
-	    collideLeft = false;
-	    collideRight = false;
+		collideLeft = false;
+		collideRight = false;
 
 		detectCollisionUp();
 		detectCollisionDown();
@@ -178,9 +178,9 @@ public class Player implements KeyListener{
 		fall();
 		jump();
 
-        if(goRight == true && collideRight == false) {worldX += speed;}
-	    if(goLeft == true && collideLeft == false) {worldX -= speed;}
-	    
+		if(goRight == true && collideRight == false) {worldX += walkSpeed;}
+		if(goLeft == true && collideLeft == false) {worldX -= walkSpeed;}
+		
 		imageCount ++;
 		if(imageCount > 10) {
 			
@@ -189,26 +189,35 @@ public class Player implements KeyListener{
 			imageCount = 0;
 			
 		}
-		System.out.println("Player X: " + worldX + " Player Y: " + worldY);
+		if(worldX > 2740){
+			
+			parkourMain.parkourTimer.saveTime();
+			parkourMain.propertiesData.saveProperties();
+			parkourMain.currentMapState = parkourMain.title;
+			System.out.println(parkourMain.parkourTimer.timerTimeMinutes + ":" + parkourMain.parkourTimer.timerTimeSeconds + ":" + parkourMain.parkourTimer.timerTimeMiliseconds);
+			worldX = 480;
+			worldY = 376;
+
+		}
 
 	}
 	
 	public void drawPlayer(Graphics2D graphics2D) {
 		
-        BufferedImage image = null;
-        
-        switch(playerDirection) {
-        case 1:
-        	if(imageNumber == 0) {image = leftImage1;}
-        	if(imageNumber == 1) {image = leftImage2;}
-        	break;
-        case 2:
-        	if(imageNumber == 0) {image = rightImage1;}
-        	if(imageNumber == 1) {image = rightImage2;}
-        	break;
-        }
-        
-        graphics2D.drawImage(image, screenX, worldY, parkourMain.tileSize, parkourMain.tileSize, null);
+		BufferedImage image = null;
+		
+		switch(playerDirection) {
+		case 1:
+			if(imageNumber == 0) {image = leftImage1;}
+			if(imageNumber == 1) {image = leftImage2;}
+			break;
+		case 2:
+			if(imageNumber == 0) {image = rightImage1;}
+			if(imageNumber == 1) {image = rightImage2;}
+			break;
+		}
+		
+		graphics2D.drawImage(image, screenX, worldY, parkourMain.tileSize, parkourMain.tileSize, null);
 		
 	}
 	
@@ -230,22 +239,22 @@ public class Player implements KeyListener{
 	
 	public void fall() {
 		
-	    if (jumping == false && collideDown == false) {
-	        
-	        worldY += fallSpeed;
-	        falling = true;
-	            
-        }else {
-        	
-	        falling = false;
-	        
-	    }
-	    
+		if (jumping == false && collideDown == false) {
+			
+			worldY += fallSpeed;
+			falling = true;
+				
+		}else {
+			
+			falling = false;
+			
+		}
+		
 	}
 	
 	public void getPlayer() {
 		
-        try {
+		try {
 			
 			leftImage1 = ImageIO.read(getClass().getResourceAsStream("/player/left1.png"));
 			rightImage1 = ImageIO.read(getClass().getResourceAsStream("/player/right1.png"));
@@ -281,17 +290,17 @@ public class Player implements KeyListener{
 			}else {
 					
 				tileNumber1 = parkourMain.tileManager.mapTileNumber[parkourMain.currentMap][(worldX - (worldX % parkourMain.tileSize)) / parkourMain.tileSize][worldY / parkourMain.tileSize - 1];
-		        tileNumber2 = parkourMain.tileManager.mapTileNumber[parkourMain.currentMap][(worldX - (worldX % parkourMain.tileSize)) / parkourMain.tileSize + 1][worldY / parkourMain.tileSize - 1];
-		        
-		        if(parkourMain.tileManager.tile[tileNumber1].solidTile == true || parkourMain.tileManager.tile[tileNumber2].solidTile == true) {
-		            	
-		        	collideDown = true;
-		            	
-		        }else {
-		        	
-		        	collideDown = false;
-		        	
-		        }
+				tileNumber2 = parkourMain.tileManager.mapTileNumber[parkourMain.currentMap][(worldX - (worldX % parkourMain.tileSize)) / parkourMain.tileSize + 1][worldY / parkourMain.tileSize - 1];
+				
+				if(parkourMain.tileManager.tile[tileNumber1].solidTile == true || parkourMain.tileManager.tile[tileNumber2].solidTile == true) {
+						
+					collideDown = true;
+						
+				}else {
+					
+					collideDown = false;
+					
+				}
 					
 			}
 			
@@ -324,17 +333,17 @@ public class Player implements KeyListener{
 			}else {
 					
 				tileNumber1 = parkourMain.tileManager.mapTileNumber[parkourMain.currentMap][(worldX - (worldX % parkourMain.tileSize)) / parkourMain.tileSize][worldY / parkourMain.tileSize + 1];
-		        tileNumber2 = parkourMain.tileManager.mapTileNumber[parkourMain.currentMap][(worldX - (worldX % parkourMain.tileSize)) / parkourMain.tileSize + 1][worldY / parkourMain.tileSize + 1];
+				tileNumber2 = parkourMain.tileManager.mapTileNumber[parkourMain.currentMap][(worldX - (worldX % parkourMain.tileSize)) / parkourMain.tileSize + 1][worldY / parkourMain.tileSize + 1];
 
-		        if(parkourMain.tileManager.tile[tileNumber1].solidTile == true || parkourMain.tileManager.tile[tileNumber2].solidTile == true) {
-		            	
-		        	collideDown = true;
-		            	
-		        }else {
-		        	
-		        	collideDown = false;
-		        	
-		        }
+				if(parkourMain.tileManager.tile[tileNumber1].solidTile == true || parkourMain.tileManager.tile[tileNumber2].solidTile == true) {
+						
+					collideDown = true;
+						
+				}else {
+					
+					collideDown = false;
+					
+				}
 					
 			}
 			
@@ -348,7 +357,7 @@ public class Player implements KeyListener{
 	
 	public void detectCollisionLeft() {
 		
-        if(playerDirection == 1) {
+		if(playerDirection == 1) {
 			
 			if(worldX % parkourMain.tileSize == 0) {
 				
@@ -402,7 +411,7 @@ public class Player implements KeyListener{
 					tileNumber1 = parkourMain.tileManager.mapTileNumber[parkourMain.currentMap][worldX / parkourMain.tileSize + 1][(worldY - (worldY % parkourMain.tileSize)) / parkourMain.tileSize];
 					tileNumber2 = parkourMain.tileManager.mapTileNumber[parkourMain.currentMap][worldX / parkourMain.tileSize + 1][(worldY - (worldY % parkourMain.tileSize)) / parkourMain.tileSize + 1];
 					
-                    if(parkourMain.tileManager.tile[tileNumber1].solidTile == true || parkourMain.tileManager.tile[tileNumber2].solidTile == true) {
+					if(parkourMain.tileManager.tile[tileNumber1].solidTile == true || parkourMain.tileManager.tile[tileNumber2].solidTile == true) {
 						
 						collideRight = true;
 						
