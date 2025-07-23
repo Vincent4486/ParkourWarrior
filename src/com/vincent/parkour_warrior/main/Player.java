@@ -26,10 +26,10 @@ public class Player implements KeyListener{
 	public int worldX = 480;
 	public int worldY = 376; // Starting Y position, can be adjusted as needed
 	public int maxJumpHeight;
-	public int jumpHeight = 60;
-public int jumpSpeed = 4;
-public int fallSpeed = 4;
-public int walkSpeed = 4;
+	public int jumpHeight = 61;
+	public int jumpSpeed = 5;
+	public int fallSpeed = 4;
+	public int walkSpeed = 6;
 	public final int screenX;
 	int imageCount = 0;
 	int imageNumber = 0;
@@ -155,16 +155,12 @@ public int walkSpeed = 4;
 		parkourMain.parkourTimer.timerTimeSecondsStr = Long.toString(parkourMain.parkourTimer.timerTimeSeconds);
 		parkourMain.parkourTimer.timerTimeMilisecondsStr = Long.toString(parkourMain.parkourTimer.timerTimeMiliseconds);
 
-		if(goLeft == true) {
-			
+		if (goLeft) {
 			playerDirection = 1;
-			
 		}
-		
-		if(goRight == true) {
-			
+
+		if (goRight) {
 			playerDirection = 2;
-			
 		}
 
 		collideLeft = false;
@@ -174,30 +170,46 @@ public int walkSpeed = 4;
 		detectCollisionDown();
 		detectCollisionLeft();
 		detectCollisionRight();
-		
+
 		fall();
 		jump();
 
-		if(goRight == true && collideRight == false) {worldX += walkSpeed;}
-		if(goLeft == true && collideLeft == false) {worldX -= walkSpeed;}
-		
-		imageCount ++;
-		if(imageCount > 10) {
-			
-			if(imageNumber == 1) {imageNumber = 0;}
-			else if(imageNumber == 0) {imageNumber = 1;}
-			imageCount = 0;
-			
+		// Adjust movement to check for collisions at each step
+		if (goRight && !collideRight) {
+			for (int i = 0; i < walkSpeed; i++) {
+				worldX++;
+				detectCollisionRight();
+				if (collideRight) {
+					worldX--;
+					break;
+				}
+			}
 		}
-		if(worldX > 2740){
-			
+
+		if (goLeft && !collideLeft) {
+			for (int i = 0; i < walkSpeed; i++) {
+				worldX--;
+				detectCollisionLeft();
+				if (collideLeft) {
+					worldX++;
+					break;
+				}
+			}
+		}
+
+		imageCount++;
+		if (imageCount > 10) {
+			imageNumber = (imageNumber == 1) ? 0 : 1;
+			imageCount = 0;
+		}
+
+		if (worldX > 2740) {
 			parkourMain.parkourTimer.saveTime();
 			parkourMain.propertiesData.saveProperties();
 			parkourMain.currentMapState = parkourMain.title;
 			System.out.println(parkourMain.parkourTimer.timerTimeMinutes + ":" + parkourMain.parkourTimer.timerTimeSeconds + ":" + parkourMain.parkourTimer.timerTimeMiliseconds);
 			worldX = 480;
 			worldY = 376;
-
 		}
 
 	}
@@ -223,33 +235,37 @@ public int walkSpeed = 4;
 	
 	public void jump() {
 		
-		if(falling == false && askJump == true && worldY > maxJumpHeight && collideUp == false) {
-			
-			worldY -= jumpSpeed;
-			jumping = true;
+		if (!falling && askJump && worldY > maxJumpHeight && !collideUp) {
+	        for (int i = 0; i < jumpSpeed; i++) {
+	            worldY--;
+	            detectCollisionUp();
+	            if (collideUp || worldY <= maxJumpHeight) {
+	                break;
+	            }
+	        }
+	        jumping = true;
+	    } else {
+	        jumping = false;
+	        askJump = false;
+	    }
 
-		}else {
-			
-			jumping = false;
-			askJump = false;
-			
-		}
-		
 	}
 	
 	public void fall() {
 		
-		if (jumping == false && collideDown == false) {
-			
-			worldY += fallSpeed;
-			falling = true;
-				
-		}else {
-			
-			falling = false;
-			
-		}
-		
+		if (!jumping && !collideDown) {
+	        for (int i = 0; i < fallSpeed; i++) {
+	            worldY++;
+	            detectCollisionDown();
+	            if (collideDown) {
+	                break;
+	            }
+	        }
+	        falling = true;
+	    } else {
+	        falling = false;
+	    }
+
 	}
 	
 	public void getPlayer() {

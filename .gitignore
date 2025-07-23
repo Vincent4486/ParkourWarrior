@@ -26,6 +26,8 @@ replay_pid*
 # properties file for game
 ParkourWarrior.properties
 
+build/
+
 *.project
 
 *.classpath
