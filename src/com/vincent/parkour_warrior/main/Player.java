@@ -88,7 +88,7 @@ public class Player implements KeyListener{
                 
                }
                break;
-		   case KeyEvent.VK_ESCAPE:parkourMain.parkourTimer.saveTime();parkourMain.currentMapState = parkourMain.title;break;
+		   case KeyEvent.VK_ESCAPE:parkourMain.currentMapState = parkourMain.title;break;
 		   }
 		
 		}
