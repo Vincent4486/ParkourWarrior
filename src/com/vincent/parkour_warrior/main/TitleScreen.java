@@ -26,15 +26,7 @@ public class TitleScreen{
 			
 			BufferedImage background = null;
 			background = ImageIO.read(getClass().getResourceAsStream("/tile/background.png"));
-			for(int y = 0; y < 33; y++) {
-				
-				for(int x = 0; x < 48; x++) {
-					
-					graphics2D.drawImage(background, null, x * 16, y * 16);
-					
-				}
-				
-			}
+			graphics2D.drawImage(background, 0, 0, 768, 529, null);
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
