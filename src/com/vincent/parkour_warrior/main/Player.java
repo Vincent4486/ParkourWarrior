@@ -189,6 +189,7 @@ public class Player implements KeyListener{
 			imageCount = 0;
 			
 		}
+		System.out.println("Player X: " + worldX + " Player Y: " + worldY);
 
 	}
 	
