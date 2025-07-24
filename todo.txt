@@ -3,4 +3,3 @@
 3) Chinese Version
 4) Momentum System for player
 5) not fall of while sneaking
-6) make Pixel.ttf font work
