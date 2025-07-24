@@ -7,6 +7,14 @@ import java.awt.Graphics2D;
 public class ParkourTimer {
 	
 	ParkourMain parkourMain;
+
+	public int endTimeMilis = 0;
+	public int endTimeSeconds = 0;
+	public int endTimeMinutes = 0;
+
+	public String endTimeMinutesStr;
+	public String endTimeSecondsStr;
+	public String endTimeMilisecondsStr;
 	
 	public long timerTimeMinutes = 0;
 	public long timerTimeSeconds = 0;
@@ -36,6 +44,8 @@ public class ParkourTimer {
 		timerTimeMinutesStr = Long.toString(timerTimeMinutes);
 		timerTimeSecondsStr = String.format("%02d", timerTimeSeconds);
 		timerTimeMilisecondsStr = String.format("%03d", timerTimeMiliseconds);
+
+		System.out.println(timerTimeMiliseconds + " | " + timerTimeMilisecondsStr + " | " + timerTimeSeconds + " | " + timerTimeSecondsStr);
 	}
 	
 	public void drawTimer(Graphics2D graphics2D) {
@@ -53,36 +63,44 @@ public class ParkourTimer {
 		int recordSeconds = parkourMain.recordTimeSeconds.get(currentMap);
 		int recordMilis = parkourMain.recordTimeMiliseconds.get(currentMap);
 
-	// If the record is zero, treat it as uninitialized and set to max value
-		if (recordMinutes == 0 && recordSeconds == 0 && recordMilis == 0) {
+		endTimeMilis = (int) timerTimeMiliseconds;
+		endTimeSeconds = (int) timerTimeSeconds;
+		endTimeMinutes = (int) timerTimeMinutes;
+
+		System.out.println("End time: " + endTimeMinutes + ":" + endTimeSeconds + "." + endTimeMilis);
+
+		endTimeMilisecondsStr = String.format("%03d", endTimeMilis);
+		endTimeSecondsStr = String.format("%02d", endTimeSeconds);
+		endTimeMinutesStr = String.format("%02d", endTimeMinutes);
+
+		if(recordMilis == 0 && recordSeconds == 0 && recordMinutes == 0){
+
+			recordMilis = Integer.MAX_VALUE;
 			recordMinutes = Integer.MAX_VALUE;
 			recordSeconds = Integer.MAX_VALUE;
-			recordMilis = Integer.MAX_VALUE;
-			parkourMain.recordTimeMinutes.set(currentMap, Integer.MAX_VALUE);
-			parkourMain.recordTimeSeconds.set(currentMap, Integer.MAX_VALUE);
-			parkourMain.recordTimeMiliseconds.set(currentMap, Integer.MAX_VALUE);
-		}
 
-		if (
-			timerTimeMinutes < recordMinutes ||
-			(timerTimeMinutes == recordMinutes && timerTimeSeconds < recordSeconds) ||
-			(timerTimeMinutes == recordMinutes && timerTimeSeconds == recordSeconds && timerTimeMiliseconds < recordMilis)
-		) {
-			parkourMain.recordTimeMinutes.set(currentMap, (int)timerTimeMinutes);
-			parkourMain.recordTimeSeconds.set(currentMap, (int)timerTimeSeconds);
-			parkourMain.recordTimeMiliseconds.set(currentMap, (int)timerTimeMiliseconds);
 		}
+			
+		if (endTimeMinutes < recordMinutes){
+
+			parkourMain.recordTimeMinutes.set(currentMap, endTimeMinutes);
+			parkourMain.recordTimeSeconds.set(currentMap, endTimeSeconds);
+			parkourMain.recordTimeMiliseconds.set(currentMap, endTimeMilis);
+
+		}else if (endTimeMinutes == recordMinutes && endTimeSeconds < recordSeconds) {
+
+			parkourMain.recordTimeMinutes.set(currentMap, endTimeMinutes);
+			parkourMain.recordTimeSeconds.set(currentMap, endTimeSeconds);
+			parkourMain.recordTimeMiliseconds.set(currentMap, endTimeMilis);
+
+		}else if (endTimeMinutes == recordMinutes && endTimeSeconds == recordSeconds && endTimeMilis < recordMilis) {
+
+			parkourMain.recordTimeMinutes.set(currentMap, endTimeMinutes);
+			parkourMain.recordTimeSeconds.set(currentMap, endTimeSeconds);
+			parkourMain.recordTimeMiliseconds.set(currentMap, endTimeMilis);
+
+		} 
+
 	}
-	public void stopTimer() {
-        // Reset the timer values to zero
-        timerTimeMinutes = 0;
-        timerTimeSeconds = 0;
-        timerTimeMiliseconds = 0;
-
-        // Optionally, reset the string representations as well
-        timerTimeMinutesStr = "00";
-        timerTimeSecondsStr = "00";
-        timerTimeMilisecondsStr = "000";
-    }
 
 }

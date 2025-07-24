@@ -30,10 +30,23 @@ public class FinishScreen {
 
         }
         
-        graphics2D.setFont(graphics2D.getFont().deriveFont(Font.BOLD, 24));
-        graphics2D.setColor(new Color(0, 68, 100));
+        graphics2D.setFont(graphics2D.getFont().deriveFont(Font.BOLD, 78));
+        graphics2D.setColor(new Color(0x35BFA3));
         graphics2D.drawString("Congratulations!", centerTextX("Congratulations!", graphics2D), 150);
-        graphics2D.drawString("Press ENTER to exit to title screen", centerTextX("Press ENTER to eit to title screen", graphics2D), 250);
+        
+        graphics2D.setFont(graphics2D.getFont().deriveFont(Font.PLAIN, 24));
+        graphics2D.setColor(new Color(0, 63, 100));
+        graphics2D.drawString("You finished in:", centerTextX("You finished in:", graphics2D), 280);
+        graphics2D.drawString(parkourMain.parkourTimer.endTimeMinutesStr + ":" +
+            parkourMain.parkourTimer.endTimeSecondsStr + "." +
+            parkourMain.parkourTimer.endTimeMilisecondsStr, 
+            centerTextX(parkourMain.parkourTimer.endTimeMinutesStr + ":" +
+            parkourMain.parkourTimer.endTimeSecondsStr + "." +
+            parkourMain.parkourTimer.endTimeMilisecondsStr, graphics2D), 320);
+
+        graphics2D.setFont(graphics2D.getFont().deriveFont(Font.PLAIN, 20));
+        graphics2D.setColor(new Color(0x24CBFF));
+        graphics2D.drawString("Press ENTER to exit to title screen", centerTextX("Press ENTER to eit to title screen", graphics2D), 500);
         
         // Additional finish screen elements can be added here
     }

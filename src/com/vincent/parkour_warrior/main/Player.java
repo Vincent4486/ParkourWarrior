@@ -18,6 +18,7 @@ public class Player implements KeyListener{
 	public boolean falling = false;
 	public boolean goRight = false;
 	public boolean goLeft = false;
+	public boolean sneaking = false; // Added for sneaking functionality
 	public boolean collideUp;
 	public boolean collideDown;
 	public boolean collideLeft;
@@ -89,6 +90,7 @@ public class Player implements KeyListener{
 			   }
 			   break;
 		   case KeyEvent.VK_ESCAPE:parkourMain.currentMapState = parkourMain.title;worldX = 480; worldY= 376;break;
+		   case KeyEvent.VK_SHIFT:sneaking = true;walkSpeed = 2;break;
 		   }
 		
 		}
@@ -138,7 +140,7 @@ public class Player implements KeyListener{
 
 		if(parkourMain.currentMapState == parkourMain.finish) {
 			
-			if (e.getKeyCode() == KeyEvent.VK_ESCAPE) 
+			if (e.getKeyCode() == KeyEvent.VK_ENTER) 
 				
 				parkourMain.currentMapState = parkourMain.title;
 				
@@ -153,6 +155,7 @@ public class Player implements KeyListener{
 		switch(e.getKeyCode()) {
 		case KeyEvent.VK_A:goLeft = false;break;
 		case KeyEvent.VK_D:goRight = false;break;
+		case KeyEvent.VK_SHIFT:sneaking = false; walkSpeed = 6; break; // Reset walk speed when sneaking is released
 		}
 		
 	}
@@ -215,13 +218,10 @@ public class Player implements KeyListener{
 
 		if (worldX > parkourMain.endIndex.get(parkourMain.currentMap)){
 
+			parkourMain.currentMapState = parkourMain.finish; 
 			parkourMain.parkourTimer.saveTime(); // Save the record time
 			parkourMain.propertiesData.saveProperties();
-			parkourMain.currentMapState = parkourMain.finish; // Transition to finish screen
-
-			System.out.println(parkourMain.parkourTimer.timerTimeMinutes + ":" + 
-				parkourMain.parkourTimer.timerTimeSeconds + ":" + 
-				parkourMain.parkourTimer.timerTimeMiliseconds);
+			// Transition to finish screen
 
 			worldX = 480;
 			worldY = 376;
