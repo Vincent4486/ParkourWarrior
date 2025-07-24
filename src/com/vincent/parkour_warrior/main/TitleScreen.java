@@ -44,7 +44,7 @@ public class TitleScreen{
         int endIndex = Math.min(parkourMain.mapPath.size() - 1, centerIndex + 1); 
         
         graphics2D.setFont(graphics2D.getFont().deriveFont(Font.PLAIN, 24));
-        graphics2D.setColor(Color.cyan);
+        graphics2D.setColor(new Color(0, 63, 100));
         graphics2D.drawString("Select a Map:", centerTextX("Select a Map:", graphics2D), 260);
 
         for (int i = startIndex; i <= endIndex; i++) {
