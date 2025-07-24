@@ -19,9 +19,9 @@ public class PropertiesData {
     public void loadProperties() {
         /*
          * Expected properties file format for each key:
-         * map_number map_path map_type is_default_map have_finished_map record_time_minutes record_time_seconds record_time_milis
+         * map_number map_path map_type is_default_map have_finished_map record_time_minutes record_time_seconds record_time_milis end_posion
          * For example: 
-         * 0=1 /map/map0.txt 1 true false 0 0 0
+         * 0=1 /map/map0.txt 1 true false 0 0 0 400
          */
         System.out.println("Attempting to load properties file from: " + filePath);
         try (FileInputStream propertiesFile = new FileInputStream(filePath)) {
@@ -54,6 +54,7 @@ public class PropertiesData {
                 int recordMinutes = Integer.parseInt(data[5]);
                 int recordSeconds = Integer.parseInt(data[6]);
                 int recordMilis = Integer.parseInt(data[7]);
+                int endIndex = Integer.parseInt(data[8]);
                 
                 // Add the data to the corresponding lists in ParkourMain.
                 parkourMain.mapNumber.add(mapNumber);
@@ -64,6 +65,7 @@ public class PropertiesData {
                 parkourMain.recordTimeMinutes.add(recordMinutes);
                 parkourMain.recordTimeSeconds.add(recordSeconds);
                 parkourMain.recordTimeMiliseconds.add(recordMilis);
+                parkourMain.endIndex.add(endIndex);
                 
                 number++;
             }
@@ -94,7 +96,8 @@ public class PropertiesData {
                         parkourMain.haveFinishedMap.get(num) + " " +
                         parkourMain.recordTimeMinutes.get(num) + " " +
                         parkourMain.recordTimeSeconds.get(num) + " " +
-                        parkourMain.recordTimeMiliseconds.get(num);
+                        parkourMain.recordTimeMiliseconds.get(num)+ " " +
+                        parkourMain.endIndex.get(num);
                 
                 properties.setProperty(Integer.toString(num), propertiesValue);
             }
@@ -113,8 +116,11 @@ public class PropertiesData {
         try (FileOutputStream propertiesFile = new FileOutputStream(filePath)) {
             Properties properties = new Properties();
             // Sample properties entry with key "0"
-            String propertiesValue = "1 /map/map0.txt 1 true false 0 0 0";
-            properties.setProperty("0", propertiesValue);
+            String propertiesValue1 = "1 /map/map0.txt 1 true false 0 0 0 2740";
+            properties.setProperty("0", propertiesValue1);
+
+            String propertiesValue2 = "2 /map/map1.txt 1 true false 0 0 0 3017";
+            properties.setProperty("1", propertiesValue2);
             
             properties.store(propertiesFile, "Parkour Warrior Sample Properties");
             System.out.println("Properties file created successfully.");

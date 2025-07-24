@@ -48,29 +48,24 @@ public class TitleScreen{
         graphics2D.drawString("Select a Map:", centerTextX("Select a Map:", graphics2D), 260);
 
         for (int i = startIndex; i <= endIndex; i++) {
-        	
-        	String recordTime = " >Record time: " + 
-        	Integer.toString(parkourMain.recordTimeMinutes.get(i)) + ":" +
-        	Integer.toString(parkourMain.recordTimeSeconds.get(i)) + "." +
-        	Integer.toString(parkourMain.recordTimeMiliseconds.get(i)) + "<";
-        	
-        	String[] path = parkourMain.mapPath.get(i).split("/");
-        	String nameEx = path[path.length - 1];
-        	String name = nameEx.substring(0, nameEx.lastIndexOf("."));
+
+            String recordTime = " >Record time: " + 
+                String.format("%02d", parkourMain.recordTimeMinutes.get(i)) + ":" + 
+                String.format("%02d", parkourMain.recordTimeSeconds.get(i)) + "." + 
+                String.format("%03d", parkourMain.recordTimeMiliseconds.get(i)) + "<";
+
+            String[] path = parkourMain.mapPath.get(i).split("/");
+            String nameEx = path[path.length - 1];
+            String name = nameEx.substring(0, nameEx.lastIndexOf("."));
             int yPosition = 8 * 44 + (i - centerIndex) * 30;
-            
+
             if (i == choosedMap) {
-            	
-            	graphics2D.setFont(graphics2D.getFont().deriveFont(Font.BOLD, 30)); 
-            	
+                graphics2D.setFont(graphics2D.getFont().deriveFont(Font.BOLD, 30)); 
             } else {
-            	
-            	graphics2D.setFont(graphics2D.getFont().deriveFont(Font.PLAIN, 24));
-            	
+                graphics2D.setFont(graphics2D.getFont().deriveFont(Font.PLAIN, 24));
             }
-            
+
             graphics2D.drawString(name + recordTime, centerTextX(name + recordTime, graphics2D), yPosition); // Draw each map
-            
         }
         
         graphics2D.setFont(graphics2D.getFont().deriveFont(Font.PLAIN, 10));

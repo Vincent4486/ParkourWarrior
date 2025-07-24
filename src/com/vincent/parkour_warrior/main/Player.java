@@ -135,6 +135,14 @@ public class Player implements KeyListener{
 			}
 			
 		}
+
+		if(parkourMain.currentMapState == parkourMain.finish) {
+			
+			if (e.getKeyCode() == KeyEvent.VK_ESCAPE) 
+				
+				parkourMain.currentMapState = parkourMain.title;
+				
+		}
 		
 	}
 
@@ -203,11 +211,18 @@ public class Player implements KeyListener{
 			imageCount = 0;
 		}
 
-		if (worldX > 2740) {
-			parkourMain.parkourTimer.saveTime();
+		System.out.println("Player X: " + worldX + ", Player Y: " + worldY);
+
+		if (worldX > parkourMain.endIndex.get(parkourMain.currentMap)){
+
+			parkourMain.parkourTimer.saveTime(); // Save the record time
 			parkourMain.propertiesData.saveProperties();
-			parkourMain.currentMapState = parkourMain.title;
-			System.out.println(parkourMain.parkourTimer.timerTimeMinutes + ":" + parkourMain.parkourTimer.timerTimeSeconds + ":" + parkourMain.parkourTimer.timerTimeMiliseconds);
+			parkourMain.currentMapState = parkourMain.finish; // Transition to finish screen
+
+			System.out.println(parkourMain.parkourTimer.timerTimeMinutes + ":" + 
+				parkourMain.parkourTimer.timerTimeSeconds + ":" + 
+				parkourMain.parkourTimer.timerTimeMiliseconds);
+
 			worldX = 480;
 			worldY = 376;
 		}

@@ -47,6 +47,7 @@ public class ParkourMain extends JPanel implements Runnable{
 	public ArrayList<Integer> recordTimeMinutes;
 	public ArrayList<Integer> recordTimeSeconds;
 	public ArrayList<Integer> recordTimeMiliseconds;
+	public ArrayList<Integer> endIndex;
 	
 	public boolean musicOn;
 	
@@ -54,6 +55,7 @@ public class ParkourMain extends JPanel implements Runnable{
 	public int currentMap = 1;
 	public final int title = 0;
 	public final int play = 1;
+	public final int finish = 2;
 
 	public final int defaultPlayMap = 1;
 	public final int customPlayMap = 2;
@@ -72,6 +74,7 @@ public class ParkourMain extends JPanel implements Runnable{
 	public PropertiesData propertiesData;
 	public TitleScreen titleScreen;
 	public ParkourTimer parkourTimer;
+	public FinishScreen finishScreen;
 	
 	public ParkourMain() {
 		
@@ -85,12 +88,14 @@ public class ParkourMain extends JPanel implements Runnable{
 	    recordTimeMinutes = new ArrayList<>();
 	    recordTimeSeconds = new ArrayList<>();
 	    recordTimeMiliseconds = new ArrayList<>();
+		endIndex = new ArrayList<>();
 	    
 	    propertiesData = new PropertiesData(this);
 	    propertiesData.loadProperties();
 	    
 	    parkourTimer = new ParkourTimer(this);
 	    titleScreen = new TitleScreen(this);
+		finishScreen = new FinishScreen(this);
 		player = new Player(this);
 	    tileManager = new TileManager(this);
 	    
@@ -171,12 +176,15 @@ public class ParkourMain extends JPanel implements Runnable{
 			parkourTimer.drawTimer(graphics2D);
 			
 		}
-		else if(currentMapState == title) {
+		else if(currentMapState == title) 
 		
 			titleScreen.drawTitleScreen(graphics2D);
 			
+		else if(currentMapState == finish){
+			
+			finishScreen.drawFinishScreen(graphics2D);
+			
 		}
-	
 		graphics2D.dispose();
 		
 	}
