@@ -453,7 +453,6 @@ public class Player implements KeyListener{
 			}
 			
 		}
-		
 		 
 	}
 
