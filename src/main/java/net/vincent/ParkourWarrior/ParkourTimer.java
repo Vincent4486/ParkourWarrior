@@ -45,7 +45,7 @@ public class ParkourTimer {
 		timerTimeSecondsStr = String.format("%02d", timerTimeSeconds);
 		timerTimeMilisecondsStr = String.format("%03d", timerTimeMiliseconds);
 
-		System.out.println(timerTimeMiliseconds + " | " + timerTimeMilisecondsStr + " | " + timerTimeSeconds + " | " + timerTimeSecondsStr);
+		//System.out.println(timerTimeMiliseconds + " | " + timerTimeMilisecondsStr + " | " + timerTimeSeconds + " | " + timerTimeSecondsStr);
 	}
 	
 	public void drawTimer(Graphics2D graphics2D) {

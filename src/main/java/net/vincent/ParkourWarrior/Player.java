@@ -28,8 +28,8 @@ public class Player implements KeyListener{
 	public int worldY = 376; // Starting Y position, can be adjusted as needed
 	public int maxJumpHeight;
 	public int jumpHeight = 61;
-	public int jumpSpeed = 5;
-	public int fallSpeed = 4;
+	public int jumpSpeed = 4;
+	public int fallSpeed = 5;
 	public int walkSpeed = 6;
 	public final int screenX;
 	int imageCount = 0;
@@ -38,12 +38,13 @@ public class Player implements KeyListener{
 	int tileNumber1;
 	int tileNumber2;
 	
-	public int momentumLeft = 0;
-	public int momentumRight = 0;
+	public boolean momentumLeft = false;
+	public boolean momentumRight = false;
 	public int momentumCountLeft = 0;
 	public int momentumCountRight = 0;
-	public int momentumCountLeft1 = 0;
-	public int momentumCountRight1 = 0;
+	
+	public static final int MAX_MOMENTUM_TICKS = 8;
+
 	/*
 	 *In integer playerDirection:
 	 *1 = playerDirection:left
@@ -96,7 +97,7 @@ public class Player implements KeyListener{
 			   }
 			   break;
 		   case KeyEvent.VK_ESCAPE:parkourMain.currentMapState = parkourMain.title;worldX = 480; worldY= 376;break;
-		   case KeyEvent.VK_SHIFT:sneaking = true;walkSpeed = 2;break;
+		   case KeyEvent.VK_SHIFT:sneaking = true;walkSpeed = 1;break;
 		   }
 		
 		}
@@ -159,8 +160,8 @@ public class Player implements KeyListener{
 		// TODO Auto-generated method stub
 		
 		switch(e.getKeyCode()) {
-		case KeyEvent.VK_A:goLeft = false;momentumLeft = 21;break;
-		case KeyEvent.VK_D:goRight = false;momentumRight = 21;break;
+		case KeyEvent.VK_A:goLeft = false;momentumLeft = true;break;
+		case KeyEvent.VK_D:goRight = false;momentumRight = true;break;
 		case KeyEvent.VK_SHIFT:sneaking = false; walkSpeed = 6; break; // Reset walk speed when sneaking is released
 		}
 		
@@ -220,7 +221,7 @@ public class Player implements KeyListener{
 			imageCount = 0;
 		}
 
-		System.out.println("Player X: " + worldX + ", Player Y: " + worldY);
+		//System.out.println("Player X: " + worldX + ", Player Y: " + worldY);
 
 		if (worldX > parkourMain.endIndex.get(parkourMain.currentMap)){
 
@@ -232,6 +233,54 @@ public class Player implements KeyListener{
 			worldX = 480;
 			worldY = 376;
 		}
+		System.out.println(momentumRight);
+		
+		if (momentumRight) {
+			if (!momentumRight) return;
+
+		    int burst = calculateBurstSpeed(momentumCountRight);
+		    for (int i = 0; i < burst; i++) {
+		        worldX++;
+		        detectCollisionRight();
+		        if (collideRight) {
+		            // hit wall: step back & kill momentum
+		            worldX--;
+		            momentumRight = false;
+		            momentumCountRight = 0;
+		            return;
+		        }
+		    }
+
+		    // advance the counter (and expire if too long)
+		    momentumCountRight++;
+		    if (momentumCountRight >= MAX_MOMENTUM_TICKS) {
+		        momentumRight = false;
+		        momentumCountRight = 0;
+		    }
+		}
+		
+		if (momentumLeft) {
+			if (!momentumLeft) return;
+
+		    int burst = calculateBurstSpeed(momentumCountLeft);
+		    for (int i = 0; i < burst; i++) {
+		        worldX--;
+		        detectCollisionLeft();
+		        if (collideLeft) {
+		            worldX++;
+		            momentumLeft = false;
+		            momentumCountLeft = 0;
+		            return;
+		        }
+		    }
+
+		    momentumCountLeft++;
+		    if (momentumCountLeft >= MAX_MOMENTUM_TICKS) {
+		        momentumLeft = false;
+		        momentumCountLeft = 0;
+		    }
+		}
+
 
 	}
 	
@@ -460,6 +509,20 @@ public class Player implements KeyListener{
 			
 		}
 		 
+	}
+	
+	private int calculateBurstSpeed(int count) {
+		int speed;
+	    if (count < 2)   speed = 6;
+	    else if (count < 5)   speed = 4;
+	    else if (count < 8)   speed = 2;
+	    else                  speed = 1;
+
+	    // halve speed when sneaking
+	    if (sneaking) {
+	        speed = Math.max(1, speed / 2);
+	    }
+	    return speed;
 	}
 
 }
