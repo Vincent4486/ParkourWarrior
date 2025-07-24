@@ -68,12 +68,12 @@ public class TitleScreen{
             graphics2D.drawString(name + recordTime, centerTextX(name + recordTime, graphics2D), yPosition); // Draw each map
         }
         
-        graphics2D.setFont(graphics2D.getFont().deriveFont(Font.PLAIN, 10));
+        graphics2D.setFont(graphics2D.getFont().deriveFont(Font.PLAIN, 15));
         graphics2D.setColor(new Color(0x24CBFF));
-        graphics2D.drawString("Press W and S to move, press ENTER to select", centerTextX("Press W and S to move, press ENTER to select", graphics2D), 495);
-        graphics2D.drawString("Press Q to toggle music", centerTextX("Press G to toggle music", graphics2D), 505);
-        graphics2D.drawString("Press ESC to exit a game without completing", centerTextX("Press ESC to exit a game without completing", graphics2D), 515);
-        graphics2D.drawString("Press A to add map ,press D to remove current map", centerTextX("Press A to add map ,press D to remove current map", graphics2D), 525);
+        graphics2D.drawString("Press W and S to move, press ENTER to select", centerTextX("Press W and S to move, press ENTER to select", graphics2D), 475);
+        graphics2D.drawString("Press Q to toggle music", centerTextX("Press G to toggle music", graphics2D), 490);
+        graphics2D.drawString("Press ESC to exit a game without completing", centerTextX("Press ESC to exit a game without completing", graphics2D), 505);
+        graphics2D.drawString("Press A to add map ,press D to remove current map", centerTextX("Press A to add map ,press D to remove current map", graphics2D), 520);
         
 	}
 	
