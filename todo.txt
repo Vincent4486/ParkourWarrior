@@ -1,0 +1,6 @@
+1) Health System
+2) Add and remove maps System
+3) Chinese Version
+4) Momentum System for player
+5) not fall of while sneaking
+6) make Pixel.ttf font work
