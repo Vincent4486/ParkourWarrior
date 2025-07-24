@@ -27,6 +27,7 @@ replay_pid*
 ParkourWarrior.properties
 
 build/
+bin/
 
 *.project
 
