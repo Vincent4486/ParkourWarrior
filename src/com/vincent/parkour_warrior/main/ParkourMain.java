@@ -2,8 +2,11 @@ package com.vincent.parkour_warrior.main;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -75,6 +78,8 @@ public class ParkourMain extends JPanel implements Runnable{
 	public TitleScreen titleScreen;
 	public ParkourTimer parkourTimer;
 	public FinishScreen finishScreen;
+
+	public Font pixelFont;
 	
 	public ParkourMain() {
 		
@@ -104,6 +109,7 @@ public class ParkourMain extends JPanel implements Runnable{
 		thread = new Thread(this);
 		
 		getSound();
+		getPixelFont();
 		
 		soundClip.start();
 		musicOn = true;
@@ -168,6 +174,8 @@ public class ParkourMain extends JPanel implements Runnable{
 		super.paintComponent(g);
 		
 		Graphics2D graphics2D = (Graphics2D)g;
+
+		graphics2D.setFont(pixelFont);
 		
 		if(currentMapState == play) {
 			
@@ -205,6 +213,25 @@ public class ParkourMain extends JPanel implements Runnable{
 			
 		}
 		
+	}
+	public void getPixelFont(){
+
+		try {
+
+			pixelFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/font/Pixel.ttf"));
+		
+		} catch (FontFormatException e) {
+
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+
+		} catch (IOException e) {
+
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+
+		}
+
 	}
 
 }
