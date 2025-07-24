@@ -1,4 +1,4 @@
-package com.vincent.parkour_warrior.main;
+package main.java.net.vincent.ParkourWarrior;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

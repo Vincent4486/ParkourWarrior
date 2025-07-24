@@ -44,7 +44,7 @@ java {
 jar {
     manifest {
         attributes(
-            'Main-Class': 'com.vincent.parkour_warrior.main.ParkourWarrior',
+            'Main-Class': 'main.java.net.vincent.ParkourWarrior.ParkourWarrior',
             'Implementation-Title': project.name,
             'Implementation-Version': 'Beta1_0'
         )
