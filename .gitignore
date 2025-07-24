@@ -35,3 +35,4 @@ bin/
 
 *.classpath
 *.DS_Store
+.vscode/
