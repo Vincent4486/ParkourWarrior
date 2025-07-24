@@ -38,6 +38,12 @@ public class Player implements KeyListener{
 	int tileNumber1;
 	int tileNumber2;
 	
+	public int momentumLeft = 0;
+	public int momentumRight = 0;
+	public int momentumCountLeft = 0;
+	public int momentumCountRight = 0;
+	public int momentumCountLeft1 = 0;
+	public int momentumCountRight1 = 0;
 	/*
 	 *In integer playerDirection:
 	 *1 = playerDirection:left
@@ -153,8 +159,8 @@ public class Player implements KeyListener{
 		// TODO Auto-generated method stub
 		
 		switch(e.getKeyCode()) {
-		case KeyEvent.VK_A:goLeft = false;break;
-		case KeyEvent.VK_D:goRight = false;break;
+		case KeyEvent.VK_A:goLeft = false;momentumLeft = 21;break;
+		case KeyEvent.VK_D:goRight = false;momentumRight = 21;break;
 		case KeyEvent.VK_SHIFT:sneaking = false; walkSpeed = 6; break; // Reset walk speed when sneaking is released
 		}
 		
