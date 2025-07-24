@@ -28,6 +28,8 @@ ParkourWarrior.properties
 
 build/
 bin/
+.gradle/
+.settings/
 
 *.project
 
