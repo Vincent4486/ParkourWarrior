@@ -34,4 +34,4 @@ bin/
 *.project
 
 *.classpath
-
+*.DS_Store
