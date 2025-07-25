@@ -122,6 +122,9 @@ public class PropertiesData {
             String propertiesValue2 = "2 /map/map1.txt 1 true false 0 0 0 3017";
             properties.setProperty("1", propertiesValue2);
             
+            String propertiesValue3 = "3 /map/map2.txt 1 true false 0 0 0 3100";
+            properties.setProperty("2", propertiesValue3);
+            
             properties.store(propertiesFile, "Parkour Warrior Sample Properties");
             System.out.println("Properties file created successfully.");
             // Reload properties after file creation.
