@@ -36,3 +36,40 @@ bin/
 *.classpath
 *.DS_Store
 .vscode/
+
+.idea/
+
+
+
+# IntelliJ IDEA
+
+*.iml
+out/
+
+# Eclipse
+.project
+.classpath
+
+
+# VS Code
+
+
+# Java
+
+
+# Gradle
+
+!gradle/wrapper/gradle-wrapper.jar
+
+target/
+
+# Common OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.swp
+*.bak
+*.orig
+
