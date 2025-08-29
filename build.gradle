@@ -3,7 +3,7 @@ plugins {
     id 'application'
 }
 
-group = 'com.vincent'
+group = 'net.vincent'
 version = '1.1.0'
 
 repositories {
@@ -32,7 +32,7 @@ sourceSets {
 application {
     // Set your fully qualified main class name.
     // Make sure the package declaration at the top of your Java file matches this.
-    mainClass = 'com.vincent.parkour_warrior.main.ParkourWarrior'
+    mainClass = 'net.vincent.ParkourWarrior.ParkourWarrior'
 }
 
 // Set Java source and target compatibility using the new DSL.
@@ -44,7 +44,7 @@ java {
 jar {
     manifest {
         attributes(
-            'Main-Class': 'main.java.net.vincent.ParkourWarrior.ParkourWarrior',
+            'Main-Class': 'net.vincent.ParkourWarrior.ParkourWarrior',
             'Implementation-Title': project.name,
             'Implementation-Version': 'Beta1_0'
         )
