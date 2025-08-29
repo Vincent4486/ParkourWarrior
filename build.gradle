@@ -21,7 +21,7 @@ sourceSets {
     main {
         java {
             // Adjust this if your source files are directly under "src", or use "src/java" if organized that way.
-            srcDirs = ['src']
+            srcDirs = ['src/main/java']
         }
         resources {
             srcDirs = ['res']

@@ -1,4 +1,4 @@
-package main.java.net.vincent.ParkourWarrior;
+package net.vincent.ParkourWarrior;
 
 import java.awt.Graphics2D;
 import java.awt.Rectangle;

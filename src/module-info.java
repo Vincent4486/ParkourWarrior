@@ -5,5 +5,5 @@
  * 
  */
 module ParkourWarrior {
-	requires java.desktop;
+    requires java.desktop;
 }
