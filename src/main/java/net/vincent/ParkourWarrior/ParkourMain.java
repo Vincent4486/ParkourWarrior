@@ -16,10 +16,32 @@ import javax.sound.sampled.Clip;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
+/**
+ * The central class of Parkour Warrior.
+ * <p>
+ * This class initialized the {@code JPanel} and {@code Graphics2D} for the game's drawer and frame to draw.
+ * This class also defines global fields for the use of the other classes, and create instances of other classes of this game
+ * in order to make the initialization not stuck in an infinite loop.
+ * </p>
+ * @author Vincent4486
+ * @version 1.2
+ * @since 1.0
+ */
+
 @SuppressWarnings("serial")
 public class ParkourMain extends JPanel implements Runnable{
-	
+
+	/**
+	 * This is the original tile size for tiles in Parkour Warrior.
+	 * @since 1.0
+	 */
 	final int originalTileSize = 16;
+
+	/**
+	 * This is the scale for the original tile size, meaning the real tile size is
+	 * {@code tileSize = originalTileSize * scale}.
+	 * @since 1.0
+	 */
 	final int scale = 3;
 	
 	/*
@@ -27,20 +49,58 @@ public class ParkourMain extends JPanel implements Runnable{
 	 * height == row
 	 * vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 	 */
-	
+
+	/**
+	 * This is mentioned at {@code final int scale}, and it is the final tile size for this game.
+	 * @since 1.0
+	 */
 	public final int tileSize = originalTileSize * scale;
+
+	/**
+	 * This is the maximum amount of tiles allowed in a row.
+	 * @since 1.0
+	 */
 	public final int maxWidthTiles = 16;
+
+	/**
+	 * This is the maximum amount of tiles allowed in a column.
+	 * @since 1.0
+	 */
 	public final int maxHeightTiles = 11;
+
+	/**
+	 * This is the maximum screen width in pixels, which is {@code maxWidthTiles * tileSize}
+	 * @since 1.0
+	 */
 	public final int screenWidth = tileSize * maxWidthTiles;
+
+	/**
+	 * This is the screen maximum height in pixels, which is {@code maxHeightTiles * tileSize}
+	 * @since 1.0
+	 */
 	public final int screenHeight = tileSize * maxHeightTiles;
+
+	/**
+	 * This is the maximum columns of ties that can be in a world.
+	 * @since 1.1
+	 */
 	public final int maxWorldColumn = 68;
+
+	/**
+	 * This is the maximum rows of tiles that can be in a world.
+	 * @since 1.1
+	 */
 	public final int maxWorldRow = 11;
-	public final int worldWidth = tileSize * maxWorldColumn;
-	public final int worldHeight = tileSize * maxWorldRow;
 	
 	/*
 	 * public int recordTimeMiliseconds is 2 digit miliseconds.
 	 * public int currentMap means current map number, number is in properties file.
+	 */
+
+	/**
+	 * This is the map number for the program to load the maps.
+	 * defined for {@code PropertiesData} and {@code TileManager}.
+	 * @since 1.1
 	 */
     public ArrayList<Integer> mapNumber;
 	public ArrayList<String> mapPath;
