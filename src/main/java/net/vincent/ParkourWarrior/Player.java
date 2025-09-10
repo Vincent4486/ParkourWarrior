@@ -9,7 +9,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-public class Player implements KeyListener{
+public class Player{
 	
 	ParkourMain parkourMain;
 	
@@ -68,102 +68,6 @@ public class Player implements KeyListener{
 		screenX = parkourMain.screenWidth / 2 - parkourMain.tileSize / 2;
 		
 		getPlayer();
-		
-	}
-
-	@Override
-	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-		if(parkourMain.currentMapState == parkourMain.play) {
-			
-		   switch(e.getKeyCode()) {
-		   case KeyEvent.VK_A:goLeft = true;break;
-		   case KeyEvent.VK_D:goRight = true;break;
-		   case KeyEvent.VK_SPACE:
-
-			   if (!askJump) {
-				
-				   maxJumpHeight = worldY - jumpHeight;
-
-				   askJump = true;
-				
-			   }
-			   break;
-		   case KeyEvent.VK_ESCAPE:parkourMain.currentMapState = parkourMain.title;worldX = 480; worldY= 376;break;
-		   case KeyEvent.VK_SHIFT:sneaking = true;walkSpeed = 1;break;
-		   }
-		
-		}
-		
-		if(parkourMain.currentMapState == parkourMain.title) {
-			
-			if (e.getKeyCode() == KeyEvent.VK_W) {
-				
-				parkourMain.titleScreen.choosedMap = (parkourMain.titleScreen.choosedMap - 1 + parkourMain.mapPath.size()) % parkourMain.mapPath.size();
-			
-			} else if (e.getKeyCode() == KeyEvent.VK_S) {
-				
-				parkourMain.titleScreen.choosedMap = (parkourMain.titleScreen.choosedMap + 1) % parkourMain.mapPath.size();
-				
-			} else if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-				
-				parkourMain.currentMap = parkourMain.titleScreen.choosedMap;
-				parkourMain.currentMapState = parkourMain.play;
-				parkourMain.timerStartTime = System.nanoTime();
-				
-			}else if (e.getKeyCode() == KeyEvent.VK_A) {
-				
-				parkourMain.propertiesData.addMap();
-				
-			}else if (e.getKeyCode() == KeyEvent.VK_D) {
-				
-				parkourMain.propertiesData.removeMap();
-				
-			}
-			
-		}
-		if(e.getKeyCode() == KeyEvent.VK_Q) {
-			
-			if(parkourMain.musicOn == true) {
-				
-				parkourMain.musicOn = false;
-				parkourMain.soundClip.stop();
-				
-			}else {
-				
-				parkourMain.musicOn = true;
-				parkourMain.soundClip.start();;
-				
-			}
-			
-		}
-
-		if(parkourMain.currentMapState == parkourMain.finish) {
-			
-			if (e.getKeyCode() == KeyEvent.VK_ENTER) 
-				
-				parkourMain.currentMapState = parkourMain.title;
-				
-		}
-		
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-		switch(e.getKeyCode()) {
-		case KeyEvent.VK_A:goLeft = false;momentumLeft = true;break;
-		case KeyEvent.VK_D:goRight = false;momentumRight = true;break;
-		case KeyEvent.VK_SHIFT:sneaking = false; walkSpeed = 6; break; // Reset walk speed when sneaking is released
-		}
 		
 	}
 	

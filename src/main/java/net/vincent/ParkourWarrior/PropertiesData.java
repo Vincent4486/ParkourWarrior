@@ -38,7 +38,7 @@ public class PropertiesData {
                 
                 // Adjust the map path so it points to /res/map/...
                 String mapPath;
-                if (!rawPath.startsWith("/res")) {
+                /*if (!rawPath.startsWith("/res")) {
                     if (!rawPath.startsWith("/")) {
                         mapPath = "/res/" + rawPath;
                     } else {
@@ -46,7 +46,8 @@ public class PropertiesData {
                     }
                 } else {
                     mapPath = rawPath;
-                }
+                }*/
+                mapPath = rawPath;
                 
                 int mapType = Integer.parseInt(data[2]);
                 boolean isDefault = Boolean.parseBoolean(data[3]);

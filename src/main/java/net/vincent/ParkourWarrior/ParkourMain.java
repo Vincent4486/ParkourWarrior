@@ -78,6 +78,7 @@ public class ParkourMain extends JPanel implements Runnable{
 	public TitleScreen titleScreen;
 	public ParkourTimer parkourTimer;
 	public FinishScreen finishScreen;
+	public KeyHandler keyHandler;
 
 	public Font pixelFont;
 	
@@ -103,6 +104,7 @@ public class ParkourMain extends JPanel implements Runnable{
 		finishScreen = new FinishScreen(this);
 		player = new Player(this);
 	    tileManager = new TileManager(this);
+		keyHandler = new KeyHandler(this);
 	    
 		tileManager.loadMap(mapPath);
 		
@@ -118,7 +120,7 @@ public class ParkourMain extends JPanel implements Runnable{
 		this.setPreferredSize(new Dimension(screenWidth, screenHeight));
 		this.setBackground(Color.black);
 		this.setDoubleBuffered(true);
-		this.addKeyListener(player);
+		this.addKeyListener(keyHandler);
 		this.setFocusable(true);
 		
 	}
