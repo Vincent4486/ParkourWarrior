@@ -98,20 +98,74 @@ public class ParkourMain extends JPanel implements Runnable{
 	 */
 
 	/**
-	 * This is the map number for the program to load the maps.
+	 * This is the map number for the program to load the maps,
 	 * defined for {@code PropertiesData} and {@code TileManager}.
 	 * @since 1.1
 	 */
     public ArrayList<Integer> mapNumber;
+    
+    /**
+     * This is the path to maps in the system, defined for 
+     * {@code PropertiesData} and {@code TileManager}.
+     * @since 1.1
+     */
 	public ArrayList<String> mapPath;
+	
+	/**
+     * This is the type of map, defined for 
+     * {@code PropertiesData} and {@code TileManager},
+     * currently unused.
+     * @since 1.1
+     */
 	public ArrayList<Integer> mapType;
+	
+	/**
+     * This is the type of map (e.g. default), defined for 
+     * {@code PropertiesData} and {@code TileManager}.
+     * @since 1.1
+     */
 	public ArrayList<Boolean> isDefaultMap;
+	
+	/**
+     * This is for Graphics2D to see if the it need to 
+     * print time next to the map, defined for 
+     * {@code PropertiesData} and {@code TileManager}.
+     * @since 1.1
+     */
 	public ArrayList<Boolean> haveFinishedMap;
+	
+	/**
+     * The shortest minutes used to finish a map, defined for 
+     * {@code PropertiesData} and {@code TileManager}.
+     * @since 1.1
+     */
 	public ArrayList<Integer> recordTimeMinutes;
+	
+	/**
+     * The shortest seconds used to finish a map, defined for 
+     * {@code PropertiesData} and {@code TileManager}.
+     * @since 1.1
+     */
 	public ArrayList<Integer> recordTimeSeconds;
+	
+	/**
+     * The shortest milliseconds used to finish a map, defined for 
+     * {@code PropertiesData} and {@code TileManager}.
+     * @since 1.1
+     */
 	public ArrayList<Integer> recordTimeMiliseconds;
+	
+	/**
+     * The end index, defined for 
+     * {@code PropertiesData} and {@code TileManager}.
+     * @since 1.1
+     */
 	public ArrayList<Integer> endIndex;
 	
+	/**
+	 * To determine if the program needs to play music.
+	 * @since 1.0
+	 */
 	public boolean musicOn;
 	
 	public int currentMapState = 0;
