@@ -9,6 +9,7 @@ import java.awt.Graphics2D;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -315,7 +316,8 @@ public class ParkourMain extends JPanel implements Runnable{
 	
 	public void getSound() {
 		
-        soundURL = getClass().getResource("/sound/ParkourWarrior.wav");
+        soundURL = Objects.requireNonNull(
+        		getClass().getResource("/sound/ParkourWarrior.wav"));
 		
 		try {
 			
@@ -334,7 +336,11 @@ public class ParkourMain extends JPanel implements Runnable{
 
 		try {
 
-			pixelFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/font/Pixel.ttf"));
+			pixelFont = Font.createFont(
+					Font.TRUETYPE_FONT, 
+					Objects.requireNonNull(
+							getClass().getResourceAsStream("/font/Pixel.ttf"))
+					);
 		
 		} catch (FontFormatException e) {
 

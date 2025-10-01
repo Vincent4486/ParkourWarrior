@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Objects;
 
 import javax.imageio.ImageIO;
 
@@ -244,10 +245,14 @@ public class Player{
 		
 		try {
 			
-			leftImage1 = ImageIO.read(getClass().getResourceAsStream("/player/left1.png"));
-			rightImage1 = ImageIO.read(getClass().getResourceAsStream("/player/right1.png"));
-			leftImage2 = ImageIO.read(getClass().getResourceAsStream("/player/left2.png"));
-			rightImage2 = ImageIO.read(getClass().getResourceAsStream("/player/right2.png"));
+			leftImage1 = ImageIO.read(Objects.requireNonNull(
+					getClass().getResourceAsStream("/player/left1.png")));
+			rightImage1 = ImageIO.read(Objects.requireNonNull(
+					getClass().getResourceAsStream("/player/right1.png")));
+			leftImage2 = ImageIO.read(Objects.requireNonNull(
+					getClass().getResourceAsStream("/player/left2.png")));
+			rightImage2 = ImageIO.read(Objects.requireNonNull(
+					getClass().getResourceAsStream("/player/right2.png")));
 			
 		}catch(IOException e) {
 			
