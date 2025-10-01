@@ -49,7 +49,13 @@ public class TileManager {
 			int worldX = column * parkourMain.tileSize;
 			int screenX = worldX - parkourMain.player.worldX + parkourMain.player.screenX;
 			
-			graphics2D.drawImage(tile[tileNumber].image, screenX, y, parkourMain.tileSize, parkourMain.tileSize, null);
+			graphics2D.drawImage(
+					tile[tileNumber].image, 
+					screenX, 
+					y, 
+					parkourMain.tileSize, 
+					parkourMain.tileSize, 
+					null);
 			column ++;
 			
 			if(column == parkourMain.maxWorldColumn) {

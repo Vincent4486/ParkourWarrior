@@ -169,37 +169,156 @@ public class ParkourMain extends JPanel implements Runnable{
 	 */
 	public boolean musicOn;
 	
+	/**
+	 * To indicate the current map state.
+	 * <p>
+	 * For loop to determine call which draw method (e.g. title screen, playing,
+	 * finish screen).
+	 * </p>
+	 * @since 1.1
+	 */
 	public int currentMapState = 0;
+	
+	/**
+	 * To determine which map is the player currently playing.
+	 * @since 1.1
+	 */
 	public int currentMap = 1;
+	
+	/**
+	 * The number for title map state.
+	 * @since 1.1
+	 */
 	public final int title = 0;
+	
+	/**
+	 * The number for playing map state.
+	 * @since 1.1
+	 */
 	public final int play = 1;
+	
+	/**
+	 * The number for the finish screen.
+	 * @since 1.1
+	 */
 	public final int finish = 2;
-
+	
+	/**
+	 * The number for the default maps, which is inside the JAR.
+	 * @since 1.1
+	 */
 	public final int defaultPlayMap = 1;
+	
+	/**
+	 * The number for custom maps. 
+	 * <p>
+	 * The map can be anywhere in the system
+	 * that the program have permission for.
+	 * </p>
+	 * @since 1.1
+	 */
 	public final int customPlayMap = 2;
 	
+	/**
+	 * The time when the timer is started, for time calculation.
+	 * @since 1.2
+	 */
 	public long timerStartTime;
+	
+	/**
+	 * The FPS of the game, currently 60.
+	 * @since 1.0
+	 */
 	public final double FPS = 1000000000 / 60;
 	
+	/**
+	 * The {@code Thread} for game.
+	 * @since 1.0
+	 */
 	Thread thread;
+	
+	/**
+	 * The {@code URL} for music of game.
+	 * @since 1.1
+	 */
 	URL soundURL;
+	
+	/**
+	 * The {@code Clip} for the music to play.
+	 * @since 1.1
+	 */
 	Clip soundClip;
 	
+	/**
+	 * The {ImageIcon} for the game.
+	 * @since 1.0
+	 */
 	public ImageIcon ico;
 	
+	/**
+	 * Instance declaration for {@code Player} class, used by all.
+	 * @since 1.0 
+	 */
 	public Player player;
+	
+	/**
+	 * Instance declaration for {@code TileManager} class, used by all.
+	 * @since 1.0 
+	 */
 	public TileManager tileManager;
+	
+	/**
+	 * Instance declaration for {@code PropertiesData}, used by all.
+	 * @since 1.1
+	 */
 	public PropertiesData propertiesData;
+	
+	/**
+	 * Instance declaration for {@code TitleScreen} class, used by all.
+	 * @since 1.2
+	 */
 	public TitleScreen titleScreen;
+	
+	/**
+	 * Instance declaration for {@code ParkourTime} class, used by all.
+	 * @since 1.1
+	 */
 	public ParkourTimer parkourTimer;
+	
+	/**
+	 * Instance declaration for {@code FinishScreen} class, used by all.
+	 * @since 1.2
+	 */
 	public FinishScreen finishScreen;
+	
+	/**
+	 * The instance declaration for {@code KeyHandler}, used by all.
+	 * @since 1.0
+	 */
 	public KeyHandler keyHandler;
 
+	/**
+	 * The font used by the game.
+	 * @since 1.2
+	 */
 	public Font pixelFont;
 	
+	/**
+	 * The constructor for class {@code ParkourMain}.
+	 * <p>
+	 * This constructor defines instances of each class for all classes to use,
+	 * for preventing loops and conserving memory. This constructor also calls
+	 * startup methods since this runs only after the {@code JFrame} is created,
+	 * for example the game's main {@code Thread}.
+	 * </p>
+	 * @version 1.2
+	 * @since 1.0
+	 * @author Vincent4486
+	 */
 	public ParkourMain() {
 		
-		ico = new ImageIcon(getClass().getResource("/player/right1.png"));
+		ico = new ImageIcon(Objects.requireNonNull(
+				getClass().getResource("/player/right1.png")));
 		
 		mapNumber = new ArrayList<>();
 		mapPath = new ArrayList<>();
