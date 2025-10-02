@@ -14,6 +14,8 @@ import java.util.Objects;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
@@ -313,7 +315,6 @@ public class ParkourMain extends JPanel implements Runnable{
 	 * </p>
 	 * @version 1.2
 	 * @since 1.0
-	 * @author Vincent4486
 	 */
 	public ParkourMain() {
 		
@@ -344,8 +345,8 @@ public class ParkourMain extends JPanel implements Runnable{
 		
 		thread = new Thread(this);
 		
-		getSound();
-		getPixelFont();
+		getSound("/sound/ParkourWarrior.wav");
+		getPixelFont("/font/Pixel.ttf");
 		
 		soundClip.start();
 		musicOn = true;
@@ -358,7 +359,11 @@ public class ParkourMain extends JPanel implements Runnable{
 		this.setFocusable(true);
 		
 	}
-
+	/**
+	 * The method from {@code Runnable} interface, to control what
+	 * would be done each frame.
+	 * @since 1.0
+	 */
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
@@ -394,6 +399,11 @@ public class ParkourMain extends JPanel implements Runnable{
 		
 	}
 	
+	/**
+	 * The method to call updates on updates on values of the game,
+	 * like the player position.
+	 * @since 1.0
+	 */
 	public void update() {
 		
 		if(currentMapState == play) {
@@ -405,6 +415,11 @@ public class ParkourMain extends JPanel implements Runnable{
 
 	}
 	
+	/**
+	 * The method for calling paint methods in each state for each class.
+	 * @param g the {@code Graphics} object to protect
+	 * @since 1.0
+	 */
 	public void paintComponent(Graphics g) {
 		
 		super.paintComponent(g);
@@ -433,10 +448,16 @@ public class ParkourMain extends JPanel implements Runnable{
 		
 	}
 	
-	public void getSound() {
+	/**
+	 * The method to get the sound file from {@code res} and puts the
+	 * audio into a {@code Clip}.
+	 * @param path Path to the audio inside the JAR.
+	 * @since 1.1
+	 */
+	public void getSound(String path) {
 		
         soundURL = Objects.requireNonNull(
-        		getClass().getResource("/sound/ParkourWarrior.wav"));
+        		getClass().getResource(path));
 		
 		try {
 			
@@ -444,21 +465,31 @@ public class ParkourMain extends JPanel implements Runnable{
 			soundClip = AudioSystem.getClip();
 			soundClip.open(audioInputStream);
 			
-		}catch(Exception e) {
+		}catch(IOException e) {
 			
 			e.printStackTrace();
-			
+		}catch(LineUnavailableException e) {
+			e.printStackTrace();
+		}catch(UnsupportedAudioFileException e) {
+			e.printStackTrace();
 		}
 		
 	}
-	public void getPixelFont(){
+	
+	/**
+	 * The method to get the font file in {@code res} and
+	 * create a {@code Font} for the program to use.
+	 * @since 1.2
+	 * @param path The path to the font file.
+	 */
+	public void getPixelFont(String path){
 
 		try {
 
 			pixelFont = Font.createFont(
 					Font.TRUETYPE_FONT, 
 					Objects.requireNonNull(
-							getClass().getResourceAsStream("/font/Pixel.ttf"))
+							getClass().getResourceAsStream(path))
 					);
 		
 		} catch (FontFormatException e) {
