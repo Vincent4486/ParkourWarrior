@@ -5,431 +5,483 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Objects;
-
 import javax.imageio.ImageIO;
 
-public class Player{
-	
-	ParkourMain parkourMain;
-	
-	public boolean askJump = false;
-	public boolean jumping = false;
-	public boolean falling = false;
-	public boolean goRight = false;
-	public boolean goLeft = false;
-	public boolean sneaking = false; // Added for sneaking functionality
-	public boolean collideUp;
-	public boolean collideDown;
-	public boolean collideLeft;
-	public boolean collideRight;
-	
-	public int worldX = 480;
-	public int worldY = 376; // Starting Y position, can be adjusted as needed
-	public int maxJumpHeight;
-	public int jumpHeight = 61;
-	public int jumpSpeed = 4;
-	public int fallSpeed = 5;
-	public int walkSpeed = 6;
-	public final int screenX;
-	int imageCount = 0;
-	int imageNumber = 0;
-	
-	int tileNumber1;
-	int tileNumber2;
-	
-	public boolean momentumLeft = false;
-	public boolean momentumRight = false;
-	public int momentumCountLeft = 0;
-	public int momentumCountRight = 0;
-	
-	public static final int MAX_MOMENTUM_TICKS = 8;
+public class Player {
 
-	/*
-	 *In integer playerDirection:
-	 *1 = playerDirection:left
-	 *2 = playerDirection:right
-	 */
-	
-	public int playerDirection = 2;
-	
-	BufferedImage leftImage1, rightImage1, leftImage2, rightImage2;
-	Rectangle solidArea = new Rectangle();
-	
-	public Player(ParkourMain parkourMain) {
-		
-		solidArea.x = 6;
-		solidArea.y = 0;
-		solidArea.height = 48;
-		solidArea.width = 36;
-		
-		this.parkourMain = parkourMain;
-		
-		screenX = parkourMain.screenWidth / 2 - parkourMain.tileSize / 2;
-		
-		getPlayer();
-		
-	}
-	
-	public void updatePlayer() {
-		
-		parkourMain.parkourTimer.timerTimeMinutesStr = Long.toString(parkourMain.parkourTimer.timerTimeMinutes);
-		parkourMain.parkourTimer.timerTimeSecondsStr = Long.toString(parkourMain.parkourTimer.timerTimeSeconds);
-		parkourMain.parkourTimer.timerTimeMilisecondsStr = Long.toString(parkourMain.parkourTimer.timerTimeMiliseconds);
+   ParkourMain parkourMain;
 
-		if (goLeft) {
-			playerDirection = 1;
-		}
+   public boolean askJump = false;
+   public boolean jumping = false;
+   public boolean falling = false;
+   public boolean goRight = false;
+   public boolean goLeft = false;
+   public boolean sneaking = false; // Added for sneaking functionality
+   public boolean collideUp;
+   public boolean collideDown;
+   public boolean collideLeft;
+   public boolean collideRight;
 
-		if (goRight) {
-			playerDirection = 2;
-		}
+   public int worldX = 480;
+   public int worldY = 376; // Starting Y position, can be adjusted as needed
+   public int maxJumpHeight;
+   public int jumpHeight = 61;
+   public int jumpSpeed = 4;
+   public int fallSpeed = 5;
+   public int walkSpeed = 6;
+   public final int screenX;
+   int imageCount = 0;
+   int imageNumber = 0;
 
-		collideLeft = false;
-		collideRight = false;
+   int tileNumber1;
+   int tileNumber2;
 
-		detectCollisionUp();
-		detectCollisionDown();
-		detectCollisionLeft();
-		detectCollisionRight();
+   public boolean momentumLeft = false;
+   public boolean momentumRight = false;
+   public int momentumCountLeft = 0;
+   public int momentumCountRight = 0;
 
-		fall();
-		jump();
+   public static final int MAX_MOMENTUM_TICKS = 8;
 
-		// Adjust movement to check for collisions at each step
-		if (goRight && !collideRight) {
-			for (int i = 0; i < walkSpeed; i++) {
-				worldX++;
-				detectCollisionRight();
-				if (collideRight) {
-					worldX--;
-					break;
-				}
-			}
-		}
+   /*
+    *In integer playerDirection:
+    *1 = playerDirection:left
+    *2 = playerDirection:right
+    */
 
-		if (goLeft && !collideLeft) {
-			for (int i = 0; i < walkSpeed; i++) {
-				worldX--;
-				detectCollisionLeft();
-				if (collideLeft) {
-					worldX++;
-					break;
-				}
-			}
-		}
+   public int playerDirection = 2;
 
-		imageCount++;
-		if (imageCount > 10) {
-			imageNumber = (imageNumber == 1) ? 0 : 1;
-			imageCount = 0;
-		}
+   BufferedImage leftImage1, rightImage1, leftImage2, rightImage2;
+   Rectangle solidArea = new Rectangle();
 
-		System.out.println("Player X: " + worldX + ", Player Y: " + worldY);
+   public Player(ParkourMain parkourMain) {
 
-		if (worldX > parkourMain.endIndex.get(parkourMain.currentMap)){
+      solidArea.x = 6;
+      solidArea.y = 0;
+      solidArea.height = 48;
+      solidArea.width = 36;
 
-			parkourMain.currentMapState = parkourMain.finish; 
-			parkourMain.parkourTimer.saveTime(); // Save the record time
-			parkourMain.propertiesData.saveProperties();
-			// Transition to finish screen
+      this.parkourMain = parkourMain;
 
-			worldX = 480;
-			worldY = 376;
-		}
-		System.out.println(momentumRight);
-		
-		if (momentumRight) {
-			if (!momentumRight) return;
+      screenX = parkourMain.screenWidth / 2 - parkourMain.tileSize / 2;
 
-		    int burst = calculateBurstSpeed(momentumCountRight);
-		    for (int i = 0; i < burst; i++) {
-		        worldX++;
-		        detectCollisionRight();
-		        if (collideRight) {
-		            // hit wall: step back & kill momentum
-		            worldX--;
-		            momentumRight = false;
-		            momentumCountRight = 0;
-		            return;
-		        }
-		    }
+      getPlayer();
+   }
 
-		    // advance the counter (and expire if too long)
-		    momentumCountRight++;
-		    if (momentumCountRight >= MAX_MOMENTUM_TICKS) {
-		        momentumRight = false;
-		        momentumCountRight = 0;
-		    }
-		}
-		
-		if (momentumLeft) {
-			if (!momentumLeft) return;
+   public void updatePlayer() {
 
-		    int burst = calculateBurstSpeed(momentumCountLeft);
-		    for (int i = 0; i < burst; i++) {
-		        worldX--;
-		        detectCollisionLeft();
-		        if (collideLeft) {
-		            worldX++;
-		            momentumLeft = false;
-		            momentumCountLeft = 0;
-		            return;
-		        }
-		    }
+      parkourMain.parkourTimer.timerTimeMinutesStr =
+         Long.toString(parkourMain.parkourTimer.timerTimeMinutes);
+      parkourMain.parkourTimer.timerTimeSecondsStr =
+         Long.toString(parkourMain.parkourTimer.timerTimeSeconds);
+      parkourMain.parkourTimer.timerTimeMilisecondsStr =
+         Long.toString(parkourMain.parkourTimer.timerTimeMiliseconds);
 
-		    momentumCountLeft++;
-		    if (momentumCountLeft >= MAX_MOMENTUM_TICKS) {
-		        momentumLeft = false;
-		        momentumCountLeft = 0;
-		    }
-		}
+      if (goLeft) {
+         playerDirection = 1;
+      }
 
+      if (goRight) {
+         playerDirection = 2;
+      }
 
-	}
-	
-	public void drawPlayer(Graphics2D graphics2D) {
-		
-		BufferedImage image = null;
-		
-		switch(playerDirection) {
-		case 1:
-			if(imageNumber == 0) {image = leftImage1;}
-			if(imageNumber == 1) {image = leftImage2;}
-			break;
-		case 2:
-			if(imageNumber == 0) {image = rightImage1;}
-			if(imageNumber == 1) {image = rightImage2;}
-			break;
-		}
-		
-		graphics2D.drawImage(image, screenX, worldY, parkourMain.tileSize, parkourMain.tileSize, null);
-		
-	}
-	
-	public void jump() {
-		
-		if (!falling && askJump && worldY > maxJumpHeight && !collideUp) {
-	        for (int i = 0; i < jumpSpeed; i++) {
-	            worldY--;
-	            detectCollisionUp();
-	            if (collideUp || worldY <= maxJumpHeight) {
-	                break;
-	            }
-	        }
-	        jumping = true;
-	    } else {
-	        jumping = false;
-	        askJump = false;
-	    }
+      collideLeft = false;
+      collideRight = false;
 
-	}
-	
-	public void fall() {
-		
-		if (!jumping && !collideDown) {
-	        for (int i = 0; i < fallSpeed; i++) {
-	            worldY++;
-	            detectCollisionDown();
-	            if (collideDown) {
-	                break;
-	            }
-	        }
-	        falling = true;
-	    } else {
-	        falling = false;
-	    }
+      detectCollisionUp();
+      detectCollisionDown();
+      detectCollisionLeft();
+      detectCollisionRight();
 
-	}
-	
-	public void getPlayer() {
-		
-		try {
-			
-			leftImage1 = ImageIO.read(Objects.requireNonNull(
-					getClass().getResourceAsStream("/player/left1.png")));
-			rightImage1 = ImageIO.read(Objects.requireNonNull(
-					getClass().getResourceAsStream("/player/right1.png")));
-			leftImage2 = ImageIO.read(Objects.requireNonNull(
-					getClass().getResourceAsStream("/player/left2.png")));
-			rightImage2 = ImageIO.read(Objects.requireNonNull(
-					getClass().getResourceAsStream("/player/right2.png")));
-			
-		}catch(IOException e) {
-			
-			e.printStackTrace();
-			
-		}
-		
-	}
-	
-	public void detectCollisionUp() {
-		
-		if(worldY % parkourMain.tileSize == 0) {
-			
-			if(worldX % parkourMain.tileSize == 0) {
-					
-				tileNumber1 = parkourMain.tileManager.mapTileNumber[parkourMain.currentMap][worldX / parkourMain.tileSize][worldY / parkourMain.tileSize - 1];
-				
-				if(parkourMain.tileManager.tile[tileNumber1].solidTile == true) {
-						
-					collideDown = true;
-						
-				}else {
-					
-					collideDown = false;
-					
-				} 
-					
-			}else {
-					
-				tileNumber1 = parkourMain.tileManager.mapTileNumber[parkourMain.currentMap][(worldX - (worldX % parkourMain.tileSize)) / parkourMain.tileSize][worldY / parkourMain.tileSize - 1];
-				tileNumber2 = parkourMain.tileManager.mapTileNumber[parkourMain.currentMap][(worldX - (worldX % parkourMain.tileSize)) / parkourMain.tileSize + 1][worldY / parkourMain.tileSize - 1];
-				
-				if(parkourMain.tileManager.tile[tileNumber1].solidTile == true || parkourMain.tileManager.tile[tileNumber2].solidTile == true) {
-						
-					collideDown = true;
-						
-				}else {
-					
-					collideDown = false;
-					
-				}
-					
-			}
-			
-		}else {
-			
-			collideDown = false;
-			
-		}
-		
-	}
-	
-	public void detectCollisionDown() {
-		
-		if(worldY % parkourMain.tileSize == 0) {
-				
-			if(worldX % parkourMain.tileSize == 0) {
-					
-				tileNumber1 = parkourMain.tileManager.mapTileNumber[parkourMain.currentMap][worldX / parkourMain.tileSize][worldY / parkourMain.tileSize + 1];
+      fall();
+      jump();
 
-				if(parkourMain.tileManager.tile[tileNumber1].solidTile == true) {
-						
-					collideDown = true;
-						
-				}else {
-					
-					collideDown = false;
-					
-				} 
-					
-			}else {
-					
-				tileNumber1 = parkourMain.tileManager.mapTileNumber[parkourMain.currentMap][(worldX - (worldX % parkourMain.tileSize)) / parkourMain.tileSize][worldY / parkourMain.tileSize + 1];
-				tileNumber2 = parkourMain.tileManager.mapTileNumber[parkourMain.currentMap][(worldX - (worldX % parkourMain.tileSize)) / parkourMain.tileSize + 1][worldY / parkourMain.tileSize + 1];
+      // Adjust movement to check for collisions at each step
+      if (goRight && !collideRight) {
+         for (int i = 0; i < walkSpeed; i++) {
+            worldX++;
+            detectCollisionRight();
+            if (collideRight) {
+               worldX--;
+               break;
+            }
+         }
+      }
 
-				if(parkourMain.tileManager.tile[tileNumber1].solidTile == true || parkourMain.tileManager.tile[tileNumber2].solidTile == true) {
-						
-					collideDown = true;
-						
-				}else {
-					
-					collideDown = false;
-					
-				}
-					
-			}
-			
-		}else {
-			
-			collideDown = false;
-			
-		}
+      if (goLeft && !collideLeft) {
+         for (int i = 0; i < walkSpeed; i++) {
+            worldX--;
+            detectCollisionLeft();
+            if (collideLeft) {
+               worldX++;
+               break;
+            }
+         }
+      }
 
-	}
-	
-	public void detectCollisionLeft() {
-		
-		if(playerDirection == 1) {
-			
-			if(worldX % parkourMain.tileSize == 0) {
-				
-				if(worldY % parkourMain.tileSize == 0) {
-					
-					tileNumber1 = parkourMain.tileManager.mapTileNumber[parkourMain.currentMap][worldX / parkourMain.tileSize - 1][worldY / parkourMain.tileSize];
-					
-					if(parkourMain.tileManager.tile[tileNumber1].solidTile == true) {
-						
-						collideLeft = true;
-						
-					}
-					
-				}else {
-					
-					tileNumber1 = parkourMain.tileManager.mapTileNumber[parkourMain.currentMap][worldX / parkourMain.tileSize - 1][(worldY - (worldY % parkourMain.tileSize)) / parkourMain.tileSize];
-					tileNumber2 = parkourMain.tileManager.mapTileNumber[parkourMain.currentMap][worldX / parkourMain.tileSize - 1][(worldY - (worldY % parkourMain.tileSize)) / parkourMain.tileSize + 1];
-					
-					if(parkourMain.tileManager.tile[tileNumber1].solidTile == true || parkourMain.tileManager.tile[tileNumber2].solidTile == true) {
-						
-						collideLeft = true;
-						
-					}
-					
-				}
-				
-			}
-			
-		}
-		
-	}
-	
-	public void detectCollisionRight() {
-		
-		if(playerDirection == 2) {
-			
-			if(worldX % parkourMain.tileSize == 0) {
-				
-				if(worldY % parkourMain.tileSize == 0) {
-					
-					tileNumber1 = parkourMain.tileManager.mapTileNumber[parkourMain.currentMap][worldX / parkourMain.tileSize + 1][worldY / parkourMain.tileSize];
-					
-					if(parkourMain.tileManager.tile[tileNumber1].solidTile == true) {
-						
-						collideRight = true;
-						
-					}
-					
-				}else {
-					
-					tileNumber1 = parkourMain.tileManager.mapTileNumber[parkourMain.currentMap][worldX / parkourMain.tileSize + 1][(worldY - (worldY % parkourMain.tileSize)) / parkourMain.tileSize];
-					tileNumber2 = parkourMain.tileManager.mapTileNumber[parkourMain.currentMap][worldX / parkourMain.tileSize + 1][(worldY - (worldY % parkourMain.tileSize)) / parkourMain.tileSize + 1];
-					
-					if(parkourMain.tileManager.tile[tileNumber1].solidTile == true || parkourMain.tileManager.tile[tileNumber2].solidTile == true) {
-						
-						collideRight = true;
-						
-					}
-					
-				}
-				
-			}
-			
-		}
-		 
-	}
-	
-	private int calculateBurstSpeed(int count) {
-		int speed;
-	    if (count < 2)   speed = 6;
-	    else if (count < 5)   speed = 4;
-	    else if (count < 8)   speed = 2;
-	    else                  speed = 1;
+      imageCount++;
+      if (imageCount > 10) {
+         imageNumber = (imageNumber == 1) ? 0 : 1;
+         imageCount = 0;
+      }
 
-	    // halve speed when sneaking
-	    if (sneaking) {
-	        speed = Math.max(1, speed / 2);
-	    }
-	    return speed;
-	}
+      System.out.println("Player X: " + worldX + ", Player Y: " + worldY);
 
+      if (worldX > parkourMain.endIndex.get(parkourMain.currentMap)) {
+
+         parkourMain.currentMapState = parkourMain.finish;
+         parkourMain.parkourTimer.saveTime(); // Save the record time
+         parkourMain.propertiesData.saveProperties();
+         // Transition to finish screen
+
+         worldX = 480;
+         worldY = 376;
+      }
+      System.out.println(momentumRight);
+
+      if (momentumRight) {
+         if (!momentumRight)
+            return;
+
+         int burst = calculateBurstSpeed(momentumCountRight);
+         for (int i = 0; i < burst; i++) {
+            worldX++;
+            detectCollisionRight();
+            if (collideRight) {
+               // hit wall: step back & kill momentum
+               worldX--;
+               momentumRight = false;
+               momentumCountRight = 0;
+               return;
+            }
+         }
+
+         // advance the counter (and expire if too long)
+         momentumCountRight++;
+         if (momentumCountRight >= MAX_MOMENTUM_TICKS) {
+            momentumRight = false;
+            momentumCountRight = 0;
+         }
+      }
+
+      if (momentumLeft) {
+         if (!momentumLeft)
+            return;
+
+         int burst = calculateBurstSpeed(momentumCountLeft);
+         for (int i = 0; i < burst; i++) {
+            worldX--;
+            detectCollisionLeft();
+            if (collideLeft) {
+               worldX++;
+               momentumLeft = false;
+               momentumCountLeft = 0;
+               return;
+            }
+         }
+
+         momentumCountLeft++;
+         if (momentumCountLeft >= MAX_MOMENTUM_TICKS) {
+            momentumLeft = false;
+            momentumCountLeft = 0;
+         }
+      }
+   }
+
+   public void drawPlayer(Graphics2D graphics2D) {
+
+      BufferedImage image = null;
+
+      switch (playerDirection) {
+      case 1:
+         if (imageNumber == 0) {
+            image = leftImage1;
+         }
+         if (imageNumber == 1) {
+            image = leftImage2;
+         }
+         break;
+      case 2:
+         if (imageNumber == 0) {
+            image = rightImage1;
+         }
+         if (imageNumber == 1) {
+            image = rightImage2;
+         }
+         break;
+      }
+
+      graphics2D.drawImage(image, screenX, worldY, parkourMain.tileSize,
+                           parkourMain.tileSize, null);
+   }
+
+   public void jump() {
+
+      if (!falling && askJump && worldY > maxJumpHeight && !collideUp) {
+         for (int i = 0; i < jumpSpeed; i++) {
+            worldY--;
+            detectCollisionUp();
+            if (collideUp || worldY <= maxJumpHeight) {
+               break;
+            }
+         }
+         jumping = true;
+      } else {
+         jumping = false;
+         askJump = false;
+      }
+   }
+
+   public void fall() {
+
+      if (!jumping && !collideDown) {
+         for (int i = 0; i < fallSpeed; i++) {
+            worldY++;
+            detectCollisionDown();
+            if (collideDown) {
+               break;
+            }
+         }
+         falling = true;
+      } else {
+         falling = false;
+      }
+   }
+
+   public void getPlayer() {
+
+      try {
+
+         leftImage1 = ImageIO.read(Objects.requireNonNull(
+            getClass().getResourceAsStream("/player/left1.png")));
+         rightImage1 = ImageIO.read(Objects.requireNonNull(
+            getClass().getResourceAsStream("/player/right1.png")));
+         leftImage2 = ImageIO.read(Objects.requireNonNull(
+            getClass().getResourceAsStream("/player/left2.png")));
+         rightImage2 = ImageIO.read(Objects.requireNonNull(
+            getClass().getResourceAsStream("/player/right2.png")));
+
+      } catch (IOException e) {
+
+         e.printStackTrace();
+      }
+   }
+
+   public void detectCollisionUp() {
+
+      if (worldY % parkourMain.tileSize == 0) {
+
+         if (worldX % parkourMain.tileSize == 0) {
+
+            tileNumber1 = parkourMain.tileManager
+                             .mapTileNumber[parkourMain.currentMap]
+                                           [worldX / parkourMain.tileSize]
+                                           [worldY / parkourMain.tileSize - 1];
+
+            if (parkourMain.tileManager.tile[tileNumber1].solidTile == true) {
+
+               collideDown = true;
+
+            } else {
+
+               collideDown = false;
+            }
+
+         } else {
+
+            tileNumber1 =
+               parkourMain.tileManager
+                  .mapTileNumber[parkourMain.currentMap]
+                                [(worldX - (worldX % parkourMain.tileSize)) /
+                                 parkourMain.tileSize]
+                                [worldY / parkourMain.tileSize - 1];
+            tileNumber2 =
+               parkourMain.tileManager
+                  .mapTileNumber[parkourMain.currentMap]
+                                [(worldX - (worldX % parkourMain.tileSize)) /
+                                    parkourMain.tileSize +
+                                 1][worldY / parkourMain.tileSize - 1];
+
+            if (parkourMain.tileManager.tile[tileNumber1].solidTile == true ||
+                parkourMain.tileManager.tile[tileNumber2].solidTile == true) {
+
+               collideDown = true;
+
+            } else {
+
+               collideDown = false;
+            }
+         }
+
+      } else {
+
+         collideDown = false;
+      }
+   }
+
+   public void detectCollisionDown() {
+
+      if (worldY % parkourMain.tileSize == 0) {
+
+         if (worldX % parkourMain.tileSize == 0) {
+
+            tileNumber1 = parkourMain.tileManager
+                             .mapTileNumber[parkourMain.currentMap]
+                                           [worldX / parkourMain.tileSize]
+                                           [worldY / parkourMain.tileSize + 1];
+
+            if (parkourMain.tileManager.tile[tileNumber1].solidTile == true) {
+
+               collideDown = true;
+
+            } else {
+
+               collideDown = false;
+            }
+
+         } else {
+
+            tileNumber1 =
+               parkourMain.tileManager
+                  .mapTileNumber[parkourMain.currentMap]
+                                [(worldX - (worldX % parkourMain.tileSize)) /
+                                 parkourMain.tileSize]
+                                [worldY / parkourMain.tileSize + 1];
+            tileNumber2 =
+               parkourMain.tileManager
+                  .mapTileNumber[parkourMain.currentMap]
+                                [(worldX - (worldX % parkourMain.tileSize)) /
+                                    parkourMain.tileSize +
+                                 1][worldY / parkourMain.tileSize + 1];
+
+            if (parkourMain.tileManager.tile[tileNumber1].solidTile == true ||
+                parkourMain.tileManager.tile[tileNumber2].solidTile == true) {
+
+               collideDown = true;
+
+            } else {
+
+               collideDown = false;
+            }
+         }
+
+      } else {
+
+         collideDown = false;
+      }
+   }
+
+   public void detectCollisionLeft() {
+
+      if (playerDirection == 1) {
+
+         if (worldX % parkourMain.tileSize == 0) {
+
+            if (worldY % parkourMain.tileSize == 0) {
+
+               tileNumber1 =
+                  parkourMain.tileManager
+                     .mapTileNumber[parkourMain.currentMap]
+                                   [worldX / parkourMain.tileSize - 1]
+                                   [worldY / parkourMain.tileSize];
+
+               if (parkourMain.tileManager.tile[tileNumber1].solidTile ==
+                   true) {
+
+                  collideLeft = true;
+               }
+
+            } else {
+
+               tileNumber1 =
+                  parkourMain.tileManager
+                     .mapTileNumber[parkourMain.currentMap]
+                                   [worldX / parkourMain.tileSize - 1]
+                                   [(worldY - (worldY % parkourMain.tileSize)) /
+                                    parkourMain.tileSize];
+               tileNumber2 =
+                  parkourMain.tileManager
+                     .mapTileNumber[parkourMain.currentMap]
+                                   [worldX / parkourMain.tileSize - 1]
+                                   [(worldY - (worldY % parkourMain.tileSize)) /
+                                       parkourMain.tileSize +
+                                    1];
+
+               if (parkourMain.tileManager.tile[tileNumber1].solidTile ==
+                      true ||
+                   parkourMain.tileManager.tile[tileNumber2].solidTile ==
+                      true) {
+
+                  collideLeft = true;
+               }
+            }
+         }
+      }
+   }
+
+   public void detectCollisionRight() {
+
+      if (playerDirection == 2) {
+
+         if (worldX % parkourMain.tileSize == 0) {
+
+            if (worldY % parkourMain.tileSize == 0) {
+
+               tileNumber1 =
+                  parkourMain.tileManager
+                     .mapTileNumber[parkourMain.currentMap]
+                                   [worldX / parkourMain.tileSize + 1]
+                                   [worldY / parkourMain.tileSize];
+
+               if (parkourMain.tileManager.tile[tileNumber1].solidTile ==
+                   true) {
+
+                  collideRight = true;
+               }
+
+            } else {
+
+               tileNumber1 =
+                  parkourMain.tileManager
+                     .mapTileNumber[parkourMain.currentMap]
+                                   [worldX / parkourMain.tileSize + 1]
+                                   [(worldY - (worldY % parkourMain.tileSize)) /
+                                    parkourMain.tileSize];
+               tileNumber2 =
+                  parkourMain.tileManager
+                     .mapTileNumber[parkourMain.currentMap]
+                                   [worldX / parkourMain.tileSize + 1]
+                                   [(worldY - (worldY % parkourMain.tileSize)) /
+                                       parkourMain.tileSize +
+                                    1];
+
+               if (parkourMain.tileManager.tile[tileNumber1].solidTile ==
+                      true ||
+                   parkourMain.tileManager.tile[tileNumber2].solidTile ==
+                      true) {
+
+                  collideRight = true;
+               }
+            }
+         }
+      }
+   }
+
+   private int calculateBurstSpeed(int count) {
+      int speed;
+      if (count < 2)
+         speed = 6;
+      else if (count < 5)
+         speed = 4;
+      else if (count < 8)
+         speed = 2;
+      else
+         speed = 1;
+
+      // halve speed when sneaking
+      if (sneaking) {
+         speed = Math.max(1, speed / 2);
+      }
+      return speed;
+   }
 }

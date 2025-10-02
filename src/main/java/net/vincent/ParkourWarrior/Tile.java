@@ -4,7 +4,6 @@ import java.awt.image.BufferedImage;
 
 public class Tile {
 
-	public BufferedImage image;
-	public boolean solidTile = false;
-
+   public BufferedImage image;
+   public boolean solidTile = false;
 }
