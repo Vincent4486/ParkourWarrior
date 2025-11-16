@@ -3,6 +3,18 @@ package net.vincent.ParkourWarrior;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+/**
+ * Keyboard input handler for the game.
+ * <p>
+ * This class is for handling the keyboard input for the game,
+ * the {@code Keyhandler} class is universal for all modes, as
+ * it would determine the current state and send signals to
+ * the target method.
+ * </p>
+ * @author Vincent4486
+ * @version 1.2
+ * @since 1.0
+ */
 public class KeyHandler implements KeyListener {
 
    ParkourMain parkourMain;
