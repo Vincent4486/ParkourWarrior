@@ -1,0 +1,35 @@
+name: Deploy ParkourWarrior Docs
+
+on:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  deploy-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Execute Deploy on FreeBSD
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            mkdir -p ~/deploy
+            cd ~/deploy
+            # Clean up old clone if it exists, then clone fresh
+            rm -rf ParkourWarrior
+            git clone https://github.com/Vincent4486/ParkourWarrior
+            cd ParkourWarrior
+            
+            # Ensure gradlew is executable and run javadoc
+            chmod +x gradlew
+            ./gradlew javadoc
+            
+            # Sync to the web directory
+            sudo mkdir -p /var/webdocs/ParkourWarrior
+            sudo cp -r build/docs/javadoc/* /var/webdocs/ParkourWarrior/
+            
+            # Cleanup
+            cd ~/
+            rm -rf ~/deploy/ParkourWarrior
