@@ -12,22 +12,50 @@ import java.awt.event.KeyListener;
  * the target method.
  * </p>
  * @author Vincent4486
- * @version 1.2
+ * @version 1.3
  * @since 1.0
  */
 public class KeyHandler implements KeyListener {
 
+   /**
+    * Reference to the main game panel.
+    * @since 1.0
+    */
    ParkourMain parkourMain;
 
+   /**
+    * Constructs a new {@code KeyHandler} with a reference to
+    * the main game panel.
+    *
+    * @param parkourMain the main game panel instance
+    * @since 1.0
+    */
    public KeyHandler(ParkourMain parkourMain) {
       this.parkourMain = parkourMain;
    }
 
+   /**
+    * Invoked when a key has been typed.
+    *
+    * @param e the {@code KeyEvent} to process
+    * @since 1.0
+    */
    @Override
    public void keyTyped(KeyEvent e) {
       // TODO Auto-generated method stub
    }
 
+   /**
+    * Invoked when a key has been pressed.
+    * <p>
+    * This method handles the key press events for the game,
+    * dispatching input to the appropriate game state handler
+    * (e.g. playing, title screen, finish screen).
+    * </p>
+    *
+    * @param e the {@code KeyEvent} to process
+    * @since 1.0
+    */
    @Override
    public void keyPressed(KeyEvent e) {
       // TODO Auto-generated method stub
@@ -115,6 +143,16 @@ public class KeyHandler implements KeyListener {
       }
    }
 
+   /**
+    * Invoked when a key has been released.
+    * <p>
+    * This method handles key release events, stopping player
+    * movement and triggering momentum effects.
+    * </p>
+    *
+    * @param e the {@code KeyEvent} to process
+    * @since 1.0
+    */
    @Override
    public void keyReleased(KeyEvent e) {
       // TODO Auto-generated method stub

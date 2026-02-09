@@ -12,10 +12,23 @@ import javax.swing.*;
  * </p>
  *
  * @author Vincent
- * @version 1.0
+ * @version 1.3
  * @since v1.0
  */
 public class ParkourWarrior {
+
+   /**
+    * Private constructor to prevent instantiation.
+    * <p>
+    * This is a utility class with only a static main method
+    * and should not be instantiated.
+    * </p>
+    *
+    * @since v1.0
+    */
+   private ParkourWarrior() {
+      // Prevent instantiation
+   }
 
    /**
     * Launches the Parkour Warrior game.

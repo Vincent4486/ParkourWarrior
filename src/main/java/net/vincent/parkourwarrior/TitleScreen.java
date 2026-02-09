@@ -8,17 +8,55 @@ import java.io.IOException;
 import java.util.Objects;
 import javax.imageio.ImageIO;
 
+/**
+ * Title screen class for Parkour Warrior.
+ * <p>
+ * This class handles the rendering of the title screen,
+ * including the game title, map selection list with record
+ * times, and control instructions. It allows the player to
+ * navigate through available maps before starting a game.
+ * </p>
+ *
+ * @author Vincent4486
+ * @version 1.3
+ * @since 1.2
+ */
 public class TitleScreen {
 
+   /**
+    * Reference to the main game panel.
+    * @since 1.2
+    */
    ParkourMain parkourMain;
 
+   /**
+    * The index of the currently selected map.
+    * @since 1.2
+    */
    public int choosedMap = 0;
 
+   /**
+    * Constructs a new {@code TitleScreen} with a reference to
+    * the main game panel.
+    *
+    * @param parkourMain the main game panel instance
+    * @since 1.2
+    */
    public TitleScreen(ParkourMain parkourMain) {
 
       this.parkourMain = parkourMain;
    }
 
+   /**
+    * Draws the title screen.
+    * <p>
+    * Renders the background image, game title, map selection
+    * list with record times, and control instructions.
+    * </p>
+    *
+    * @param graphics2D the {@code Graphics2D} context to draw on
+    * @since 1.2
+    */
    public void drawTitleScreen(Graphics2D graphics2D) {
 
       try {
@@ -94,6 +132,14 @@ public class TitleScreen {
          520);
    }
 
+   /**
+    * Calculates the X position to center a text string horizontally.
+    *
+    * @param text the text to center
+    * @param graphics2D the {@code Graphics2D} context for font metrics
+    * @return the X coordinate for centered text
+    * @since 1.2
+    */
    public int centerTextX(String text, Graphics2D graphics2D) {
 
       int x =
@@ -104,6 +150,14 @@ public class TitleScreen {
       return x;
    }
 
+   /**
+    * Calculates the Y position to center a text string vertically.
+    *
+    * @param text the text to center
+    * @param graphics2D the {@code Graphics2D} context for font metrics
+    * @return the Y coordinate for centered text
+    * @since 1.2
+    */
    public int centerTextY(String text, Graphics2D graphics2D) {
 
       int y =

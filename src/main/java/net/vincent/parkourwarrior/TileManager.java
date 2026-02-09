@@ -9,15 +9,56 @@ import java.util.ArrayList;
 import java.util.Objects;
 import javax.imageio.ImageIO;
 
+/**
+ * Tile manager class for Parkour Warrior.
+ * <p>
+ * This class manages all tiles in the game world, including
+ * loading tile images, reading map data from resource files,
+ * and drawing the visible tiles on screen relative to the
+ * player's position.
+ * </p>
+ *
+ * @author Vincent4486
+ * @version 1.3
+ * @since 1.0
+ */
 public class TileManager {
 
+   /**
+    * Reference to the main game panel.
+    * @since 1.0
+    */
    ParkourMain parkourMain;
+
+   /**
+    * Array of all available tile types.
+    * @since 1.0
+    */
    public Tile[] tile;
 
+   /**
+    * Three-dimensional array storing tile numbers for each map.
+    * <p>
+    * Indexed as {@code [mapIndex][column][row]}.
+    * </p>
+    * @since 1.0
+    */
    int mapTileNumber[][][];
 
+   /**
+    * The current tile number being processed.
+    * @since 1.0
+    */
    public int tileNumber;
 
+   /**
+    * Constructs a new {@code TileManager} with a reference to the
+    * main game panel, initializes the tile array and map data array,
+    * and loads all tile images.
+    *
+    * @param parkourMain the main game panel instance
+    * @since 1.0
+    */
    public TileManager(ParkourMain parkourMain) {
 
       this.parkourMain = parkourMain;
@@ -31,6 +72,16 @@ public class TileManager {
       getTile();
    }
 
+   /**
+    * Draws the visible tiles on screen.
+    * <p>
+    * Iterates through the tile map array and renders each tile
+    * relative to the player's position using a camera offset.
+    * </p>
+    *
+    * @param graphics2D the {@code Graphics2D} context to draw on
+    * @since 1.0
+    */
    public void drawTile(Graphics2D graphics2D) {
 
       /*
@@ -64,8 +115,23 @@ public class TileManager {
       }
    }
 
+   /**
+    * Updates the tile state each frame.
+    *
+    * @since 1.0
+    */
    public void updateTile() {}
 
+   /**
+    * Loads map data from the specified resource paths.
+    * <p>
+    * Reads each map file line by line, parsing space-separated
+    * tile numbers into the {@code mapTileNumber} array.
+    * </p>
+    *
+    * @param mapPaths the list of resource paths to the map files
+    * @since 1.1
+    */
    public void loadMap(ArrayList<String> mapPaths) {
       int mapIndex = 0;
       for (String path : mapPaths) {
@@ -111,6 +177,12 @@ public class TileManager {
          mapIndex++;
       }
    }
+   /**
+    * Loads all tile images from the resources and assigns
+    * their solid properties.
+    *
+    * @since 1.0
+    */
    public void getTile() {
 
       try {

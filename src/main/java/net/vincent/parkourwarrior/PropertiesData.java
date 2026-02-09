@@ -6,17 +6,56 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
+/**
+ * Properties data handler for Parkour Warrior.
+ * <p>
+ * This class manages the game's persistent data by reading and
+ * writing to a properties file. It stores map configurations,
+ * record times, and other game settings that persist between
+ * sessions.
+ * </p>
+ *
+ * @author Vincent4486
+ * @version 1.3
+ * @since 1.1
+ */
 public class PropertiesData {
 
+   /**
+    * Reference to the main game panel.
+    * @since 1.1
+    */
    ParkourMain parkourMain;
-   // Build the absolute file path based on the current working directory.
+
+   /**
+    * The absolute file path to the properties file.
+    * @since 1.1
+    */
    String filePath =
       System.getProperty("user.dir") + "/ParkourWarrior.properties";
 
+   /**
+    * Constructs a new {@code PropertiesData} with a reference to
+    * the main game panel.
+    *
+    * @param parkourMain the main game panel instance
+    * @since 1.1
+    */
    public PropertiesData(ParkourMain parkourMain) {
       this.parkourMain = parkourMain;
    }
 
+   /**
+    * Loads map and game data from the properties file.
+    * <p>
+    * Reads each numbered property entry and parses it into
+    * map number, path, type, default status, finish status,
+    * record times, and end positions, populating the
+    * corresponding lists in {@code ParkourMain}.
+    * </p>
+    *
+    * @since 1.1
+    */
    public void loadProperties() {
       /*
        * Expected properties file format for each key:
@@ -87,6 +126,15 @@ public class PropertiesData {
       }
    }
 
+   /**
+    * Saves the current map and game data to the properties file.
+    * <p>
+    * Writes all map entries from {@code ParkourMain} lists back
+    * to the properties file, preserving the current game state.
+    * </p>
+    *
+    * @since 1.1
+    */
    public void saveProperties() {
       System.out.println("Saving properties to: " + filePath);
       try (FileOutputStream propertiesFile = new FileOutputStream(filePath)) {
@@ -116,6 +164,16 @@ public class PropertiesData {
       }
    }
 
+   /**
+    * Creates a new properties file with default map entries.
+    * <p>
+    * This method is called when no existing properties file is
+    * found. It writes default map configurations and then
+    * reloads the properties.
+    * </p>
+    *
+    * @since 1.1
+    */
    public void createPropertiesFile() {
       System.out.println("Creating properties file at: " + filePath);
       try (FileOutputStream propertiesFile = new FileOutputStream(filePath)) {
@@ -140,11 +198,20 @@ public class PropertiesData {
       }
    }
 
-   // Empty methods for further functionality:
+   /**
+    * Adds a new map to the game.
+    *
+    * @since 1.2
+    */
    public void addMap() {
       // Implementation here
    }
 
+   /**
+    * Removes the current map from the game.
+    *
+    * @since 1.2
+    */
    public void removeMap() {
       // Implementation here
    }

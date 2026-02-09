@@ -4,31 +4,121 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 
+/**
+ * Timer class for Parkour Warrior.
+ * <p>
+ * This class manages the in-game timer, tracking elapsed time
+ * during gameplay, rendering the timer on screen, and saving
+ * record times when a map is completed.
+ * </p>
+ *
+ * @author Vincent4486
+ * @version 1.3
+ * @since 1.1
+ */
 public class ParkourTimer {
 
+   /**
+    * Reference to the main game panel.
+    * @since 1.1
+    */
    ParkourMain parkourMain;
 
+   /**
+    * The end time milliseconds when a map is completed.
+    * @since 1.1
+    */
    public int endTimeMilis = 0;
+
+   /**
+    * The end time seconds when a map is completed.
+    * @since 1.1
+    */
    public int endTimeSeconds = 0;
+
+   /**
+    * The end time minutes when a map is completed.
+    * @since 1.1
+    */
    public int endTimeMinutes = 0;
 
+   /**
+    * Formatted string for the end time minutes.
+    * @since 1.1
+    */
    public String endTimeMinutesStr;
+
+   /**
+    * Formatted string for the end time seconds.
+    * @since 1.1
+    */
    public String endTimeSecondsStr;
+
+   /**
+    * Formatted string for the end time milliseconds.
+    * @since 1.1
+    */
    public String endTimeMilisecondsStr;
 
+   /**
+    * The current timer minutes.
+    * @since 1.1
+    */
    public long timerTimeMinutes = 0;
+
+   /**
+    * The current timer seconds.
+    * @since 1.1
+    */
    public long timerTimeSeconds = 0;
+
+   /**
+    * The current timer milliseconds.
+    * @since 1.1
+    */
    public long timerTimeMiliseconds = 0;
 
+   /**
+    * Formatted string for the current timer minutes.
+    * @since 1.1
+    */
    public String timerTimeMinutesStr;
+
+   /**
+    * Formatted string for the current timer seconds.
+    * @since 1.1
+    */
    public String timerTimeSecondsStr;
+
+   /**
+    * Formatted string for the current timer milliseconds.
+    * @since 1.1
+    */
    public String timerTimeMilisecondsStr;
 
+   /**
+    * Constructs a new {@code ParkourTimer} with a reference to
+    * the main game panel.
+    *
+    * @param parkourMain the main game panel instance
+    * @since 1.1
+    */
    public ParkourTimer(ParkourMain parkourMain) {
 
       this.parkourMain = parkourMain;
    }
 
+   /**
+    * Runs the timer by calculating elapsed time since the start.
+    * <p>
+    * Computes minutes, seconds, and milliseconds from the elapsed
+    * nanoseconds and formats them into display strings.
+    * </p>
+    *
+    * @param startTime the start time in nanoseconds
+    * @param FPS the current frames per second
+    * @since 1.1
+    */
    public void runTimer(long startTime, double FPS) {
 
       long currentTime = System.nanoTime();
@@ -49,6 +139,12 @@ public class ParkourTimer {
       // timerTimeSecondsStr);
    }
 
+   /**
+    * Draws the timer on the screen.
+    *
+    * @param graphics2D the {@code Graphics2D} context to draw on
+    * @since 1.1
+    */
    public void drawTimer(Graphics2D graphics2D) {
 
       graphics2D.setFont(graphics2D.getFont().deriveFont(Font.BOLD, 36));
@@ -58,6 +154,12 @@ public class ParkourTimer {
                             50, 50);
    }
 
+   /**
+    * Saves the current timer as the end time and updates
+    * the record time if it is faster than the previous record.
+    *
+    * @since 1.1
+    */
    public void saveTime() {
 
       int currentMap = parkourMain.currentMap;

@@ -27,7 +27,7 @@ import javax.swing.JPanel;
  * game in order to make the initialization not stuck in an infinite loop.
  * </p>
  * @author Vincent4486
- * @version 1.2
+ * @version 1.3
  * @since 1.0
  */
 

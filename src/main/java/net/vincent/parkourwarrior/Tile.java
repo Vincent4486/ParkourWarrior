@@ -12,10 +12,22 @@ import java.awt.image.BufferedImage;
  * if a tile is solid.
  * </p>
  * @author Vincent4486
- * @version 1.2
+ * @version 1.3
  * @since 1.0
  */
 public class Tile {
+
+   /**
+    * Constructs a new {@code Tile} with default values.
+    * <p>
+    * The tile image is initially null and solidTile is false.
+    * </p>
+    *
+    * @since 1.0
+    */
+   public Tile() {
+      // Default constructor
+   }
 
    /**
     * The {@code BufferedImage} to store the image of a tile.

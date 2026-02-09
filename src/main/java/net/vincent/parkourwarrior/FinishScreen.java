@@ -6,14 +6,47 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 
+/**
+ * Finish screen class for Parkour Warrior.
+ * <p>
+ * This class handles the rendering of the finish screen,
+ * displayed when the player completes a map. It shows a
+ * congratulatory message along with the completion time.
+ * </p>
+ *
+ * @author Vincent4486
+ * @version 1.3
+ * @since 1.2
+ */
 public class FinishScreen {
 
+   /**
+    * Reference to the main game panel.
+    * @since 1.2
+    */
    ParkourMain parkourMain;
 
+   /**
+    * Constructs a new {@code FinishScreen} with a reference to
+    * the main game panel.
+    *
+    * @param parkourMain the main game panel instance
+    * @since 1.2
+    */
    public FinishScreen(ParkourMain parkourMain) {
       this.parkourMain = parkourMain;
    }
 
+   /**
+    * Draws the finish screen.
+    * <p>
+    * Renders the background image, congratulatory message,
+    * completion time, and navigation instructions.
+    * </p>
+    *
+    * @param graphics2D the {@code Graphics2D} context to draw on
+    * @since 1.2
+    */
    public void drawFinishScreen(Graphics2D graphics2D) {
       // Draw the finish screen background and other elements here
       // This is a placeholder for the actual implementation
@@ -57,6 +90,14 @@ public class FinishScreen {
       // Additional finish screen elements can be added here
    }
 
+   /**
+    * Calculates the X position to center a text string horizontally.
+    *
+    * @param text the text to center
+    * @param graphics2D the {@code Graphics2D} context for font metrics
+    * @return the X coordinate for centered text
+    * @since 1.2
+    */
    int centerTextX(String text, Graphics2D graphics2D) {
       return (768 - graphics2D.getFontMetrics().stringWidth(text)) / 2;
    }

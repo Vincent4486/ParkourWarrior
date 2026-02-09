@@ -7,53 +7,218 @@ import java.io.IOException;
 import java.util.Objects;
 import javax.imageio.ImageIO;
 
+/**
+ * The player class for Parkour Warrior.
+ * <p>
+ * This class handles the player's movement, jumping, falling,
+ * collision detection, and rendering. It manages the player's
+ * position in the world and responds to keyboard input to
+ * control the character.
+ * </p>
+ *
+ * @author Vincent4486
+ * @version 1.3
+ * @since 1.0
+ */
 public class Player {
 
+   /**
+    * Reference to the main game panel.
+    * @since 1.0
+    */
    ParkourMain parkourMain;
 
+   /**
+    * Whether the player has requested a jump.
+    * @since 1.0
+    */
    public boolean askJump = false;
+
+   /**
+    * Whether the player is currently jumping.
+    * @since 1.0
+    */
    public boolean jumping = false;
+
+   /**
+    * Whether the player is currently falling.
+    * @since 1.0
+    */
    public boolean falling = false;
+
+   /**
+    * Whether the player is moving right.
+    * @since 1.0
+    */
    public boolean goRight = false;
+
+   /**
+    * Whether the player is moving left.
+    * @since 1.0
+    */
    public boolean goLeft = false;
-   public boolean sneaking = false; // Added for sneaking functionality
+
+   /**
+    * Whether the player is currently sneaking.
+    * @since 1.2
+    */
+   public boolean sneaking = false;
+
+   /**
+    * Whether the player is colliding upward.
+    * @since 1.0
+    */
    public boolean collideUp;
+
+   /**
+    * Whether the player is colliding downward.
+    * @since 1.0
+    */
    public boolean collideDown;
+
+   /**
+    * Whether the player is colliding to the left.
+    * @since 1.0
+    */
    public boolean collideLeft;
+
+   /**
+    * Whether the player is colliding to the right.
+    * @since 1.0
+    */
    public boolean collideRight;
 
+   /**
+    * The player's X position in the world.
+    * @since 1.0
+    */
    public int worldX = 480;
-   public int worldY = 376; // Starting Y position, can be adjusted as needed
+
+   /**
+    * The player's Y position in the world.
+    * @since 1.0
+    */
+   public int worldY = 376;
+
+   /**
+    * The maximum height the player can reach during a jump.
+    * @since 1.0
+    */
    public int maxJumpHeight;
+
+   /**
+    * The height of the player's jump in pixels.
+    * @since 1.0
+    */
    public int jumpHeight = 61;
+
+   /**
+    * The speed of the player's jump in pixels per frame.
+    * @since 1.0
+    */
    public int jumpSpeed = 4;
+
+   /**
+    * The speed of the player's fall in pixels per frame.
+    * @since 1.0
+    */
    public int fallSpeed = 5;
+
+   /**
+    * The walking speed of the player in pixels per frame.
+    * @since 1.0
+    */
    public int walkSpeed = 6;
+
+   /**
+    * The player's X position on screen, used for camera offset.
+    * @since 1.0
+    */
    public final int screenX;
+
+   /**
+    * Counter for sprite animation frame timing.
+    * @since 1.0
+    */
    int imageCount = 0;
+
+   /**
+    * The current sprite animation frame number.
+    * @since 1.0
+    */
    int imageNumber = 0;
 
+   /**
+    * First tile number used for collision detection.
+    * @since 1.0
+    */
    int tileNumber1;
+
+   /**
+    * Second tile number used for collision detection.
+    * @since 1.0
+    */
    int tileNumber2;
 
+   /**
+    * Whether the player has leftward momentum after releasing the left key.
+    * @since 1.3
+    */
    public boolean momentumLeft = false;
+
+   /**
+    * Whether the player has rightward momentum after releasing the right key.
+    * @since 1.3
+    */
    public boolean momentumRight = false;
+
+   /**
+    * Counter for leftward momentum ticks.
+    * @since 1.3
+    */
    public int momentumCountLeft = 0;
+
+   /**
+    * Counter for rightward momentum ticks.
+    * @since 1.3
+    */
    public int momentumCountRight = 0;
 
+   /**
+    * The maximum number of ticks for momentum to last.
+    * @since 1.3
+    */
    public static final int MAX_MOMENTUM_TICKS = 8;
 
-   /*
-    *In integer playerDirection:
-    *1 = playerDirection:left
-    *2 = playerDirection:right
+   /**
+    * The player's facing direction.
+    * <p>
+    * 1 = left, 2 = right.
+    * </p>
+    * @since 1.0
     */
-
    public int playerDirection = 2;
 
+   /**
+    * Sprite images for the player's left and right animations.
+    * @since 1.0
+    */
    BufferedImage leftImage1, rightImage1, leftImage2, rightImage2;
+
+   /**
+    * The solid area rectangle used for collision detection.
+    * @since 1.0
+    */
    Rectangle solidArea = new Rectangle();
 
+   /**
+    * Constructs a new {@code Player} with a reference to the main
+    * game panel and initializes the player's collision area and
+    * screen position.
+    *
+    * @param parkourMain the main game panel instance
+    * @since 1.0
+    */
    public Player(ParkourMain parkourMain) {
 
       solidArea.x = 6;
@@ -68,6 +233,15 @@ public class Player {
       getPlayer();
    }
 
+   /**
+    * Updates the player's state each frame.
+    * <p>
+    * This method handles movement, collision detection, jumping,
+    * falling, momentum, animation cycling, and map completion checks.
+    * </p>
+    *
+    * @since 1.0
+    */
    public void updatePlayer() {
 
       parkourMain.parkourTimer.timerTimeMinutesStr =
@@ -188,6 +362,12 @@ public class Player {
       }
    }
 
+   /**
+    * Draws the player sprite on the screen.
+    *
+    * @param graphics2D the {@code Graphics2D} context to draw on
+    * @since 1.0
+    */
    public void drawPlayer(Graphics2D graphics2D) {
 
       BufferedImage image = null;
@@ -215,6 +395,16 @@ public class Player {
                            parkourMain.tileSize, null);
    }
 
+   /**
+    * Handles the player's jump logic.
+    * <p>
+    * Moves the player upward if a jump has been requested and
+    * the player has not reached the maximum jump height or
+    * collided with a tile above.
+    * </p>
+    *
+    * @since 1.0
+    */
    public void jump() {
 
       if (!falling && askJump && worldY > maxJumpHeight && !collideUp) {
@@ -232,6 +422,15 @@ public class Player {
       }
    }
 
+   /**
+    * Handles the player's falling logic.
+    * <p>
+    * Moves the player downward when not jumping and not
+    * colliding with a tile below.
+    * </p>
+    *
+    * @since 1.0
+    */
    public void fall() {
 
       if (!jumping && !collideDown) {
@@ -248,6 +447,11 @@ public class Player {
       }
    }
 
+   /**
+    * Loads the player's sprite images from the resources.
+    *
+    * @since 1.0
+    */
    public void getPlayer() {
 
       try {
@@ -267,6 +471,15 @@ public class Player {
       }
    }
 
+   /**
+    * Detects collision above the player.
+    * <p>
+    * Checks whether the tiles directly above the player are solid,
+    * and updates the {@code collideDown} flag accordingly.
+    * </p>
+    *
+    * @since 1.0
+    */
    public void detectCollisionUp() {
 
       if (worldY % parkourMain.tileSize == 0) {
@@ -319,6 +532,15 @@ public class Player {
       }
    }
 
+   /**
+    * Detects collision below the player.
+    * <p>
+    * Checks whether the tiles directly below the player are solid,
+    * and updates the {@code collideDown} flag accordingly.
+    * </p>
+    *
+    * @since 1.0
+    */
    public void detectCollisionDown() {
 
       if (worldY % parkourMain.tileSize == 0) {
@@ -371,6 +593,15 @@ public class Player {
       }
    }
 
+   /**
+    * Detects collision to the left of the player.
+    * <p>
+    * Checks whether the tiles to the left of the player are solid,
+    * and updates the {@code collideLeft} flag accordingly.
+    * </p>
+    *
+    * @since 1.0
+    */
    public void detectCollisionLeft() {
 
       if (playerDirection == 1) {
@@ -419,6 +650,15 @@ public class Player {
       }
    }
 
+   /**
+    * Detects collision to the right of the player.
+    * <p>
+    * Checks whether the tiles to the right of the player are solid,
+    * and updates the {@code collideRight} flag accordingly.
+    * </p>
+    *
+    * @since 1.0
+    */
    public void detectCollisionRight() {
 
       if (playerDirection == 2) {
@@ -467,6 +707,17 @@ public class Player {
       }
    }
 
+   /**
+    * Calculates the burst speed for momentum based on the tick count.
+    * <p>
+    * The speed decreases as the momentum count increases, simulating
+    * a deceleration effect. Speed is halved when sneaking.
+    * </p>
+    *
+    * @param count the current momentum tick count
+    * @return the burst speed in pixels per frame
+    * @since 1.3
+    */
    private int calculateBurstSpeed(int count) {
       int speed;
       if (count < 2)
