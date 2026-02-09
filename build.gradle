@@ -37,23 +37,24 @@ application {
 
 // Set Java source and target compatibility using the new DSL.
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(24)
+    }
 }
 
 jar {
     manifest {
         attributes(
-            'Main-Class': 'net.vincent.parkourwarrior.ParkourWarrior',
+            'Main-Class': application.mainClass,
             'Implementation-Title': project.name,
-            'Implementation-Version': 'Beta1_0'
+            'Implementation-Version': project.version
         )
     }
 
     // Include the compiled class files and resources.
     from sourceSets.main.output
 
-    // Explicitly include the "res" folder from the project root if needed.q
+    // Explicitly include the "res" folder from the project root if needed.
     // This copies the folder from your project root into the jar under "res".
     from('res') {
         into 'res'
