@@ -1,4 +1,4 @@
-package net.vincent.ParkourWarrior;
+package net.vincent.parkourwarrior;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -95,7 +95,7 @@ public class KeyHandler implements KeyListener {
       }
       if (e.getKeyCode() == KeyEvent.VK_Q) {
 
-         if (parkourMain.musicOn == true) {
+         if (parkourMain.musicOn) {
 
             parkourMain.musicOn = false;
             parkourMain.soundClip.stop();
@@ -104,7 +104,6 @@ public class KeyHandler implements KeyListener {
 
             parkourMain.musicOn = true;
             parkourMain.soundClip.start();
-            ;
          }
       }
 

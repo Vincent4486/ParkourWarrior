@@ -1,4 +1,4 @@
-package net.vincent.ParkourWarrior;
+package net.vincent.parkourwarrior;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -236,7 +236,7 @@ public class ParkourMain extends JPanel implements Runnable {
     * The FPS of the game, currently 60.
     * @since 1.0
     */
-   public final double FPS = 1000000000 / 60;
+   public final double FPS = 1_000_000_000 / 60;
 
    /**
     * The {@code Thread} for game.
@@ -318,7 +318,6 @@ public class ParkourMain extends JPanel implements Runnable {
     * startup methods since this runs only after the {@code JFrame} is created,
     * for example the game's main {@code Thread}.
     * </p>
-    * @version 1.2
     * @since 1.0
     */
    public ParkourMain() {

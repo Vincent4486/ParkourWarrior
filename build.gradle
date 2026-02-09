@@ -32,7 +32,7 @@ sourceSets {
 application {
     // Set your fully qualified main class name.
     // Make sure the package declaration at the top of your Java file matches this.
-    mainClass = 'net.vincent.ParkourWarrior.ParkourWarrior'
+    mainClass = 'net.vincent.parkourwarrior.ParkourWarrior'
 }
 
 // Set Java source and target compatibility using the new DSL.
@@ -44,7 +44,7 @@ java {
 jar {
     manifest {
         attributes(
-            'Main-Class': 'net.vincent.ParkourWarrior.ParkourWarrior',
+            'Main-Class': 'net.vincent.parkourwarrior.ParkourWarrior',
             'Implementation-Title': project.name,
             'Implementation-Version': 'Beta1_0'
         )
@@ -53,7 +53,7 @@ jar {
     // Include the compiled class files and resources.
     from sourceSets.main.output
 
-    // Explicitly include the "res" folder from the project root if needed.
+    // Explicitly include the "res" folder from the project root if needed.q
     // This copies the folder from your project root into the jar under "res".
     from('res') {
         into 'res'

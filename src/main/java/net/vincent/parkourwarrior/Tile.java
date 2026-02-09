@@ -1,4 +1,4 @@
-package net.vincent.ParkourWarrior;
+package net.vincent.parkourwarrior;
 
 import java.awt.image.BufferedImage;
 
