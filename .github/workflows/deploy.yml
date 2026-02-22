@@ -1,35 +1,42 @@
-name: Deploy ParkourWarrior Docs
+name: Build and Deploy ParkourWarrior
 
 on:
   push:
     branches: [ main, master ]
 
 jobs:
-  deploy-docs:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Execute Deploy on FreeBSD
-        uses: appleboy/ssh-action@v1.0.3
+      # Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Set up JDK 24
+      - name: Set up JDK 24
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: '24'
+
+      # Set up Gradle
+      - name: Set up Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-version: wrapper
+
+      # Build the project (including Javadoc if needed)
+      - name: Build project
+        run: |
+          chmod +x gradlew
+          ./gradlew build javadoc
+
+      # Copy the built Javadoc to the remote server via SCP
+      - name: Deploy artifacts via SCP
+        uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            mkdir -p ~/deploy
-            cd ~/deploy
-            # Clean up old clone if it exists, then clone fresh
-            rm -rf ParkourWarrior
-            git clone https://github.com/Vincent4486/ParkourWarrior
-            cd ParkourWarrior
-            
-            # Ensure gradlew is executable and run javadoc
-            chmod +x gradlew
-            ./gradlew javadoc
-            
-            # Sync to the web directory
-            sudo mkdir -p /var/webdocs/ParkourWarrior
-            sudo cp -r build/docs/javadoc/* /var/webdocs/ParkourWarrior/
-            
-            # Cleanup
-            cd ~/
-            rm -rf ~/deploy/ParkourWarrior
+          target: /var/webdocs/ParkourWarrior/
+          source: "build/docs/javadoc/*"
