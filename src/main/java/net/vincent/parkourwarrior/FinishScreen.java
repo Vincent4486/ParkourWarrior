@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.util.Objects;
 import javax.imageio.ImageIO;
 
 /**
@@ -53,12 +54,11 @@ public class FinishScreen {
       try {
 
          BufferedImage background = null;
-         background = ImageIO.read(
-            getClass().getResourceAsStream("/tile/background.png"));
+         background = ImageIO.read(Objects.requireNonNull(
+            getClass().getResourceAsStream("/tile/background.png")));
          graphics2D.drawImage(background, 0, 0, 768, 529, null);
 
       } catch (Exception e) {
-
          e.printStackTrace();
       }
 

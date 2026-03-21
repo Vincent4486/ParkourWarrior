@@ -17,7 +17,7 @@ import javax.imageio.ImageIO;
  * </p>
  *
  * @author Vincent4486
- * @version 1.3
+ * @version 1.4
  * @since 1.0
  */
 public class Player {

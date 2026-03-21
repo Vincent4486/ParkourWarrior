@@ -1,9 +1,7 @@
 /**
- * 
+ *
  */
 /**
- * 
+ *
  */
-module ParkourWarrior {
-    requires java.desktop;
-}
+module ParkourWarrior { requires java.desktop; }

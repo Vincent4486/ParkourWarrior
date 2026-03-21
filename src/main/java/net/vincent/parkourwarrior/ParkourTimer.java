@@ -13,7 +13,7 @@ import java.awt.Graphics2D;
  * </p>
  *
  * @author Vincent4486
- * @version 1.3
+ * @version 1.4
  * @since 1.1
  */
 public class ParkourTimer {

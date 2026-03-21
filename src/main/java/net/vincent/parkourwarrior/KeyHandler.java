@@ -112,13 +112,6 @@ public class KeyHandler implements KeyListener {
             parkourMain.currentMapState = parkourMain.play;
             parkourMain.timerStartTime = System.nanoTime();
 
-         } else if (e.getKeyCode() == KeyEvent.VK_A) {
-
-            parkourMain.propertiesData.addMap();
-
-         } else if (e.getKeyCode() == KeyEvent.VK_D) {
-
-            parkourMain.propertiesData.removeMap();
          }
       }
       if (e.getKeyCode() == KeyEvent.VK_Q) {

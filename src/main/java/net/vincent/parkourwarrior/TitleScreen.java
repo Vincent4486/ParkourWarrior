@@ -125,11 +125,6 @@ public class TitleScreen {
          "Press ESC to exit a game without completing",
          centerTextX("Press ESC to exit a game without completing", graphics2D),
          505);
-      graphics2D.drawString(
-         "Press A to add map ,press D to remove current map",
-         centerTextX("Press A to add map ,press D to remove current map",
-                     graphics2D),
-         520);
    }
 
    /**

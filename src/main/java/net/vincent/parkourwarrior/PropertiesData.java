@@ -60,7 +60,7 @@ public class PropertiesData {
       /*
        * Expected properties file format for each key:
        * map_number map_path map_type is_default_map have_finished_map
-       * record_time_minutes record_time_seconds record_time_milis end_posion
+       * record_time_minutes record_time_seconds record_time_milis end_position
        * For example:
        * 0=1 /map/map0.txt 1 true false 0 0 0 400
        */

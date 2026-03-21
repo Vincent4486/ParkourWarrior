@@ -40,6 +40,9 @@ public class ParkourWarrior {
     * @param args command-line arguments (not used)
     */
    public static void main(String[] args) {
+      // Prevents JVM from using its own menu bar
+      System.setProperty("apple.laf.useScreenMenuBar", "true");
+
       JFrame frame = new JFrame("Parkour Warrior");
 
       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -47,6 +50,7 @@ public class ParkourWarrior {
 
       ParkourMain parkourMain = new ParkourMain();
       frame.add(parkourMain);
+      frame.setJMenuBar(parkourMain.menuBar);
       frame.setIconImage(parkourMain.ico.getImage());
 
       frame.pack();

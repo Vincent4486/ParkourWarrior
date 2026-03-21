@@ -27,7 +27,7 @@ import javax.swing.JPanel;
  * game in order to make the initialization not stuck in an infinite loop.
  * </p>
  * @author Vincent4486
- * @version 1.3
+ * @version 1.4
  * @since 1.0
  */
 
@@ -51,7 +51,6 @@ public class ParkourMain extends JPanel implements Runnable {
    /*
     * width == column
     * height == row
-    * vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
     */
 
    /**
@@ -305,6 +304,12 @@ public class ParkourMain extends JPanel implements Runnable {
    public KeyHandler keyHandler;
 
    /**
+    * Instance declaration for {@code MenuBar}
+    * @since 1.4
+    */
+   public MenuBar menuBar;
+
+   /**
     * The font used by the game.
     * @since 1.2
     */
@@ -344,6 +349,7 @@ public class ParkourMain extends JPanel implements Runnable {
       player = new Player(this);
       tileManager = new TileManager(this);
       keyHandler = new KeyHandler(this);
+      menuBar = new MenuBar(this);
 
       tileManager.loadMap(mapPath);
 
