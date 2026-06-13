@@ -3,7 +3,7 @@ plugins {
     id 'application'
 }
 
-group = 'net.vincent'
+group = 'org.vyang'
 version = '1.4'
 
 repositories {
@@ -32,7 +32,7 @@ sourceSets {
 application {
     // Set your fully qualified main class name.
     // Make sure the package declaration at the top of your Java file matches this.
-    mainClass = 'net.vincent.parkourwarrior.ParkourWarrior'
+    mainClass = 'org.vyang.parkourwarrior.ParkourWarrior'
 }
 
 // Set Java source and target compatibility using the new DSL.
