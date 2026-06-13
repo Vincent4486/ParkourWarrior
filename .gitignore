@@ -71,5 +71,8 @@ Thumbs.db
 *.bak
 *.orig
 
-
+# Documentation build
 docs/
+
+# Emacs files
+*.*~
