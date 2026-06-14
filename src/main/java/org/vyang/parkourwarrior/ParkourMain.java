@@ -240,6 +240,12 @@ public class ParkourMain extends JPanel implements Runnable {
    public MenuBar menuBar;
 
    /**
+    * Instance declaration for {@code Dialogue}
+    * @since 1.4
+    */
+   public Dialogue dialogue;
+
+   /**
     * The font used by the game.
     * @since 1.2
     */
@@ -268,6 +274,7 @@ public class ParkourMain extends JPanel implements Runnable {
       tileManager = new TileManager(this);
       keyHandler = new KeyHandler(this);
       menuBar = new MenuBar(this);
+      dialogue = new Dialogue(this);
 
       tileManager.loadMap();
 
