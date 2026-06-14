@@ -2,7 +2,7 @@ package org.vyang.parkourwarrior;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import javax.swing.JOptionPane;
+import java.util.function.Consumer;
 
 /**
  * Keyboard input handler for the game.
@@ -81,16 +81,22 @@ public class KeyHandler implements KeyListener {
             }
             break;
          case KeyEvent.VK_ESCAPE:
-            int exit = JOptionPane.showConfirmDialog(
-               null, "Do you want to quit?", "Confirm Quit",
-               JOptionPane.YES_NO_OPTION);
-            if (exit == 0) {
-               parkourMain.currentMapState = parkourMain.title;
-               parkourMain.player.worldX = 480;
-               parkourMain.player.worldY = 376;
-            } else
-               break;
-
+            parkourMain.currentMapState = parkourMain.dialogue;
+            parkourMain.dialogScreen.title = "Confirm Quit";
+            parkourMain.dialogScreen.text = "Do you want to quit?";
+            parkourMain.dialogScreen.dialogueOption =
+               DialogScreen.DIALOGUE_OPTION_YES_NO;
+            parkourMain.dialogScreen.currentSelection =
+               DialogScreen.DIALOGUE_CURRENT_NO;
+            parkourMain.dialogScreen.callback = (yes) -> {
+               if (yes) {
+                  parkourMain.currentMapState = parkourMain.title;
+                  parkourMain.player.worldX = 480;
+                  parkourMain.player.worldY = 376;
+               } else {
+                  parkourMain.currentMapState = parkourMain.play;
+               }
+            };
             break;
          case KeyEvent.VK_SHIFT:
             parkourMain.player.sneaking = true;
@@ -135,11 +141,57 @@ public class KeyHandler implements KeyListener {
          }
       }
 
-      if (parkourMain.currentMapState == parkourMain.finish) {
+      if (parkourMain.currentMapState == parkourMain.dialogue) {
 
-         if (e.getKeyCode() == KeyEvent.VK_ENTER)
-
-            parkourMain.currentMapState = parkourMain.title;
+         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+            if (parkourMain.dialogScreen.dialogueOption ==
+                   DialogScreen.DIALOGUE_OPTION_YES_NO) {
+               if (parkourMain.dialogScreen.currentSelection ==
+                      DialogScreen.DIALOGUE_CURRENT_YES) {
+                  if (parkourMain.dialogScreen.callback != null) {
+                     Consumer<Boolean> cb =
+                        parkourMain.dialogScreen.callback;
+                     parkourMain.dialogScreen.callback = null;
+                     cb.accept(true);
+                  } else {
+                     parkourMain.currentMapState =
+                        parkourMain.dialogScreen.gotoMapState;
+                  }
+               } else {
+                  if (parkourMain.dialogScreen.callback != null) {
+                     Consumer<Boolean> cb =
+                        parkourMain.dialogScreen.callback;
+                     parkourMain.dialogScreen.callback = null;
+                     cb.accept(false);
+                  } else {
+                     parkourMain.currentMapState =
+                        parkourMain.dialogScreen.initialMapState;
+                  }
+               }
+            } else {
+               if (parkourMain.dialogScreen.callback != null) {
+                  Consumer<Boolean> cb =
+                     parkourMain.dialogScreen.callback;
+                  parkourMain.dialogScreen.callback = null;
+                  cb.accept(true);
+               } else {
+                  parkourMain.currentMapState =
+                     parkourMain.dialogScreen.gotoMapState;
+               }
+            }
+         } else if (e.getKeyCode() == KeyEvent.VK_A ||
+                    e.getKeyCode() == KeyEvent.VK_D) {
+            if (parkourMain.dialogScreen.dialogueOption ==
+                   DialogScreen.DIALOGUE_OPTION_YES_NO) {
+               if (parkourMain.dialogScreen.currentSelection ==
+                      DialogScreen.DIALOGUE_CURRENT_NO)
+                  parkourMain.dialogScreen.currentSelection =
+                     DialogScreen.DIALOGUE_CURRENT_YES;
+               else
+                  parkourMain.dialogScreen.currentSelection =
+                     DialogScreen.DIALOGUE_CURRENT_NO;
+            }
+         }
       }
    }
 

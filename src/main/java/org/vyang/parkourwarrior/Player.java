@@ -304,7 +304,21 @@ public class Player {
       if (worldX > parkourMain.mapManager.gameMaps.get(parkourMain.currentMap)
                       .endIndex) {
 
-         parkourMain.currentMapState = parkourMain.finish;
+         parkourMain.currentMapState = parkourMain.dialogue;
+         parkourMain.dialogScreen.title = "Congratulations!";
+         parkourMain.dialogScreen.text = "You finished in " +
+                                         parkourMain.parkourTimer
+                                             .timerTimeMinutesStr +
+                                         ":" +
+                                         parkourMain.parkourTimer
+                                             .timerTimeSecondsStr +
+                                         "." +
+                                         parkourMain.parkourTimer
+                                             .timerTimeMilisecondsStr;
+         parkourMain.dialogScreen.dialogueOption = DialogScreen.DIALOGUE_OPTION_NONE;
+         parkourMain.dialogScreen.callback = (yes) -> {
+            parkourMain.currentMapState = parkourMain.title;
+         };
          parkourMain.parkourTimer.saveTime(); // Save the record time
          parkourMain.mapManager.saveMapProperties();
          // Transition to finish screen

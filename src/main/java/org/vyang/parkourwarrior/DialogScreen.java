@@ -5,9 +5,10 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.Objects;
+import java.util.function.Consumer;
 import javax.imageio.ImageIO;
 
-public class Dialogue {
+public class DialogScreen {
    ParkourMain parkourMain;
 
    public int dialogueOption = 0;
@@ -20,17 +21,24 @@ public class Dialogue {
    public static final int DIALOGUE_CURRENT_YES = 1;
    public static final int DIALOGUE_CURRENT_NO = 0;
 
-   public Dialogue(ParkourMain parkourMain) { this.parkourMain = parkourMain; }
+   public int gotoMapState = 0;
+   public int initialMapState = 0;
+   public Consumer<Boolean> callback = null;
 
-   public void drawDialogue(Graphics2D graphics2D, String title, String text) {
+   String title;
+   String text;
+
+   public DialogScreen(ParkourMain parkourMain) { this.parkourMain = parkourMain; }
+
+   public void drawDialogScreen(Graphics2D graphics2D) {
       if (dialogueOption == DIALOGUE_OPTION_NONE) {
-         drawDialogueInform(graphics2D, title, text);
+         drawDialogScreenInform(graphics2D, this.title, this.text);
       } else {
-         drawDialogueOption(graphics2D, title, text);
+         drawDialogScreenOption(graphics2D, this.title, this.text);
       }
    }
 
-   private void drawDialogueInform(Graphics2D graphics2D, String title,
+   private void drawDialogScreenInform(Graphics2D graphics2D, String title,
                                    String text) {
       try {
 
@@ -58,7 +66,7 @@ public class Dialogue {
                             500);
    }
 
-   private void drawDialogueOption(Graphics2D graphics2D, String title,
+   private void drawDialogScreenOption(Graphics2D graphics2D, String title,
                                    String text) {
       try {
 
@@ -81,6 +89,14 @@ public class Dialogue {
 
       String yesText = "Yes";
       String noText = "No";
+      int yesWidth =
+         graphics2D.getFontMetrics().stringWidth(yesText);
+      int noWidth =
+         graphics2D.getFontMetrics().stringWidth(noText);
+      int gap = 20;
+      int blockWidth = yesWidth + gap + noWidth;
+      int blockStartX = (768 - blockWidth) / 2;
+      int optionY = 320;
       if (dialogueOption == DIALOGUE_OPTION_NO) {
          graphics2D.setFont(graphics2D.getFont().deriveFont(Font.BOLD, 24));
          graphics2D.drawString(noText, centerTextX(text, graphics2D), 280);
@@ -93,14 +109,14 @@ public class Dialogue {
          } else {
             graphics2D.setFont(graphics2D.getFont().deriveFont(Font.PLAIN, 24));
          }
-         graphics2D.drawString(yesText, centerTextX(text, graphics2D), 280);
+         graphics2D.drawString(yesText, blockStartX, optionY);
 
          if (currentSelection == DIALOGUE_CURRENT_NO) {
             graphics2D.setFont(graphics2D.getFont().deriveFont(Font.BOLD, 24));
          } else {
             graphics2D.setFont(graphics2D.getFont().deriveFont(Font.PLAIN, 24));
          }
-         graphics2D.drawString(noText, centerTextX(text, graphics2D), 280);
+         graphics2D.drawString(noText, blockStartX + yesWidth + gap, optionY);
       }
 
       graphics2D.setFont(graphics2D.getFont().deriveFont(Font.PLAIN, 20));
