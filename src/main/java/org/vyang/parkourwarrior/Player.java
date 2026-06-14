@@ -311,7 +311,6 @@ public class Player {
          worldX = 480;
          worldY = 376;
       }
-      System.out.println(momentumRight);
 
       if (momentumRight) {
          if (!momentumRight)

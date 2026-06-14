@@ -45,6 +45,13 @@ public class TitleScreen {
    public TitleScreen(ParkourMain parkourMain) {
 
       this.parkourMain = parkourMain;
+      
+      for (int i = 0; i < parkourMain.gameMaps.size(); i++) {
+          if (parkourMain.gameMaps.get(i).isDefaultMap == true) {
+             this.choosedMap = i;
+             break;
+          }
+       }
    }
 
    /**

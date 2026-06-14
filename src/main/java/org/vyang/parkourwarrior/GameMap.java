@@ -7,14 +7,14 @@ package org.vyang.parkourwarrior;
  * @since 1.5
  */
 public class GameMap {
-	
-	/*
+
+   /*
     * public int recordTimeMiliseconds is 2 digit miliseconds.
     * public int currentMap means current map number, number is in properties
     * file.
     */
-	
-	/**
+
+   /**
     * This is the map number for the program to load the maps,
     * defined for {@code PropertiesData} and {@code TileManager}.
     * @since 1.5
@@ -78,11 +78,10 @@ public class GameMap {
     * @since 1.5
     */
    public int endIndex;
-   
+
    /**
     * The constructor of class {@code GameMap} which is not used.
     * @since 1.5
     */
    public GameMap() {}
-   
 }
