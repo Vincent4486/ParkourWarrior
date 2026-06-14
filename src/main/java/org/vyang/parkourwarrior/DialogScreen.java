@@ -8,28 +8,128 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import javax.imageio.ImageIO;
 
+/**
+ * Dialog screen class for Parkour Warrior.
+ * <p>
+ * This class handles rendering of overlay dialogs on the game screen,
+ * supporting both informational messages (with a simple "Press ENTER to
+ * proceed" prompt) and yes/no selection prompts. Navigation and results
+ * are handled via a callback mechanism.
+ * </p>
+ *
+ * @author Vincent4486
+ * @version 1.4
+ * @since 1.4
+ */
 public class DialogScreen {
+
+   /**
+    * Reference to the main game panel.
+    * @since 1.4
+    */
    ParkourMain parkourMain;
 
+   /**
+    * The current dialog mode determining which type of prompt to display.
+    * @since 1.4
+    */
    public int dialogueOption = 0;
+
+   /**
+    * Constant for yes/no selection dialog.
+    * @since 1.4
+    */
    public static final int DIALOGUE_OPTION_YES_NO = 0;
+
+   /**
+    * Constant for dialog with only a yes option.
+    * @since 1.4
+    */
    public static final int DIALOGUE_OPTION_YES = 1;
+
+   /**
+    * Constant for dialog with only a no option.
+    * @since 1.4
+    */
    public static final int DIALOGUE_OPTION_NO = 2;
+
+   /**
+    * Constant for informational dialog without selection.
+    * @since 1.4
+    */
    public static final int DIALOGUE_OPTION_NONE = 3;
 
+   /**
+    * The currently highlighted selection (yes or no).
+    * @since 1.4
+    */
    public int currentSelection = 0;
+
+   /**
+    * Constant for the yes selection state.
+    * @since 1.4
+    */
    public static final int DIALOGUE_CURRENT_YES = 1;
+
+   /**
+    * Constant for the no selection state.
+    * @since 1.4
+    */
    public static final int DIALOGUE_CURRENT_NO = 0;
 
+   /**
+    * The target map state to transition to when yes is selected
+    * (used as fallback when no callback is set).
+    * @since 1.4
+    */
    public int gotoMapState = 0;
+
+   /**
+    * The map state to return to when no is selected
+    * (used as fallback when no callback is set).
+    * @since 1.4
+    */
    public int initialMapState = 0;
+
+   /**
+    * Callback invoked with the dialog result ({@code true} for yes,
+    * {@code false} for no). When set, this takes precedence over
+    * {@code gotoMapState} and {@code initialMapState}.
+    * @since 1.4
+    */
    public Consumer<Boolean> callback = null;
 
+   /**
+    * The title text displayed at the top of the dialog.
+    * @since 1.4
+    */
    String title;
+
+   /**
+    * The body text displayed in the center of the dialog.
+    * @since 1.4
+    */
    String text;
 
+   /**
+    * Constructs a new {@code DialogScreen} with a reference to
+    * the main game panel.
+    *
+    * @param parkourMain the main game panel instance
+    * @since 1.4
+    */
    public DialogScreen(ParkourMain parkourMain) { this.parkourMain = parkourMain; }
 
+   /**
+    * Draws the dialog screen based on the current {@code dialogueOption}.
+    * <p>
+    * Displays an informational dialog when set to {@code DIALOGUE_OPTION_NONE},
+    * or a selection dialog (yes/no) for other modes.
+    * </p>
+    *
+    * @param graphics2D the {@code Graphics2D} context to draw on
+    * @since 1.4
+    */
    public void drawDialogScreen(Graphics2D graphics2D) {
       if (dialogueOption == DIALOGUE_OPTION_NONE) {
          drawDialogScreenInform(graphics2D, this.title, this.text);
@@ -38,6 +138,15 @@ public class DialogScreen {
       }
    }
 
+   /**
+    * Draws an informational dialog with a title, message text,
+    * and a "Press ENTER to proceed" prompt.
+    *
+    * @param graphics2D the {@code Graphics2D} context to draw on
+    * @param title the dialog title to display
+    * @param text the dialog body text to display
+    * @since 1.4
+    */
    private void drawDialogScreenInform(Graphics2D graphics2D, String title,
                                    String text) {
       try {
@@ -66,6 +175,15 @@ public class DialogScreen {
                             500);
    }
 
+   /**
+    * Draws a selection dialog with yes/no options centered as a block,
+    * highlighting the currently selected option in bold.
+    *
+    * @param graphics2D the {@code Graphics2D} context to draw on
+    * @param title the dialog title to display
+    * @param text the dialog body text to display
+    * @since 1.4
+    */
    private void drawDialogScreenOption(Graphics2D graphics2D, String title,
                                    String text) {
       try {

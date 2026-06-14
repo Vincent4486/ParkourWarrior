@@ -236,8 +236,8 @@ public class MapManager {
     */
    public void showMapManager() {
       javax.swing.SwingUtilities.invokeLater(() -> {
-         MapDialogue dialogue = new MapDialogue();
-         dialogue.setVisible(true); // This brings the window onto the screen
+         MapManagerWindow managerWindow = new MapManagerWindow();
+         managerWindow.setVisible(true); // This brings the window onto the screen
       });
    }
 
@@ -247,8 +247,13 @@ public class MapManager {
     * @since 1.5
     */
    @SuppressWarnings("serial")
-   private class MapDialogue extends javax.swing.JFrame {
-      public MapDialogue() {
+   private class MapManagerWindow extends javax.swing.JFrame {
+      /**
+       * Constructs the map manager window.
+       *
+       * @since 1.5
+       */
+      public MapManagerWindow() {
          this.setTitle("Custom Map Manager");
          this.setSize(350, 200);
 
