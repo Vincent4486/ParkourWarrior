@@ -164,9 +164,12 @@ public class ParkourTimer {
 
       int currentMap = parkourMain.currentMap;
       GameMap map = parkourMain.gameMaps.get(currentMap);
-      int recordMinutes = parkourMain.gameMaps.get(currentMap).recordTimeMinutes;
-      int recordSeconds = parkourMain.gameMaps.get(currentMap).recordTimeSeconds;
-      int recordMilis = parkourMain.gameMaps.get(currentMap).recordTimeMiliseconds;
+      int recordMinutes =
+         parkourMain.gameMaps.get(currentMap).recordTimeMinutes;
+      int recordSeconds =
+         parkourMain.gameMaps.get(currentMap).recordTimeSeconds;
+      int recordMilis =
+         parkourMain.gameMaps.get(currentMap).recordTimeMiliseconds;
 
       endTimeMilis = (int)timerTimeMiliseconds;
       endTimeSeconds = (int)timerTimeSeconds;
@@ -186,10 +189,11 @@ public class ParkourTimer {
          recordSeconds = Integer.MAX_VALUE;
       }
 
-      if ((endTimeMinutes < recordMinutes) || 
-          (endTimeMinutes == recordMinutes && endTimeSeconds < recordSeconds) || 
-          (endTimeMinutes == recordMinutes && endTimeSeconds == recordSeconds && endTimeMilis < recordMilis)) {
-          
+      if ((endTimeMinutes < recordMinutes) ||
+          (endTimeMinutes == recordMinutes && endTimeSeconds < recordSeconds) ||
+          (endTimeMinutes == recordMinutes && endTimeSeconds == recordSeconds &&
+           endTimeMilis < recordMilis)) {
+
          map.recordTimeMinutes = endTimeMinutes;
          map.recordTimeSeconds = endTimeSeconds;
          map.recordTimeMiliseconds = endTimeMilis;

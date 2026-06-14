@@ -31,8 +31,8 @@ public class PropertiesData {
     * The absolute file path to the properties file.
     * @since 1.1
     */
-   String filePath =
-      System.getProperty("user.home") + "/.config/ParkourWarrior/maps.properties";
+   String filePath = System.getProperty("user.home") +
+                     "/.config/ParkourWarrior/maps.properties";
 
    /**
     * Constructs a new {@code PropertiesData} with a reference to
@@ -178,7 +178,7 @@ public class PropertiesData {
     */
    public void createPropertiesFile() {
       System.out.println("Creating properties file at: " + filePath);
-      
+
       try (FileOutputStream propertiesFile = new FileOutputStream(filePath)) {
          Properties properties = new Properties();
          // Sample properties entry with key "0"

@@ -45,13 +45,13 @@ public class TitleScreen {
    public TitleScreen(ParkourMain parkourMain) {
 
       this.parkourMain = parkourMain;
-      
+
       for (int i = 0; i < parkourMain.gameMaps.size(); i++) {
-          if (parkourMain.gameMaps.get(i).isDefaultMap == true) {
-             this.choosedMap = i;
-             break;
-          }
-       }
+         if (parkourMain.gameMaps.get(i).isDefaultMap == true) {
+            this.choosedMap = i;
+            break;
+         }
+      }
    }
 
    /**
@@ -97,9 +97,14 @@ public class TitleScreen {
 
          String recordTime =
             " >Record time: " +
-            String.format("%02d", parkourMain.gameMaps.get(i).recordTimeMinutes) + ":" +
-            String.format("%02d", parkourMain.gameMaps.get(i).recordTimeSeconds) + "." +
-            String.format("%03d", parkourMain.gameMaps.get(i).recordTimeMiliseconds) +
+            String.format("%02d",
+                          parkourMain.gameMaps.get(i).recordTimeMinutes) +
+            ":" +
+            String.format("%02d",
+                          parkourMain.gameMaps.get(i).recordTimeSeconds) +
+            "." +
+            String.format("%03d",
+                          parkourMain.gameMaps.get(i).recordTimeMiliseconds) +
             "<";
 
          String[] path = parkourMain.gameMaps.get(i).mapPath.split("/");

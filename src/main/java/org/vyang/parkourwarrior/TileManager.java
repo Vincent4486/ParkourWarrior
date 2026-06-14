@@ -132,67 +132,82 @@ public class TileManager {
     * @since 1.1
     */
    public void loadMap() {
-	    int mapIndex = 0;
-	    for (GameMap map : parkourMain.gameMaps) {
-	        String path = map.mapPath;
-	        InputStream inputStream = null;
+      int mapIndex = 0;
+      for (GameMap map : parkourMain.gameMaps) {
+         String path = map.mapPath;
+         InputStream inputStream = null;
 
-	        if (map.mapType == parkourMain.customPlayMap) {
-	            String userHome = System.getProperty("user.home");
-	            java.io.File customMapFile = new java.io.File(userHome + "/.config/ParkourWarrior/maps/" + path);
+         if (map.mapType == parkourMain.customPlayMap) {
+            String userHome = System.getProperty("user.home");
+            java.io.File customMapFile = new java.io.File(
+               userHome + "/.config/ParkourWarrior/maps/" + path);
 
-	            System.out.println("Attempting to load custom map from config directory: " + customMapFile.getAbsolutePath());
+            System.out.println(
+               "Attempting to load custom map from config directory: " +
+               customMapFile.getAbsolutePath());
 
-	            if (customMapFile.exists() && !customMapFile.isDirectory()) {
-	                try {
-	                    inputStream = new java.io.FileInputStream(customMapFile);
-	                } catch (IOException e) {
-	                    System.err.println("Failed to open custom map file: " + customMapFile.getAbsolutePath());
-	                }
-	            } else {
-	                System.err.println("Custom map file does not exist: " + customMapFile.getAbsolutePath());
-	            }
+            if (customMapFile.exists() && !customMapFile.isDirectory()) {
+               try {
+                  inputStream = new java.io.FileInputStream(customMapFile);
+               } catch (IOException e) {
+                  System.err.println("Failed to open custom map file: " +
+                                     customMapFile.getAbsolutePath());
+               }
+            } else {
+               System.err.println("Custom map file does not exist: " +
+                                  customMapFile.getAbsolutePath());
+            }
 
-	        } else if (map.mapType == parkourMain.defaultPlayMap) {
-	            System.out.println("Attempting to load internal default map: " + path);
-	            inputStream = getClass().getResourceAsStream(path);
+         } else if (map.mapType == parkourMain.defaultPlayMap) {
+            System.out.println("Attempting to load internal default map: " +
+                               path);
+            inputStream = getClass().getResourceAsStream(path);
 
-	            if (inputStream == null) {
-	                String fixedPath = path.startsWith("/") ? path.substring(1) : path;
-	                inputStream = getClass().getClassLoader().getResourceAsStream(fixedPath);
-	            }
-	        }
+            if (inputStream == null) {
+               String fixedPath =
+                  path.startsWith("/") ? path.substring(1) : path;
+               inputStream =
+                  getClass().getClassLoader().getResourceAsStream(fixedPath);
+            }
+         }
 
-	        if (inputStream == null) {
-	            System.err.println("CRITICAL: Failed to load map index " + mapIndex + " (" + path + ")");
-	            mapIndex++;
-	            continue;
-	        }
+         if (inputStream == null) {
+            System.err.println("CRITICAL: Failed to load map index " +
+                               mapIndex + " (" + path + ")");
+            mapIndex++;
+            continue;
+         }
 
-	        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
-	            int row = 0;
-	            String line;
-	            while ((line = bufferedReader.readLine()) != null && row < parkourMain.maxWorldRow) {
-	                String[] tokens = line.split(" ");
-	                for (int column = 0; column < parkourMain.maxWorldColumn && column < tokens.length; column++) {
-	                    try {
-	                        int tileNumber = Integer.parseInt(tokens[column]);
-	                        mapTileNumber[mapIndex][column][row] = tileNumber;
-	                    } catch (NumberFormatException e) {
-	                        System.err.println("Error parsing number at map " + mapIndex + ", row " + row + ", col " + column);
-	                    }
-	                }
-	                row++;
-	            }
-	        } catch (IOException e) {
-	            System.err.println("Error reading map " + path);
-	            e.printStackTrace();
-	        }
+         try (BufferedReader bufferedReader =
+                 new BufferedReader(new InputStreamReader(inputStream))) {
+            int row = 0;
+            String line;
+            while ((line = bufferedReader.readLine()) != null &&
+                   row < parkourMain.maxWorldRow) {
+               String[] tokens = line.split(" ");
+               for (int column = 0; column < parkourMain.maxWorldColumn &&
+                                    column < tokens.length;
+                    column++) {
+                  try {
+                     int tileNumber = Integer.parseInt(tokens[column]);
+                     mapTileNumber[mapIndex][column][row] = tileNumber;
+                  } catch (NumberFormatException e) {
+                     System.err.println("Error parsing number at map " +
+                                        mapIndex + ", row " + row + ", col " +
+                                        column);
+                  }
+               }
+               row++;
+            }
+         } catch (IOException e) {
+            System.err.println("Error reading map " + path);
+            e.printStackTrace();
+         }
 
-	        mapIndex++;
-	    }
-	}
-   
+         mapIndex++;
+      }
+   }
+
    /**
     * Loads all tile images from the resources and assigns
     * their solid properties.
