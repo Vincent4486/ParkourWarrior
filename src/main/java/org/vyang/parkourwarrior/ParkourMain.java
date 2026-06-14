@@ -99,12 +99,6 @@ public class ParkourMain extends JPanel implements Runnable {
    public final int maxWorldRow = 11;
 
    /**
-    * The array of game maps loaded from the properties file.
-    * @since 1.5
-    */
-   public ArrayList<GameMap> gameMaps;
-
-   /**
     * To determine if the program needs to play music.
     * @since 1.0
     */
@@ -209,10 +203,10 @@ public class ParkourMain extends JPanel implements Runnable {
    public TileManager tileManager;
 
    /**
-    * Instance declaration for {@code PropertiesData}, used by all.
+    * Instance declaration for {@code MapManager}, used by all.
     * @since 1.1
     */
-   public PropertiesData propertiesData;
+   public MapManager mapManager;
 
    /**
     * Instance declaration for {@code TitleScreen} class, used by all.
@@ -265,11 +259,7 @@ public class ParkourMain extends JPanel implements Runnable {
       ico = new ImageIcon(
          Objects.requireNonNull(getClass().getResource("/player/right1.png")));
 
-      gameMaps = new ArrayList<>();
-
-      propertiesData = new PropertiesData(this);
-      propertiesData.loadProperties();
-
+      mapManager = new MapManager(this);
       parkourTimer = new ParkourTimer(this);
       titleScreen = new TitleScreen(this);
       finishScreen = new FinishScreen(this);

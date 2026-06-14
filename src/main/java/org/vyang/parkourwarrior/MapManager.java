@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Properties;
 
 /**
@@ -19,7 +20,7 @@ import java.util.Properties;
  * @version 1.3
  * @since 1.1
  */
-public class PropertiesData {
+public class MapManager {
 
    /**
     * Reference to the main game panel.
@@ -33,16 +34,25 @@ public class PropertiesData {
     */
    String filePath = System.getProperty("user.home") +
                      "/.config/ParkourWarrior/maps.properties";
+   
+   /**
+    * The array of game maps loaded from the properties file.
+    * @since 1.5
+    */
+   public ArrayList<Map> gameMaps;
 
    /**
-    * Constructs a new {@code PropertiesData} with a reference to
+    * Constructs a new {@code MapManager} with a reference to
     * the main game panel.
     *
     * @param parkourMain the main game panel instance
     * @since 1.1
     */
-   public PropertiesData(ParkourMain parkourMain) {
+   public MapManager(ParkourMain parkourMain) {
       this.parkourMain = parkourMain;
+      
+      gameMaps = new ArrayList<>();
+      loadMapProperties();
    }
 
    /**
@@ -56,7 +66,7 @@ public class PropertiesData {
     *
     * @since 1.1
     */
-   public void loadProperties() {
+   public void loadMapProperties() {
       /*
        * Expected properties file format for each key:
        * map_number map_path map_type is_default_map have_finished_map
@@ -100,7 +110,7 @@ public class PropertiesData {
             int endIndex = Integer.parseInt(data[8]);
 
             // Add the data to the corresponding list in ParkourMain.
-            GameMap map = new GameMap();
+            Map map = new Map();
             map.mapNumber = mapNumber;
             map.mapPath = mapPath;
             map.mapType = mapType;
@@ -110,7 +120,7 @@ public class PropertiesData {
             map.recordTimeSeconds = recordSeconds;
             map.recordTimeMiliseconds = recordMilis;
             map.endIndex = endIndex;
-            parkourMain.gameMaps.add(map);
+            this.gameMaps.add(map);
 
             number++;
          }
@@ -137,22 +147,22 @@ public class PropertiesData {
     *
     * @since 1.1
     */
-   public void saveProperties() {
+   public void saveMapProperties() {
       System.out.println("Saving properties to: " + filePath);
       try (FileOutputStream propertiesFile = new FileOutputStream(filePath)) {
          Properties properties = new Properties();
 
-         for (int num = 0; num < parkourMain.gameMaps.size(); num++) {
+         for (int num = 0; num < this.gameMaps.size(); num++) {
             String propertiesValue =
-               parkourMain.gameMaps.get(num).mapNumber + " " +
-               parkourMain.gameMaps.get(num).mapPath + " " +
-               parkourMain.gameMaps.get(num).mapType + " " +
-               parkourMain.gameMaps.get(num).isDefaultMap + " " +
-               parkourMain.gameMaps.get(num).haveFinishedMap + " " +
-               parkourMain.gameMaps.get(num).recordTimeMinutes + " " +
-               parkourMain.gameMaps.get(num).recordTimeSeconds + " " +
-               parkourMain.gameMaps.get(num).recordTimeMiliseconds + " " +
-               parkourMain.gameMaps.get(num).endIndex;
+               this.gameMaps.get(num).mapNumber + " " +
+               this.gameMaps.get(num).mapPath + " " +
+               this.gameMaps.get(num).mapType + " " +
+               this.gameMaps.get(num).isDefaultMap + " " +
+               this.gameMaps.get(num).haveFinishedMap + " " +
+               this.gameMaps.get(num).recordTimeMinutes + " " +
+               this.gameMaps.get(num).recordTimeSeconds + " " +
+               this.gameMaps.get(num).recordTimeMiliseconds + " " +
+               this.gameMaps.get(num).endIndex;
 
             properties.setProperty(Integer.toString(num), propertiesValue);
          }
@@ -194,7 +204,7 @@ public class PropertiesData {
          properties.store(propertiesFile, "Parkour Warrior Sample Properties");
          System.out.println("Properties file created successfully.");
          // Reload properties after file creation.
-         loadProperties();
+         loadMapProperties();
       } catch (IOException e) {
          System.err.println("Error writing properties file: " + e.getMessage());
          e.printStackTrace();

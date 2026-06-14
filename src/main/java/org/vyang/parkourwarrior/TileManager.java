@@ -66,7 +66,7 @@ public class TileManager {
       tile = new Tile[15];
 
       mapTileNumber =
-         new int[parkourMain.gameMaps.size()][parkourMain.maxWorldColumn]
+         new int[parkourMain.mapManager.gameMaps.size()][parkourMain.maxWorldColumn]
                 [parkourMain.maxWorldRow];
 
       getTile();
@@ -133,7 +133,7 @@ public class TileManager {
     */
    public void loadMap() {
       int mapIndex = 0;
-      for (GameMap map : parkourMain.gameMaps) {
+      for (Map map : parkourMain.mapManager.gameMaps) {
          String path = map.mapPath;
          InputStream inputStream = null;
 

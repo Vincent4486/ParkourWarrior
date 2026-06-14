@@ -163,13 +163,13 @@ public class ParkourTimer {
    public void saveTime() {
 
       int currentMap = parkourMain.currentMap;
-      GameMap map = parkourMain.gameMaps.get(currentMap);
+      Map map = parkourMain.mapManager.gameMaps.get(currentMap);
       int recordMinutes =
-         parkourMain.gameMaps.get(currentMap).recordTimeMinutes;
+         parkourMain.mapManager.gameMaps.get(currentMap).recordTimeMinutes;
       int recordSeconds =
-         parkourMain.gameMaps.get(currentMap).recordTimeSeconds;
+         parkourMain.mapManager.gameMaps.get(currentMap).recordTimeSeconds;
       int recordMilis =
-         parkourMain.gameMaps.get(currentMap).recordTimeMiliseconds;
+         parkourMain.mapManager.gameMaps.get(currentMap).recordTimeMiliseconds;
 
       endTimeMilis = (int)timerTimeMiliseconds;
       endTimeSeconds = (int)timerTimeSeconds;

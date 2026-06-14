@@ -301,11 +301,11 @@ public class Player {
 
       System.out.println("Player X: " + worldX + ", Player Y: " + worldY);
 
-      if (worldX > parkourMain.gameMaps.get(parkourMain.currentMap).endIndex) {
+      if (worldX > parkourMain.mapManager.gameMaps.get(parkourMain.currentMap).endIndex) {
 
          parkourMain.currentMapState = parkourMain.finish;
          parkourMain.parkourTimer.saveTime(); // Save the record time
-         parkourMain.propertiesData.saveProperties();
+         parkourMain.mapManager.saveMapProperties();
          // Transition to finish screen
 
          worldX = 480;
