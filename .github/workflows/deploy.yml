@@ -26,13 +26,29 @@ jobs:
     - name: Build and Aggregate Docs
       run: ./gradlew clean build javadoc
 
+    # Prepare the jar with git hash in filename
+    - name: Rename Jar with Git Hash
+      run: |
+        JAR_FILE=$(ls build/libs/*.jar | head -1)
+        SHORT_HASH="${GITHUB_SHA:0:7}"
+        cp "$JAR_FILE" "build/libs/ParkourWarrior-${SHORT_HASH}.jar"
+
     - name: Deploy Javadocs via SCP
       uses: appleboy/scp-action@master
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
-        # This takes the files built on the runner and sends them to the server
         source: "docs/*"
         target: "/var/webdocs/ParkourWarrior"
         strip_components: 1
+
+    - name: Deploy Jar via SCP
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        source: "build/libs/ParkourWarrior-*.jar"
+        target: "/var/webdownloads/ParkourWarrior/nightly"
+        strip_components: 2
