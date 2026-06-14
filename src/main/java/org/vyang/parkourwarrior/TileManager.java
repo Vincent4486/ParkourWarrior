@@ -66,8 +66,8 @@ public class TileManager {
       tile = new Tile[15];
 
       mapTileNumber =
-         new int[parkourMain.mapManager.gameMaps.size()][parkourMain.maxWorldColumn]
-                [parkourMain.maxWorldRow];
+         new int[parkourMain.mapManager.gameMaps.size()]
+                [parkourMain.maxWorldColumn][parkourMain.maxWorldRow];
 
       getTile();
    }

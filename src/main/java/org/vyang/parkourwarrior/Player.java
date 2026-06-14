@@ -301,7 +301,8 @@ public class Player {
 
       System.out.println("Player X: " + worldX + ", Player Y: " + worldY);
 
-      if (worldX > parkourMain.mapManager.gameMaps.get(parkourMain.currentMap).endIndex) {
+      if (worldX > parkourMain.mapManager.gameMaps.get(parkourMain.currentMap)
+                      .endIndex) {
 
          parkourMain.currentMapState = parkourMain.finish;
          parkourMain.parkourTimer.saveTime(); // Save the record time

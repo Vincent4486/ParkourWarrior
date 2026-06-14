@@ -34,7 +34,7 @@ public class MapManager {
     */
    String filePath = System.getProperty("user.home") +
                      "/.config/ParkourWarrior/maps.properties";
-   
+
    /**
     * The array of game maps loaded from the properties file.
     * @since 1.5
@@ -50,7 +50,7 @@ public class MapManager {
     */
    public MapManager(ParkourMain parkourMain) {
       this.parkourMain = parkourMain;
-      
+
       gameMaps = new ArrayList<>();
       loadMapProperties();
    }
@@ -227,5 +227,34 @@ public class MapManager {
     */
    public void removeMap() {
       // Implementation here
+   }
+
+   /**
+    * Shows the map manager dialogue.
+    *
+    * @since 1.5
+    */
+   public void showMapManager() {
+      javax.swing.SwingUtilities.invokeLater(() -> {
+         MapDialogue dialogue = new MapDialogue();
+         dialogue.setVisible(true); // This brings the window onto the screen
+      });
+   }
+
+   /**
+    * Inner class handling the UI window for custom map management.
+    *
+    * @since 1.5
+    */
+   @SuppressWarnings("serial")
+   private class MapDialogue extends javax.swing.JFrame {
+      public MapDialogue() {
+         this.setTitle("Custom Map Manager");
+         this.setSize(350, 200);
+
+         this.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+
+         this.setLocationRelativeTo(MapManager.this.parkourMain);
+      }
    }
 }

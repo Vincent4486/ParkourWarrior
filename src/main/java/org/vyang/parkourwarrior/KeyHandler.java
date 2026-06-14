@@ -2,6 +2,7 @@ package org.vyang.parkourwarrior;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import javax.swing.JOptionPane;
 
 /**
  * Keyboard input handler for the game.
@@ -80,9 +81,16 @@ public class KeyHandler implements KeyListener {
             }
             break;
          case KeyEvent.VK_ESCAPE:
-            parkourMain.currentMapState = parkourMain.title;
-            parkourMain.player.worldX = 480;
-            parkourMain.player.worldY = 376;
+            int exit = JOptionPane.showConfirmDialog(
+               null, "Do you want to quit?", "Confirm Quit",
+               JOptionPane.YES_NO_OPTION);
+            if (exit == 0) {
+               parkourMain.currentMapState = parkourMain.title;
+               parkourMain.player.worldX = 480;
+               parkourMain.player.worldY = 376;
+            } else
+               break;
+
             break;
          case KeyEvent.VK_SHIFT:
             parkourMain.player.sneaking = true;

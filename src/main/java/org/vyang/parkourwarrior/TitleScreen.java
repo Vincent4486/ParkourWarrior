@@ -86,7 +86,8 @@ public class TitleScreen {
 
       int centerIndex = choosedMap;
       int startIndex = Math.max(0, centerIndex - 1);
-      int endIndex = Math.min(parkourMain.mapManager.gameMaps.size() - 1, centerIndex + 1);
+      int endIndex =
+         Math.min(parkourMain.mapManager.gameMaps.size() - 1, centerIndex + 1);
 
       graphics2D.setFont(graphics2D.getFont().deriveFont(Font.PLAIN, 24));
       graphics2D.setColor(new Color(0, 63, 100));
@@ -97,17 +98,21 @@ public class TitleScreen {
 
          String recordTime =
             " >Record time: " +
-            String.format("%02d",
-                          parkourMain.mapManager.gameMaps.get(i).recordTimeMinutes) +
+            String.format(
+               "%02d",
+               parkourMain.mapManager.gameMaps.get(i).recordTimeMinutes) +
             ":" +
-            String.format("%02d",
-                          parkourMain.mapManager.gameMaps.get(i).recordTimeSeconds) +
+            String.format(
+               "%02d",
+               parkourMain.mapManager.gameMaps.get(i).recordTimeSeconds) +
             "." +
-            String.format("%03d",
-                          parkourMain.mapManager.gameMaps.get(i).recordTimeMiliseconds) +
+            String.format(
+               "%03d",
+               parkourMain.mapManager.gameMaps.get(i).recordTimeMiliseconds) +
             "<";
 
-         String[] path = parkourMain.mapManager.gameMaps.get(i).mapPath.split("/");
+         String[] path =
+            parkourMain.mapManager.gameMaps.get(i).mapPath.split("/");
          String nameEx = path[path.length - 1];
          String name = nameEx.substring(0, nameEx.lastIndexOf("."));
          int yPosition = 8 * 44 + (i - centerIndex) * 30;

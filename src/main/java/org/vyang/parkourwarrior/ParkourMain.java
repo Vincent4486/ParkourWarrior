@@ -16,6 +16,7 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
@@ -418,6 +419,25 @@ public class ParkourMain extends JPanel implements Runnable {
 
          // TODO Auto-generated catch block
          e.printStackTrace();
+      }
+   }
+
+   /**
+    * The global quit method that handles the uninitialization.
+    * @since 1.5
+    * @param code Exit code.
+    */
+   public void quit(int code) {
+      if (currentMapState == play) {
+         int exit = JOptionPane.showConfirmDialog(null, "Do you want to quit?",
+                                                  "Confirm Quit",
+                                                  JOptionPane.YES_NO_OPTION);
+         if (exit == 0)
+            System.exit(code);
+         else
+            return;
+      } else {
+         System.exit(code);
       }
    }
 }
