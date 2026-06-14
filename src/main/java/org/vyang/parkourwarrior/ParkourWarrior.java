@@ -1,5 +1,6 @@
 package org.vyang.parkourwarrior;
 
+import java.awt.*;
 import javax.swing.*;
 
 /**
@@ -52,6 +53,17 @@ public class ParkourWarrior {
       frame.add(parkourMain);
       frame.setJMenuBar(parkourMain.menuBar);
       frame.setIconImage(parkourMain.ico.getImage());
+
+      if (Taskbar.isTaskbarSupported()) {
+         Taskbar taskbar = Taskbar.getTaskbar();
+         try {
+            taskbar.setIconImage(parkourMain.ico.getImage());
+         } catch (UnsupportedOperationException e) {
+            e.printStackTrace();
+         } catch (SecurityException e) {
+            e.printStackTrace();
+         }
+      }
 
       frame.pack();
       frame.setVisible(true);

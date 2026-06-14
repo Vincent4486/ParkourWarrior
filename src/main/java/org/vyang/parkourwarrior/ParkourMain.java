@@ -258,7 +258,7 @@ public class ParkourMain extends JPanel implements Runnable {
    public ParkourMain() {
 
       ico = new ImageIcon(
-         Objects.requireNonNull(getClass().getResource("/player/right1.png")));
+         Objects.requireNonNull(getClass().getResource("/icon/ParkourWarrior.png")));
 
       mapManager = new MapManager(this);
       parkourTimer = new ParkourTimer(this);
