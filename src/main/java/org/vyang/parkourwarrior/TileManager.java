@@ -66,7 +66,7 @@ public class TileManager {
       tile = new Tile[15];
 
       mapTileNumber =
-         new int[parkourMain.mapNumber.size()][parkourMain.maxWorldColumn]
+         new int[parkourMain.gameMaps.size()][parkourMain.maxWorldColumn]
                 [parkourMain.maxWorldRow];
 
       getTile();
@@ -132,9 +132,10 @@ public class TileManager {
     * @param mapPaths the list of resource paths to the map files
     * @since 1.1
     */
-   public void loadMap(ArrayList<String> mapPaths) {
+   public void loadMap() {
       int mapIndex = 0;
-      for (String path : mapPaths) {
+      for (GameMap map : parkourMain.gameMaps) {
+    	 String path = map.mapPath;
          System.out.println("Attempting to load map from resource: " + path);
          InputStream inputStream =
             Objects.requireNonNull(getClass().getResourceAsStream(path));

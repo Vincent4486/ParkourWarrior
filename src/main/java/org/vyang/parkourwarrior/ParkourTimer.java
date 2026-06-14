@@ -163,9 +163,10 @@ public class ParkourTimer {
    public void saveTime() {
 
       int currentMap = parkourMain.currentMap;
-      int recordMinutes = parkourMain.recordTimeMinutes.get(currentMap);
-      int recordSeconds = parkourMain.recordTimeSeconds.get(currentMap);
-      int recordMilis = parkourMain.recordTimeMiliseconds.get(currentMap);
+      GameMap map = parkourMain.gameMaps.get(currentMap);
+      int recordMinutes = parkourMain.gameMaps.get(currentMap).recordTimeMinutes;
+      int recordSeconds = parkourMain.gameMaps.get(currentMap).recordTimeSeconds;
+      int recordMilis = parkourMain.gameMaps.get(currentMap).recordTimeMiliseconds;
 
       endTimeMilis = (int)timerTimeMiliseconds;
       endTimeSeconds = (int)timerTimeSeconds;
@@ -185,26 +186,13 @@ public class ParkourTimer {
          recordSeconds = Integer.MAX_VALUE;
       }
 
-      if (endTimeMinutes < recordMinutes) {
-
-         parkourMain.recordTimeMinutes.set(currentMap, endTimeMinutes);
-         parkourMain.recordTimeSeconds.set(currentMap, endTimeSeconds);
-         parkourMain.recordTimeMiliseconds.set(currentMap, endTimeMilis);
-
-      } else if (endTimeMinutes == recordMinutes &&
-                 endTimeSeconds < recordSeconds) {
-
-         parkourMain.recordTimeMinutes.set(currentMap, endTimeMinutes);
-         parkourMain.recordTimeSeconds.set(currentMap, endTimeSeconds);
-         parkourMain.recordTimeMiliseconds.set(currentMap, endTimeMilis);
-
-      } else if (endTimeMinutes == recordMinutes &&
-                 endTimeSeconds == recordSeconds &&
-                 endTimeMilis < recordMilis) {
-
-         parkourMain.recordTimeMinutes.set(currentMap, endTimeMinutes);
-         parkourMain.recordTimeSeconds.set(currentMap, endTimeSeconds);
-         parkourMain.recordTimeMiliseconds.set(currentMap, endTimeMilis);
+      if ((endTimeMinutes < recordMinutes) || 
+          (endTimeMinutes == recordMinutes && endTimeSeconds < recordSeconds) || 
+          (endTimeMinutes == recordMinutes && endTimeSeconds == recordSeconds && endTimeMilis < recordMilis)) {
+          
+         map.recordTimeMinutes = endTimeMinutes;
+         map.recordTimeSeconds = endTimeSeconds;
+         map.recordTimeMiliseconds = endTimeMilis;
       }
    }
 }

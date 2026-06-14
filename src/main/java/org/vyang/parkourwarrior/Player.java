@@ -301,7 +301,7 @@ public class Player {
 
       System.out.println("Player X: " + worldX + ", Player Y: " + worldY);
 
-      if (worldX > parkourMain.endIndex.get(parkourMain.currentMap)) {
+      if (worldX > parkourMain.gameMaps.get(parkourMain.currentMap).endIndex) {
 
          parkourMain.currentMapState = parkourMain.finish;
          parkourMain.parkourTimer.saveTime(); // Save the record time
@@ -405,7 +405,7 @@ public class Player {
     *
     * @since 1.0
     */
-   public void jump() {
+   private void jump() {
 
       if (!falling && askJump && worldY > maxJumpHeight && !collideUp) {
          for (int i = 0; i < jumpSpeed; i++) {
@@ -431,7 +431,7 @@ public class Player {
     *
     * @since 1.0
     */
-   public void fall() {
+   private void fall() {
 
       if (!jumping && !collideDown) {
          for (int i = 0; i < fallSpeed; i++) {

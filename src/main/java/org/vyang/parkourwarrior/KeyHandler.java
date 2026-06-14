@@ -97,14 +97,14 @@ public class KeyHandler implements KeyListener {
 
             parkourMain.titleScreen.choosedMap =
                (parkourMain.titleScreen.choosedMap - 1 +
-                parkourMain.mapPath.size()) %
-               parkourMain.mapPath.size();
+                parkourMain.gameMaps.size()) %
+               parkourMain.gameMaps.size();
 
          } else if (e.getKeyCode() == KeyEvent.VK_S) {
 
             parkourMain.titleScreen.choosedMap =
                (parkourMain.titleScreen.choosedMap + 1) %
-               parkourMain.mapPath.size();
+               parkourMain.gameMaps.size();
 
          } else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 

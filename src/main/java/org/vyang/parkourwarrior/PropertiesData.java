@@ -32,7 +32,7 @@ public class PropertiesData {
     * @since 1.1
     */
    String filePath =
-      System.getProperty("user.dir") + "/ParkourWarrior.properties";
+      System.getProperty("user.home") + "/.config/ParkourWarrior/maps.properties";
 
    /**
     * Constructs a new {@code PropertiesData} with a reference to
@@ -99,16 +99,18 @@ public class PropertiesData {
             int recordMilis = Integer.parseInt(data[7]);
             int endIndex = Integer.parseInt(data[8]);
 
-            // Add the data to the corresponding lists in ParkourMain.
-            parkourMain.mapNumber.add(mapNumber);
-            parkourMain.mapPath.add(mapPath);
-            parkourMain.mapType.add(mapType);
-            parkourMain.isDefaultMap.add(isDefault);
-            parkourMain.haveFinishedMap.add(haveFinished);
-            parkourMain.recordTimeMinutes.add(recordMinutes);
-            parkourMain.recordTimeSeconds.add(recordSeconds);
-            parkourMain.recordTimeMiliseconds.add(recordMilis);
-            parkourMain.endIndex.add(endIndex);
+            // Add the data to the corresponding list in ParkourMain.
+            GameMap map = new GameMap();
+            map.mapNumber = mapNumber;
+            map.mapPath = mapPath;
+            map.mapType = mapType;
+            map.isDefaultMap = isDefault;
+            map.haveFinishedMap = haveFinished;
+            map.recordTimeMinutes = recordMinutes;
+            map.recordTimeSeconds = recordSeconds;
+            map.recordTimeMiliseconds = recordMilis;
+            map.endIndex = endIndex;
+            parkourMain.gameMaps.add(map);
 
             number++;
          }
@@ -140,17 +142,17 @@ public class PropertiesData {
       try (FileOutputStream propertiesFile = new FileOutputStream(filePath)) {
          Properties properties = new Properties();
 
-         for (int num = 0; num < parkourMain.mapNumber.size(); num++) {
+         for (int num = 0; num < parkourMain.gameMaps.size(); num++) {
             String propertiesValue =
-               parkourMain.mapNumber.get(num) + " " +
-               parkourMain.mapPath.get(num) + " " +
-               parkourMain.mapType.get(num) + " " +
-               parkourMain.isDefaultMap.get(num) + " " +
-               parkourMain.haveFinishedMap.get(num) + " " +
-               parkourMain.recordTimeMinutes.get(num) + " " +
-               parkourMain.recordTimeSeconds.get(num) + " " +
-               parkourMain.recordTimeMiliseconds.get(num) + " " +
-               parkourMain.endIndex.get(num);
+               parkourMain.gameMaps.get(num).mapNumber + " " +
+               parkourMain.gameMaps.get(num).mapPath + " " +
+               parkourMain.gameMaps.get(num).mapType + " " +
+               parkourMain.gameMaps.get(num).isDefaultMap + " " +
+               parkourMain.gameMaps.get(num).haveFinishedMap + " " +
+               parkourMain.gameMaps.get(num).recordTimeMinutes + " " +
+               parkourMain.gameMaps.get(num).recordTimeSeconds + " " +
+               parkourMain.gameMaps.get(num).recordTimeMiliseconds + " " +
+               parkourMain.gameMaps.get(num).endIndex;
 
             properties.setProperty(Integer.toString(num), propertiesValue);
          }
@@ -176,6 +178,7 @@ public class PropertiesData {
     */
    public void createPropertiesFile() {
       System.out.println("Creating properties file at: " + filePath);
+      
       try (FileOutputStream propertiesFile = new FileOutputStream(filePath)) {
          Properties properties = new Properties();
          // Sample properties entry with key "0"

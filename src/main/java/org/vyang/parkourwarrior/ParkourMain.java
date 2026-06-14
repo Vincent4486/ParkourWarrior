@@ -98,76 +98,11 @@ public class ParkourMain extends JPanel implements Runnable {
     */
    public final int maxWorldRow = 11;
 
-   /*
-    * public int recordTimeMiliseconds is 2 digit miliseconds.
-    * public int currentMap means current map number, number is in properties
-    * file.
-    */
-
    /**
-    * This is the map number for the program to load the maps,
-    * defined for {@code PropertiesData} and {@code TileManager}.
-    * @since 1.1
+    * The array of game maps loaded from the properties file.
+    * @since 1.5
     */
-   public ArrayList<Integer> mapNumber;
-
-   /**
-    * This is the path to maps in the system, defined for
-    * {@code PropertiesData} and {@code TileManager}.
-    * @since 1.1
-    */
-   public ArrayList<String> mapPath;
-
-   /**
-    * This is the type of map, defined for
-    * {@code PropertiesData} and {@code TileManager},
-    * currently unused.
-    * @since 1.1
-    */
-   public ArrayList<Integer> mapType;
-
-   /**
-    * This is the type of map (e.g. default), defined for
-    * {@code PropertiesData} and {@code TileManager}.
-    * @since 1.1
-    */
-   public ArrayList<Boolean> isDefaultMap;
-
-   /**
-    * This is for Graphics2D to see if the it need to
-    * print time next to the map, defined for
-    * {@code PropertiesData} and {@code TileManager}.
-    * @since 1.1
-    */
-   public ArrayList<Boolean> haveFinishedMap;
-
-   /**
-    * The shortest minutes used to finish a map, defined for
-    * {@code PropertiesData} and {@code TileManager}.
-    * @since 1.1
-    */
-   public ArrayList<Integer> recordTimeMinutes;
-
-   /**
-    * The shortest seconds used to finish a map, defined for
-    * {@code PropertiesData} and {@code TileManager}.
-    * @since 1.1
-    */
-   public ArrayList<Integer> recordTimeSeconds;
-
-   /**
-    * The shortest milliseconds used to finish a map, defined for
-    * {@code PropertiesData} and {@code TileManager}.
-    * @since 1.1
-    */
-   public ArrayList<Integer> recordTimeMiliseconds;
-
-   /**
-    * The end index, defined for
-    * {@code PropertiesData} and {@code TileManager}.
-    * @since 1.1
-    */
-   public ArrayList<Integer> endIndex;
+   public ArrayList<GameMap> gameMaps;
 
    /**
     * To determine if the program needs to play music.
@@ -330,15 +265,7 @@ public class ParkourMain extends JPanel implements Runnable {
       ico = new ImageIcon(
          Objects.requireNonNull(getClass().getResource("/player/right1.png")));
 
-      mapNumber = new ArrayList<>();
-      mapPath = new ArrayList<>();
-      mapType = new ArrayList<>();
-      isDefaultMap = new ArrayList<>();
-      haveFinishedMap = new ArrayList<>();
-      recordTimeMinutes = new ArrayList<>();
-      recordTimeSeconds = new ArrayList<>();
-      recordTimeMiliseconds = new ArrayList<>();
-      endIndex = new ArrayList<>();
+      gameMaps = new ArrayList<>();
 
       propertiesData = new PropertiesData(this);
       propertiesData.loadProperties();
@@ -351,7 +278,7 @@ public class ParkourMain extends JPanel implements Runnable {
       keyHandler = new KeyHandler(this);
       menuBar = new MenuBar(this);
 
-      tileManager.loadMap(mapPath);
+      tileManager.loadMap();
 
       thread = new Thread(this);
 
