@@ -1,7 +1,11 @@
 package org.vyang.parkourwarrior;
 
-import java.util.ArrayList;
-
+/**
+ * GameMap contating all data of a map.
+ * @author Vincent4486
+ * @version 1.5
+ * @since 1.5
+ */
 public class GameMap {
 	
 	/*

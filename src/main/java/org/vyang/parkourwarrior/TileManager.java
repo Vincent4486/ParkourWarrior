@@ -129,7 +129,6 @@ public class TileManager {
     * tile numbers into the {@code mapTileNumber} array.
     * </p>
     *
-    * @param mapPaths the list of resource paths to the map files
     * @since 1.1
     */
    public void loadMap() {
