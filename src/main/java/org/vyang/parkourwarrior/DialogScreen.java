@@ -15,8 +15,8 @@ import javax.imageio.ImageIO;
  * supporting both informational messages (with a single option that
  * ENTER activates) and yes/no selection prompts. Navigation and results
  * are handled via a callback mechanism. A dialog can also be transparent,
- * which draws it over the running game instead of over the default
- * background.
+ * which draws a light overlay over the whole screen instead of the default
+ * background, so the game stays visible behind the text.
  * </p>
  *
  * @author Vincent4486
@@ -37,6 +37,14 @@ public class DialogScreen {
     * @since 1.5
     */
    private BufferedImage background;
+
+   /**
+    * The colour of the overlay of a transparent dialog, which is the
+    * colour of the default dialog background at a light alpha.
+    * @since 1.5
+    */
+   private static final Color OVERLAY_BACKGROUND =
+      new Color(242, 245, 255, 200);
 
    /**
     * Reference to the main game panel.
@@ -165,11 +173,7 @@ public class DialogScreen {
     */
    private void drawDialogScreenInform(Graphics2D graphics2D, String title,
                                    String text) {
-      BufferedImage image = getBackground();
-
-      if (!transparent && image != null) {
-         graphics2D.drawImage(image, 0, 0, 768, 529, null);
-      }
+      drawBackdrop(graphics2D);
 
       graphics2D.setFont(graphics2D.getFont().deriveFont(Font.BOLD, 78));
       graphics2D.setColor(new Color(0x35BFA3));
@@ -197,11 +201,7 @@ public class DialogScreen {
     */
    private void drawDialogScreenOption(Graphics2D graphics2D, String title,
                                    String text) {
-      BufferedImage image = getBackground();
-
-      if (!transparent && image != null) {
-         graphics2D.drawImage(image, 0, 0, 768, 529, null);
-      }
+      drawBackdrop(graphics2D);
 
       graphics2D.setFont(graphics2D.getFont().deriveFont(Font.BOLD, 78));
       graphics2D.setColor(new Color(0x35BFA3));
@@ -248,6 +248,32 @@ public class DialogScreen {
       graphics2D.drawString(
          "A/D to move, ENTER to select",
          centerTextX("A/D to move, ENTER to select", graphics2D), 500);
+   }
+
+   /**
+    * Draws the backdrop of the dialog.
+    * <p>
+    * A transparent dialog fills the whole screen with a light colour
+    * at a light alpha, so the game stays visible behind the text,
+    * while a normal dialog draws the default background image.
+    * </p>
+    *
+    * @param graphics2D the {@code Graphics2D} context to draw on
+    * @since 1.5
+    */
+   private void drawBackdrop(Graphics2D graphics2D) {
+
+      if (transparent) {
+         graphics2D.setColor(OVERLAY_BACKGROUND);
+         graphics2D.fillRect(0, 0, 768, 529);
+         return;
+      }
+
+      BufferedImage image = getBackground();
+
+      if (image != null) {
+         graphics2D.drawImage(image, 0, 0, 768, 529, null);
+      }
    }
 
    /**
