@@ -91,8 +91,7 @@ public class KeyHandler implements KeyListener {
             parkourMain.dialogScreen.callback = (yes) -> {
                if (yes) {
                   parkourMain.currentMapState = parkourMain.title;
-                  parkourMain.player.worldX = 480;
-                  parkourMain.player.worldY = 376;
+                  parkourMain.player.spawnPlayer();
                } else {
                   parkourMain.currentMapState = parkourMain.play;
                }
@@ -125,6 +124,7 @@ public class KeyHandler implements KeyListener {
             parkourMain.currentMap = parkourMain.titleScreen.choosedMap;
             parkourMain.currentMapState = parkourMain.play;
             parkourMain.timerStartTime = System.nanoTime();
+            parkourMain.player.spawnPlayer();
          }
       }
       if (e.getKeyCode() == KeyEvent.VK_Q) {

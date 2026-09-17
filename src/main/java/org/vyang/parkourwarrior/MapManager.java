@@ -17,7 +17,7 @@ import java.util.Properties;
  * </p>
  *
  * @author Vincent4486
- * @version 1.3
+ * @version 1.5
  * @since 1.1
  */
 public class MapManager {
@@ -71,8 +71,9 @@ public class MapManager {
        * Expected properties file format for each key:
        * map_number map_path map_type is_default_map have_finished_map
        * record_time_minutes record_time_seconds record_time_milis end_position
+       * player_init_x player_init_y
        * For example:
-       * 0=1 /map/map0.txt 1 true false 0 0 0 400
+       * 0=1 /map/map0.txt 1 true false 0 0 0 400 480 384
        */
       System.out.println("Attempting to load properties file from: " +
                          filePath);
@@ -83,7 +84,7 @@ public class MapManager {
          int number = 0;
          while (properties.getProperty(Integer.toString(number)) != null) {
             String dataLine = properties.getProperty(Integer.toString(number));
-            String[] data = dataLine.split(" ");
+            String[] data = dataLine.trim().split(" ");
 
             int mapNumber = Integer.parseInt(data[0]);
             String rawPath = data[1].trim();
@@ -120,6 +121,13 @@ public class MapManager {
             map.recordTimeSeconds = recordSeconds;
             map.recordTimeMiliseconds = recordMilis;
             map.endIndex = endIndex;
+
+            // Entries without a player spawn keep the defaults of Map
+            if (data.length > 10) {
+               map.playerInitX = Integer.parseInt(data[9]);
+               map.playerInitY = Integer.parseInt(data[10]);
+            }
+
             this.gameMaps.add(map);
 
             number++;
@@ -162,7 +170,9 @@ public class MapManager {
                this.gameMaps.get(num).recordTimeMinutes + " " +
                this.gameMaps.get(num).recordTimeSeconds + " " +
                this.gameMaps.get(num).recordTimeMiliseconds + " " +
-               this.gameMaps.get(num).endIndex;
+               this.gameMaps.get(num).endIndex + " " +
+               this.gameMaps.get(num).playerInitX + " " +
+               this.gameMaps.get(num).playerInitY;
 
             properties.setProperty(Integer.toString(num), propertiesValue);
          }
@@ -192,13 +202,16 @@ public class MapManager {
       try (FileOutputStream propertiesFile = new FileOutputStream(filePath)) {
          Properties properties = new Properties();
          // Sample properties entry with key "0"
-         String propertiesValue1 = "1 /map/map0.txt 1 true false 0 0 0 2740";
+         String propertiesValue1 =
+            "1 /map/map0.txt 1 true false 0 0 0 2740 480 384";
          properties.setProperty("0", propertiesValue1);
 
-         String propertiesValue2 = "2 /map/map1.txt 1 true false 0 0 0 3017";
+         String propertiesValue2 =
+            "2 /map/map1.txt 1 true false 0 0 0 3017 480 384";
          properties.setProperty("1", propertiesValue2);
 
-         String propertiesValue3 = "3 /map/map2.txt 1 true false 0 0 0 3100";
+         String propertiesValue3 =
+            "3 /map/map2.txt 1 true false 0 0 0 3100 480 384";
          properties.setProperty("2", propertiesValue3);
 
          properties.store(propertiesFile, "Parkour Warrior Sample Properties");

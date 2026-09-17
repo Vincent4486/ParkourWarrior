@@ -391,8 +391,7 @@ public class Player {
          parkourMain.mapManager.saveMapProperties();
          // Transition to finish screen
 
-         worldX = 480;
-         worldY = 376;
+         spawnPlayer();
       }
    }
 
@@ -696,6 +695,28 @@ public class Player {
       velocityY = 0;
       remainderX = 0;
       remainderY = 0;
+   }
+
+   /**
+    * Moves the player to the spawn position of the current map.
+    * <p>
+    * The spawn is read from the current {@code Map}, and the
+    * velocity, the sub-pixel movement, and any jump request are
+    * cleared.
+    * </p>
+    *
+    * @since 1.5
+    */
+   public void spawnPlayer() {
+
+      Map map = parkourMain.mapManager.gameMaps.get(parkourMain.currentMap);
+
+      worldX = map.playerInitX;
+      worldY = map.playerInitY;
+
+      askJump = false;
+
+      resetMotion();
    }
 
    /**

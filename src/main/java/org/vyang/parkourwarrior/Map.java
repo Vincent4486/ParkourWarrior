@@ -80,6 +80,20 @@ public class Map {
    public int endIndex;
 
    /**
+    * The X position the player spawns at in world pixels,
+    * defined for {@code MapManager} and {@code Player}.
+    * @since 1.5
+    */
+   public int playerInitX = 480;
+
+   /**
+    * The Y position the player spawns at in world pixels,
+    * defined for {@code MapManager} and {@code Player}.
+    * @since 1.5
+    */
+   public int playerInitY = 384;
+
+   /**
     * The constructor of class {@code Map} which is not used.
     * @since 1.5
     */
