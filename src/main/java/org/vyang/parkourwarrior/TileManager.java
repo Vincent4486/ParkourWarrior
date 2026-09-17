@@ -18,7 +18,7 @@ import javax.imageio.ImageIO;
  * </p>
  *
  * @author Vincent4486
- * @version 1.3
+ * @version 1.5
  * @since 1.0
  */
 public class TileManager {
@@ -74,8 +74,11 @@ public class TileManager {
    /**
     * Draws the visible tiles on screen.
     * <p>
-    * Iterates through the tile map array and renders each tile
-    * relative to the player's position using a camera offset.
+    * Renders the tiles that are on screen relative to the player's
+    * position using a camera offset. Columns outside the map repeat
+    * the first or the last column of the map, so the screen is never
+    * left black at the borders. The repeated columns are drawn only,
+    * the collision of the player still ends at the map borders.
     * </p>
     *
     * @param graphics2D the {@code Graphics2D} context to draw on
@@ -88,28 +91,29 @@ public class TileManager {
        * height == row
        */
 
-      int column = 0;
-      int row = 0;
-      int y = 0;
+      int tileSize = parkourMain.tileSize;
+      int cameraX = parkourMain.player.worldX - parkourMain.player.screenX;
 
-      while (column < parkourMain.maxWorldColumn &&
-             row < parkourMain.maxHeightTiles) {
+      int firstColumn = Math.floorDiv(cameraX, tileSize);
+      int lastColumn =
+         Math.floorDiv(cameraX + parkourMain.screenWidth - 1, tileSize);
 
-         tileNumber = mapTileNumber[parkourMain.currentMap][column][row];
+      for (int row = 0; row < parkourMain.maxHeightTiles; row++) {
 
-         int worldX = column * parkourMain.tileSize;
-         int screenX =
-            worldX - parkourMain.player.worldX + parkourMain.player.screenX;
+         int y = row * tileSize;
 
-         graphics2D.drawImage(tile[tileNumber].image, screenX, y,
-                              parkourMain.tileSize, parkourMain.tileSize, null);
-         column++;
+         for (int column = firstColumn; column <= lastColumn; column++) {
 
-         if (column == parkourMain.maxWorldColumn) {
+            int mapColumn =
+               Math.min(Math.max(column, 0), parkourMain.maxWorldColumn - 1);
 
-            column = 0;
-            row++;
-            y += parkourMain.tileSize;
+            tileNumber =
+               mapTileNumber[parkourMain.currentMap][mapColumn][row];
+
+            int screenX = column * tileSize - cameraX;
+
+            graphics2D.drawImage(tile[tileNumber].image, screenX, y,
+                                 tileSize, tileSize, null);
          }
       }
    }

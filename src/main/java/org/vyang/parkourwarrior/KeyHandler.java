@@ -13,7 +13,7 @@ import java.util.function.Consumer;
  * the target method.
  * </p>
  * @author Vincent4486
- * @version 1.3
+ * @version 1.5
  * @since 1.0
  */
 public class KeyHandler implements KeyListener {
