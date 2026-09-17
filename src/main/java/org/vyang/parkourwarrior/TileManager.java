@@ -283,6 +283,11 @@ public class TileManager {
           * ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
           */
 
+         tile[9] = new Tile();
+         tile[9].image = ImageIO.read(Objects.requireNonNull(
+            getClass().getResourceAsStream("/tile/dirt.png")));
+         tile[9].solidTile = true;
+
       } catch (IOException e) {
 
          e.printStackTrace();

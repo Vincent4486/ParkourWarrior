@@ -66,7 +66,7 @@ that cannot be read is kept as `maps.json.bak`.
 
 | Tiles | Behaviour |
 | ----- | --------- |
-| 0 brick, 3 grass, 4 sand, 6 water | solid |
+| 0 brick, 3 grass, 4 sand, 6 water, 9 dirt | solid |
 | 7 brick, 8 sky | solid, border barrier |
 | 1 cloud, 2 flag, 5 sky | not solid |
 
