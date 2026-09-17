@@ -388,7 +388,7 @@ public class Player {
             parkourMain.currentMapState = parkourMain.title;
          };
          parkourMain.parkourTimer.saveTime(); // Save the record time
-         parkourMain.mapManager.saveMapProperties();
+         parkourMain.mapManager.saveMaps();
          // Transition to finish screen
 
          spawnPlayer();
@@ -672,14 +672,15 @@ public class Player {
     */
    private boolean isSolidTile(int column, int row) {
 
-      if (column < 0 || row < 0 || column >= parkourMain.maxWorldColumn ||
+      int[][] tileMap =
+         parkourMain.tileManager.mapTileNumber[parkourMain.currentMap];
+
+      if (column < 0 || row < 0 || column >= tileMap.length ||
           row >= parkourMain.maxWorldRow) {
          return true;
       }
 
-      int tileNumber =
-         parkourMain.tileManager
-            .mapTileNumber[parkourMain.currentMap][column][row];
+      int tileNumber = tileMap[column][row];
 
       return parkourMain.tileManager.tile[tileNumber].solidTile;
    }

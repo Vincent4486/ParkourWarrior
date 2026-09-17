@@ -80,6 +80,14 @@ public class Map {
    public int endIndex;
 
    /**
+    * The length of the map in world pixels, which is 0 for the
+    * default length of {@code maxWorldColumn} tiles, defined for
+    * {@code MapManager} and {@code TileManager}.
+    * @since 1.5
+    */
+   public int mapLength = 0;
+
+   /**
     * The X position the player spawns at in world pixels,
     * defined for {@code MapManager} and {@code Player}.
     * @since 1.5

@@ -86,10 +86,17 @@ public class ParkourMain extends JPanel implements Runnable {
    public final int screenHeight = tileSize * maxHeightTiles;
 
    /**
-    * This is the maximum columns of ties that can be in a world.
+    * This is the default number of columns of a map, which is used
+    * when a map does not set its own length.
     * @since 1.1
     */
    public final int maxWorldColumn = 68;
+
+   /**
+    * This is the maximum length of a map in pixels, which is 500 tiles.
+    * @since 1.5
+    */
+   public final int maxMapLength = tileSize * 500;
 
    /**
     * This is the maximum rows of tiles that can be in a world.
@@ -418,6 +425,32 @@ public class ParkourMain extends JPanel implements Runnable {
          // TODO Auto-generated catch block
          e.printStackTrace();
       }
+   }
+
+   /**
+    * Returns the number of tile columns of a map.
+    * <p>
+    * A map without a length uses the default of {@code maxWorldColumn}
+    * columns, and no map is longer than {@code maxMapLength}. The length
+    * is rounded down to whole tiles, which are {@code tileSize} wide.
+    * </p>
+    *
+    * @param map the map to measure
+    * @return the number of tile columns of the map
+    * @since 1.5
+    */
+   public int getMapColumnCount(Map map) {
+
+      int length;
+      if (map.mapLength > 0) {
+         length = map.mapLength;
+      } else {
+         length = maxWorldColumn * tileSize;
+      }
+
+      int columns = Math.min(length, maxMapLength) / tileSize;
+
+      return Math.max(columns, 1);
    }
 
    /**

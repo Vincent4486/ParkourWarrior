@@ -1,19 +1,24 @@
 package org.vyang.parkourwarrior;
 
-import java.io.FileInputStream;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.InstanceCreator;
+import com.google.gson.JsonParseException;
+import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Properties;
 
 /**
- * Properties data handler for Parkour Warrior.
+ * JSON data handler for Parkour Warrior.
  * <p>
  * This class manages the game's persistent data by reading and
- * writing to a properties file. It stores map configurations,
- * record times, and other game settings that persist between
- * sessions.
+ * writing to a JSON file with {@code Gson}. It stores map
+ * configurations, record times, and spawn positions that
+ * persist between sessions.
  * </p>
  *
  * @author Vincent4486
@@ -29,17 +34,23 @@ public class MapManager {
    ParkourMain parkourMain;
 
    /**
-    * The absolute file path to the properties file.
+    * The absolute file path to the JSON file.
     * @since 1.1
     */
    String filePath = System.getProperty("user.home") +
-                     "/.config/ParkourWarrior/maps.properties";
+                     "/.config/ParkourWarrior/maps.json";
 
    /**
-    * The array of game maps loaded from the properties file.
+    * The array of game maps loaded from the JSON file.
     * @since 1.5
     */
    public ArrayList<Map> gameMaps;
+
+   /**
+    * The {@code Gson} instance used to read and write the JSON file.
+    * @since 1.5
+    */
+   private final Gson gson;
 
    /**
     * Constructs a new {@code MapManager} with a reference to
@@ -51,177 +62,154 @@ public class MapManager {
    public MapManager(ParkourMain parkourMain) {
       this.parkourMain = parkourMain;
 
+      gson = createGson();
       gameMaps = new ArrayList<>();
-      loadMapProperties();
+      loadMaps();
    }
 
    /**
-    * Loads map and game data from the properties file.
-    * <p>
-    * Reads each numbered property entry and parses it into
-    * map number, path, type, default status, finish status,
-    * record times, and end positions, populating the
-    * corresponding lists in {@code ParkourMain}.
-    * </p>
+    * Loads the maps from the JSON file.
     *
-    * @since 1.1
+    * @since 1.5
     */
-   public void loadMapProperties() {
-      /*
-       * Expected properties file format for each key:
-       * map_number map_path map_type is_default_map have_finished_map
-       * record_time_minutes record_time_seconds record_time_milis end_position
-       * player_init_x player_init_y
-       * For example:
-       * 0=1 /map/map0.txt 1 true false 0 0 0 400 480 384
-       */
-      System.out.println("Attempting to load properties file from: " +
-                         filePath);
-      try (FileInputStream propertiesFile = new FileInputStream(filePath)) {
-         Properties properties = new Properties();
-         properties.load(propertiesFile);
+   public void loadMaps() {
 
-         int number = 0;
-         while (properties.getProperty(Integer.toString(number)) != null) {
-            String dataLine = properties.getProperty(Integer.toString(number));
-            String[] data = dataLine.trim().split(" ");
+      System.out.println("Attempting to load maps file from: " + filePath);
 
-            int mapNumber = Integer.parseInt(data[0]);
-            String rawPath = data[1].trim();
+      try (FileReader reader = new FileReader(filePath)) {
 
-            // Adjust the map path so it points to /res/map/...
-            String mapPath;
-            /*if (!rawPath.startsWith("/res")) {
-                if (!rawPath.startsWith("/")) {
-                    mapPath = "/res/" + rawPath;
-                } else {
-                    mapPath = "/res" + rawPath;
-                }
-            } else {
-                mapPath = rawPath;
-            }*/
-            mapPath = rawPath;
+         MapData data = gson.fromJson(reader, MapData.class);
 
-            int mapType = Integer.parseInt(data[2]);
-            boolean isDefault = Boolean.parseBoolean(data[3]);
-            boolean haveFinished = Boolean.parseBoolean(data[4]);
-            int recordMinutes = Integer.parseInt(data[5]);
-            int recordSeconds = Integer.parseInt(data[6]);
-            int recordMilis = Integer.parseInt(data[7]);
-            int endIndex = Integer.parseInt(data[8]);
-
-            // Add the data to the corresponding list in ParkourMain.
-            Map map = new Map();
-            map.mapNumber = mapNumber;
-            map.mapPath = mapPath;
-            map.mapType = mapType;
-            map.isDefaultMap = isDefault;
-            map.haveFinishedMap = haveFinished;
-            map.recordTimeMinutes = recordMinutes;
-            map.recordTimeSeconds = recordSeconds;
-            map.recordTimeMiliseconds = recordMilis;
-            map.endIndex = endIndex;
-
-            // Entries without a player spawn keep the defaults of Map
-            if (data.length > 10) {
-               map.playerInitX = Integer.parseInt(data[9]);
-               map.playerInitY = Integer.parseInt(data[10]);
-            }
-
-            this.gameMaps.add(map);
-
-            number++;
+         if (data == null || data.maps == null || data.maps.isEmpty()) {
+            System.out.println("Maps file is empty, creating a new one at: " +
+                               filePath);
+            createMapFile();
+            return;
          }
 
-         System.out.println("Loaded properties successfully.");
-         // Optionally: now call the map-loading method using
-         // parkourMain.mapPath parkourMain.loadMaps(parkourMain.mapPath);
+         gameMaps = data.maps;
+
+         System.out.println("Loaded maps successfully.");
 
       } catch (FileNotFoundException e) {
-         System.out.println(
-            "Properties file not found. Creating a new one at: " + filePath);
-         createPropertiesFile();
+
+         System.out.println("Maps file not found, creating a new one at: " +
+                            filePath);
+         createMapFile();
+
+      } catch (IOException | JsonParseException e) {
+
+         System.out.println("Maps file is invalid, creating a new one at: " +
+                            filePath);
+         e.printStackTrace();
+         backupMapFile();
+         createMapFile();
+      }
+   }
+
+   /**
+    * Saves the game maps to the JSON file.
+    *
+    * @since 1.5
+    */
+   public void saveMaps() {
+
+      System.out.println("Saving maps to: " + filePath);
+
+      MapData data = new MapData();
+      data.maps = gameMaps;
+
+      try (FileWriter writer = new FileWriter(filePath)) {
+
+         gson.toJson(data, writer);
+         System.out.println("Maps file saved successfully.");
+
+      } catch (FileNotFoundException e) {
+         createMapFile();
       } catch (IOException e) {
          e.printStackTrace();
       }
    }
 
    /**
-    * Saves the current map and game data to the properties file.
-    * <p>
-    * Writes all map entries from {@code ParkourMain} lists back
-    * to the properties file, preserving the current game state.
-    * </p>
+    * Creates a new JSON file with the builtin maps.
     *
-    * @since 1.1
+    * @since 1.5
     */
-   public void saveMapProperties() {
-      System.out.println("Saving properties to: " + filePath);
-      try (FileOutputStream propertiesFile = new FileOutputStream(filePath)) {
-         Properties properties = new Properties();
+   public void createMapFile() {
 
-         for (int num = 0; num < this.gameMaps.size(); num++) {
-            String propertiesValue =
-               this.gameMaps.get(num).mapNumber + " " +
-               this.gameMaps.get(num).mapPath + " " +
-               this.gameMaps.get(num).mapType + " " +
-               this.gameMaps.get(num).isDefaultMap + " " +
-               this.gameMaps.get(num).haveFinishedMap + " " +
-               this.gameMaps.get(num).recordTimeMinutes + " " +
-               this.gameMaps.get(num).recordTimeSeconds + " " +
-               this.gameMaps.get(num).recordTimeMiliseconds + " " +
-               this.gameMaps.get(num).endIndex + " " +
-               this.gameMaps.get(num).playerInitX + " " +
-               this.gameMaps.get(num).playerInitY;
+      System.out.println("Creating maps file at: " + filePath);
 
-            properties.setProperty(Integer.toString(num), propertiesValue);
-         }
+      MapData data = new MapData();
+      data.maps.add(createBuiltinMap(1, "/map/map0.txt", 2740));
+      data.maps.add(createBuiltinMap(2, "/map/map1.txt", 3017));
+      data.maps.add(createBuiltinMap(3, "/map/map2.txt", 3100));
 
-         properties.store(propertiesFile, "Parkour Warrior Properties");
-         System.out.println("Properties file saved successfully.");
-      } catch (FileNotFoundException e) {
-         createPropertiesFile();
+      gameMaps = data.maps;
+
+      try (FileWriter writer = new FileWriter(filePath)) {
+
+         gson.toJson(data, writer);
+         System.out.println("Maps file created successfully.");
+
       } catch (IOException e) {
+         System.err.println("Error writing maps file: " + e.getMessage());
          e.printStackTrace();
       }
    }
 
    /**
-    * Creates a new properties file with default map entries.
-    * <p>
-    * This method is called when no existing properties file is
-    * found. It writes default map configurations and then
-    * reloads the properties.
-    * </p>
+    * Renames the maps file to a backup next to it.
     *
-    * @since 1.1
+    * @since 1.5
     */
-   public void createPropertiesFile() {
-      System.out.println("Creating properties file at: " + filePath);
+   private void backupMapFile() {
 
-      try (FileOutputStream propertiesFile = new FileOutputStream(filePath)) {
-         Properties properties = new Properties();
-         // Sample properties entry with key "0"
-         String propertiesValue1 =
-            "1 /map/map0.txt 1 true false 0 0 0 2740 480 384";
-         properties.setProperty("0", propertiesValue1);
+      File file = new File(filePath);
+      File backup = new File(filePath + ".bak");
 
-         String propertiesValue2 =
-            "2 /map/map1.txt 1 true false 0 0 0 3017 480 384";
-         properties.setProperty("1", propertiesValue2);
-
-         String propertiesValue3 =
-            "3 /map/map2.txt 1 true false 0 0 0 3100 480 384";
-         properties.setProperty("2", propertiesValue3);
-
-         properties.store(propertiesFile, "Parkour Warrior Sample Properties");
-         System.out.println("Properties file created successfully.");
-         // Reload properties after file creation.
-         loadMapProperties();
-      } catch (IOException e) {
-         System.err.println("Error writing properties file: " + e.getMessage());
-         e.printStackTrace();
+      if (file.exists()) {
+         backup.delete();
+         file.renameTo(backup);
       }
+   }
+
+   /**
+    * Creates a builtin map with default times and spawn.
+    *
+    * @param mapNumber the number of the map
+    * @param mapPath the path of the map file inside the JAR
+    * @param endIndex the world X that finishes the map
+    * @return the builtin map
+    * @since 1.5
+    */
+   private Map createBuiltinMap(int mapNumber, String mapPath, int endIndex) {
+
+      Map map = new Map();
+
+      map.mapNumber = mapNumber;
+      map.mapPath = mapPath;
+      map.mapType = parkourMain.defaultPlayMap;
+      map.isDefaultMap = true;
+      map.endIndex = endIndex;
+
+      return map;
+   }
+
+   /**
+    * Creates the {@code Gson} instance for the maps file.
+    *
+    * @return the {@code Gson} instance
+    * @since 1.5
+    */
+   private static Gson createGson() {
+
+      GsonBuilder builder = new GsonBuilder();
+
+      builder.registerTypeAdapter(Map.class, new MapInstanceCreator());
+      builder.setPrettyPrinting();
+
+      return builder.create();
    }
 
    /**
@@ -273,6 +261,40 @@ public class MapManager {
          this.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
 
          this.setLocationRelativeTo(MapManager.this.parkourMain);
+      }
+   }
+
+   /**
+    * Root object of the maps JSON file.
+    *
+    * @since 1.5
+    */
+   private static class MapData {
+
+      /**
+       * The maps stored in the JSON file.
+       * @since 1.5
+       */
+      ArrayList<Map> maps = new ArrayList<>();
+   }
+
+   /**
+    * Creates maps with the default values of their fields.
+    *
+    * @since 1.5
+    */
+   private static class MapInstanceCreator implements InstanceCreator<Map> {
+
+      /**
+       * Creates a map with the default values of its fields.
+       *
+       * @param type the type of the instance to create
+       * @return a new map
+       * @since 1.5
+       */
+      @Override
+      public Map createInstance(Type type) {
+         return new Map();
       }
    }
 }

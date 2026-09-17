@@ -11,8 +11,7 @@ repositories {
 }
 
 dependencies {
-    // Add any library dependencies here, for example:
-    // implementation 'org.example:library:1.0.0'
+    implementation 'com.google.code.gson:gson:2.14.0'
 }
 
 // Configure the main source set to use "src" as the directory for Java sources 

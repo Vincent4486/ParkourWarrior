@@ -38,7 +38,8 @@ public class TileManager {
    /**
     * Three-dimensional array storing tile numbers for each map.
     * <p>
-    * Indexed as {@code [mapIndex][column][row]}.
+    * Indexed as {@code [mapIndex][column][row]}, where the columns
+    * are allocated from the length of that map.
     * </p>
     * @since 1.0
     */
@@ -65,8 +66,17 @@ public class TileManager {
       tile = new Tile[15];
 
       mapTileNumber =
-         new int[parkourMain.mapManager.gameMaps.size()]
-                [parkourMain.maxWorldColumn][parkourMain.maxWorldRow];
+         new int[parkourMain.mapManager.gameMaps.size()][][];
+
+      for (int mapIndex = 0;
+           mapIndex < parkourMain.mapManager.gameMaps.size(); mapIndex++) {
+
+         int columnCount = parkourMain.getMapColumnCount(
+            parkourMain.mapManager.gameMaps.get(mapIndex));
+
+         mapTileNumber[mapIndex] =
+            new int[columnCount][parkourMain.maxWorldRow];
+      }
 
       getTile();
    }
@@ -93,6 +103,7 @@ public class TileManager {
 
       int tileSize = parkourMain.tileSize;
       int cameraX = parkourMain.player.worldX - parkourMain.player.screenX;
+      int columnCount = mapTileNumber[parkourMain.currentMap].length;
 
       int firstColumn = Math.floorDiv(cameraX, tileSize);
       int lastColumn =
@@ -105,7 +116,7 @@ public class TileManager {
          for (int column = firstColumn; column <= lastColumn; column++) {
 
             int mapColumn =
-               Math.min(Math.max(column, 0), parkourMain.maxWorldColumn - 1);
+               Math.min(Math.max(column, 0), columnCount - 1);
 
             tileNumber =
                mapTileNumber[parkourMain.currentMap][mapColumn][row];
@@ -188,7 +199,7 @@ public class TileManager {
             while ((line = bufferedReader.readLine()) != null &&
                    row < parkourMain.maxWorldRow) {
                String[] tokens = line.split(" ");
-               for (int column = 0; column < parkourMain.maxWorldColumn &&
+               for (int column = 0; column < mapTileNumber[mapIndex].length &&
                                     column < tokens.length;
                     column++) {
                   try {
