@@ -40,4 +40,12 @@ public class Tile {
     * @since 1.0
     */
    public boolean solidTile = false;
+
+   /**
+    * The height in pixels of the bottom part of the tile that kills
+    * the player, where 0 means the tile does not kill. The part
+    * above it is the part the player can enter.
+    * @since 1.5
+    */
+   public int deadlyHeight = 0;
 }

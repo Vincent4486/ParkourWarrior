@@ -66,8 +66,9 @@ that cannot be read is kept as `maps.json.bak`.
 
 | Tiles | Behaviour |
 | ----- | --------- |
-| 0 brick, 3 grass, 4 sand, 6 water, 9 dirt | solid |
+| 0 brick, 3 grass, 4 sand, 9 dirt | solid |
 | 7 brick, 8 sky | solid, border barrier |
+| 6 water | passable, its bottom third kills the player |
 | 1 cloud, 2 flag, 5 sky | not solid |
 
 The flag marks the end of a map visually, the map is finished once the player

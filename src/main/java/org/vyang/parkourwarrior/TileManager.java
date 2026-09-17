@@ -262,7 +262,7 @@ public class TileManager {
          tile[6] = new Tile();
          tile[6].image = ImageIO.read(Objects.requireNonNull(
             getClass().getResourceAsStream("/tile/water.png")));
-         tile[6].solidTile = true;
+         tile[6].deadlyHeight = parkourMain.tileSize / 3;
 
          /*
           * Below is barrier layer for boarder of map.

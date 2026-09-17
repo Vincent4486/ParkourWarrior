@@ -86,6 +86,7 @@ public class KeyHandler implements KeyListener {
             parkourMain.dialogScreen.text = "Do you want to quit?";
             parkourMain.dialogScreen.dialogueOption =
                DialogScreen.DIALOGUE_OPTION_YES_NO;
+            parkourMain.dialogScreen.transparent = true;
             parkourMain.dialogScreen.currentSelection =
                DialogScreen.DIALOGUE_CURRENT_NO;
             parkourMain.dialogScreen.callback = (yes) -> {

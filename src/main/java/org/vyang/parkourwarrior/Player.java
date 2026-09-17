@@ -363,6 +363,11 @@ public class Player {
       jumping = !collideDown && velocityY < 0;
       falling = !collideDown && velocityY > 0;
 
+      if (touchesDeadlyTile()) {
+         die();
+         return;
+      }
+
       imageCount++;
       if (imageCount > 10) {
          imageNumber = (imageNumber == 1) ? 0 : 1;
@@ -383,7 +388,9 @@ public class Player {
                                          "." +
                                          parkourMain.parkourTimer
                                              .timerTimeMilisecondsStr;
-         parkourMain.dialogScreen.dialogueOption = DialogScreen.DIALOGUE_OPTION_NONE;
+         parkourMain.dialogScreen.dialogueOption =
+            DialogScreen.DIALOGUE_OPTION_NONE;
+         parkourMain.dialogScreen.transparent = true;
          parkourMain.dialogScreen.callback = (yes) -> {
             parkourMain.currentMapState = parkourMain.title;
          };
@@ -696,6 +703,67 @@ public class Player {
       velocityY = 0;
       remainderX = 0;
       remainderY = 0;
+   }
+
+   /**
+    * Shows the death dialog over the game and returns home.
+    * <p>
+    * The dialog is transparent, so the map stays visible behind it,
+    * and its only option returns to the title screen on ENTER.
+    * </p>
+    *
+    * @since 1.5
+    */
+   private void die() {
+
+      parkourMain.currentMapState = parkourMain.dialogue;
+      parkourMain.dialogScreen.title = "You Died";
+      parkourMain.dialogScreen.transparent = true;
+      parkourMain.dialogScreen.dialogueOption =
+         DialogScreen.DIALOGUE_OPTION_NONE;
+      parkourMain.dialogScreen.callback = (yes) -> {
+         parkourMain.currentMapState = parkourMain.title;
+      };
+   }
+
+   /**
+    * Checks whether the player touches the deadly part of a tile.
+    * <p>
+    * A deadly tile only kills in the part below the height that can be
+    * entered, which is the bottom third of a water tile.
+    * </p>
+    *
+    * @return {@code true} if the player is inside a deadly part
+    * @since 1.5
+    */
+   private boolean touchesDeadlyTile() {
+
+      int size = parkourMain.tileSize;
+      int bottom = worldY + size - 1;
+      int[][] tileMap =
+         parkourMain.tileManager.mapTileNumber[parkourMain.currentMap];
+
+      for (int column = Math.floorDiv(worldX, size);
+           column <= Math.floorDiv(worldX + size - 1, size); column++) {
+
+         for (int row = Math.floorDiv(worldY, size);
+              row <= Math.floorDiv(bottom, size); row++) {
+
+            if (column < 0 || row < 0 || column >= tileMap.length ||
+                row >= parkourMain.maxWorldRow) {
+               continue;
+            }
+
+            Tile tile = parkourMain.tileManager.tile[tileMap[column][row]];
+            int deadlyTop = (row + 1) * size - tile.deadlyHeight;
+
+            if (tile.deadlyHeight > 0 && bottom >= deadlyTop) {
+               return true;
+            }
+         }
+      }
+
+      return false;
    }
 
    /**

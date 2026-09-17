@@ -12,16 +12,31 @@ import javax.imageio.ImageIO;
  * Dialog screen class for Parkour Warrior.
  * <p>
  * This class handles rendering of overlay dialogs on the game screen,
- * supporting both informational messages (with a simple "Press ENTER to
- * proceed" prompt) and yes/no selection prompts. Navigation and results
- * are handled via a callback mechanism.
+ * supporting both informational messages (with a single option that
+ * ENTER activates) and yes/no selection prompts. Navigation and results
+ * are handled via a callback mechanism. A dialog can also be transparent,
+ * which draws it over the running game instead of over the default
+ * background.
  * </p>
  *
  * @author Vincent4486
- * @version 1.4
+ * @version 1.5
  * @since 1.4
  */
 public class DialogScreen {
+
+   /**
+    * Whether the dialog is drawn over the game instead of over the
+    * default background, which the game draws behind it.
+    * @since 1.5
+    */
+   public boolean transparent = false;
+
+   /**
+    * The background image of the dialog, loaded on first use.
+    * @since 1.5
+    */
+   private BufferedImage background;
 
    /**
     * Reference to the main game panel.
@@ -106,10 +121,11 @@ public class DialogScreen {
    String title;
 
    /**
-    * The body text displayed in the center of the dialog.
+    * The body text displayed in the center of the dialog, which stays
+    * empty on dialogs that have no body text.
     * @since 1.4
     */
-   String text;
+   String text = "";
 
    /**
     * Constructs a new {@code DialogScreen} with a reference to
@@ -149,15 +165,10 @@ public class DialogScreen {
     */
    private void drawDialogScreenInform(Graphics2D graphics2D, String title,
                                    String text) {
-      try {
+      BufferedImage image = getBackground();
 
-         BufferedImage background = null;
-         background = ImageIO.read(Objects.requireNonNull(
-            getClass().getResourceAsStream("/tile/background.png")));
-         graphics2D.drawImage(background, 0, 0, 768, 529, null);
-
-      } catch (Exception e) {
-         e.printStackTrace();
+      if (!transparent && image != null) {
+         graphics2D.drawImage(image, 0, 0, 768, 529, null);
       }
 
       graphics2D.setFont(graphics2D.getFont().deriveFont(Font.BOLD, 78));
@@ -186,15 +197,10 @@ public class DialogScreen {
     */
    private void drawDialogScreenOption(Graphics2D graphics2D, String title,
                                    String text) {
-      try {
+      BufferedImage image = getBackground();
 
-         BufferedImage background = null;
-         background = ImageIO.read(Objects.requireNonNull(
-            getClass().getResourceAsStream("/tile/background.png")));
-         graphics2D.drawImage(background, 0, 0, 768, 529, null);
-
-      } catch (Exception e) {
-         e.printStackTrace();
+      if (!transparent && image != null) {
+         graphics2D.drawImage(image, 0, 0, 768, 529, null);
       }
 
       graphics2D.setFont(graphics2D.getFont().deriveFont(Font.BOLD, 78));
@@ -242,6 +248,28 @@ public class DialogScreen {
       graphics2D.drawString(
          "A/D to move, ENTER to select",
          centerTextX("A/D to move, ENTER to select", graphics2D), 500);
+   }
+
+   /**
+    * Returns the background image of the dialog.
+    *
+    * @return the background image, or {@code null} when it cannot load
+    * @since 1.5
+    */
+   private BufferedImage getBackground() {
+
+      if (background == null) {
+         try {
+
+            background = ImageIO.read(Objects.requireNonNull(
+               getClass().getResourceAsStream("/tile/background.png")));
+
+         } catch (Exception e) {
+            e.printStackTrace();
+         }
+      }
+
+      return background;
    }
 
    /**

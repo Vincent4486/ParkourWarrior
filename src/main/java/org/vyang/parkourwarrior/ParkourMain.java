@@ -369,6 +369,12 @@ public class ParkourMain extends JPanel implements Runnable {
 
       else if (currentMapState == dialogue) {
 
+         if (dialogScreen.transparent) {
+            tileManager.drawTile(graphics2D);
+            player.drawPlayer(graphics2D);
+            parkourTimer.drawTimer(graphics2D);
+         }
+
          dialogScreen.drawDialogScreen(graphics2D);
       }
       graphics2D.dispose();
@@ -463,6 +469,7 @@ public class ParkourMain extends JPanel implements Runnable {
          dialogScreen.title = "Confirm Quit";
          dialogScreen.text = "Do you want to quit?";
          dialogScreen.dialogueOption = DialogScreen.DIALOGUE_OPTION_YES_NO;
+         dialogScreen.transparent = true;
          dialogScreen.currentSelection = DialogScreen.DIALOGUE_CURRENT_NO;
          dialogScreen.callback = (yes) -> {
             if (yes)
