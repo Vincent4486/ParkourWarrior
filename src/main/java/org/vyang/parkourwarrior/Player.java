@@ -13,11 +13,13 @@ import javax.imageio.ImageIO;
  * This class handles the player's movement, jumping, falling,
  * collision detection, and rendering. It manages the player's
  * position in the world and responds to keyboard input to
- * control the character.
+ * control the character. The movement is simulated by a velocity
+ * based physics model, which applies gravity, acceleration,
+ * friction, and a terminal falling speed every frame.
  * </p>
  *
  * @author Vincent4486
- * @version 1.4
+ * @version 1.5
  * @since 1.0
  */
 public class Player {
@@ -101,7 +103,11 @@ public class Player {
    public int worldY = 376;
 
    /**
-    * The maximum height the player can reach during a jump.
+    * The highest position the player may reach during a jump.
+    * <p>
+    * Retained for compatibility with {@code KeyHandler}, the jump
+    * impulse is derived from {@code jumpHeight} by the physics.
+    * </p>
     * @since 1.0
     */
    public int maxJumpHeight;
@@ -113,22 +119,114 @@ public class Player {
    public int jumpHeight = 61;
 
    /**
-    * The speed of the player's jump in pixels per frame.
+    * The rising speed of the player's jump in pixels per frame,
+    * which the gravity of the jump is derived from.
     * @since 1.0
     */
    public int jumpSpeed = 4;
 
    /**
-    * The speed of the player's fall in pixels per frame.
+    * The terminal falling speed of the player in pixels per frame.
     * @since 1.0
     */
    public int fallSpeed = 5;
 
    /**
-    * The walking speed of the player in pixels per frame.
+    * The walking speed of the player in pixels per frame, which
+    * is the maximum horizontal speed of the physics.
     * @since 1.0
     */
    public int walkSpeed = 6;
+
+   /**
+    * The acceleration of gravity in pixels per second squared.
+    * @since 1.5
+    */
+   private final double gravity;
+
+   /**
+    * The upward velocity of a jump in pixels per second.
+    * @since 1.5
+    */
+   private final double jumpVelocity;
+
+   /**
+    * The terminal velocity of a fall in pixels per second.
+    * @since 1.5
+    */
+   private final double maxFallSpeed;
+
+   /**
+    * The current horizontal velocity in pixels per second.
+    * @since 1.5
+    */
+   private double velocityX = 0;
+
+   /**
+    * The current vertical velocity in pixels per second.
+    * @since 1.5
+    */
+   private double velocityY = 0;
+
+   /**
+    * The horizontal sub-pixel distance not yet applied to worldX.
+    * @since 1.5
+    */
+   private double remainderX = 0;
+
+   /**
+    * The vertical sub-pixel distance not yet applied to worldY.
+    * @since 1.5
+    */
+   private double remainderY = 0;
+
+   /**
+    * The X position of the player before the current frame.
+    * @since 1.5
+    */
+   private int previousWorldX = 480;
+
+   /**
+    * The Y position of the player before the current frame.
+    * @since 1.5
+    */
+   private int previousWorldY = 376;
+
+   /**
+    * The fixed timestep of the physics in seconds, for 60 frames per second.
+    * @since 1.5
+    */
+   private static final double TIME_STEP = 1.0 / 60.0;
+
+   /**
+    * The number of physics frames in one second.
+    * @since 1.5
+    */
+   private static final double FRAMES_PER_SECOND = 60.0;
+
+   /**
+    * The horizontal acceleration on the ground in pixels per second squared.
+    * @since 1.5
+    */
+   private static final double GROUND_ACCELERATION = 2400.0;
+
+   /**
+    * The horizontal acceleration in the air in pixels per second squared.
+    * @since 1.5
+    */
+   private static final double AIR_ACCELERATION = 1200.0;
+
+   /**
+    * The horizontal deceleration on the ground in pixels per second squared.
+    * @since 1.5
+    */
+   private static final double GROUND_FRICTION = 2400.0;
+
+   /**
+    * The horizontal deceleration in the air in pixels per second squared.
+    * @since 1.5
+    */
+   private static final double AIR_DRAG = 600.0;
 
    /**
     * The player's X position on screen, used for camera offset.
@@ -149,46 +247,24 @@ public class Player {
    int imageNumber = 0;
 
    /**
-    * First tile number used for collision detection.
-    * @since 1.0
-    */
-   int tileNumber1;
-
-   /**
-    * Second tile number used for collision detection.
-    * @since 1.0
-    */
-   int tileNumber2;
-
-   /**
     * Whether the player has leftward momentum after releasing the left key.
+    * <p>
+    * Retained for compatibility with {@code KeyHandler}, the sliding is
+    * applied by the friction of the physics instead.
+    * </p>
     * @since 1.3
     */
    public boolean momentumLeft = false;
 
    /**
     * Whether the player has rightward momentum after releasing the right key.
+    * <p>
+    * Retained for compatibility with {@code KeyHandler}, the sliding is
+    * applied by the friction of the physics instead.
+    * </p>
     * @since 1.3
     */
    public boolean momentumRight = false;
-
-   /**
-    * Counter for leftward momentum ticks.
-    * @since 1.3
-    */
-   public int momentumCountLeft = 0;
-
-   /**
-    * Counter for rightward momentum ticks.
-    * @since 1.3
-    */
-   public int momentumCountRight = 0;
-
-   /**
-    * The maximum number of ticks for momentum to last.
-    * @since 1.3
-    */
-   public static final int MAX_MOMENTUM_TICKS = 8;
 
    /**
     * The player's facing direction.
@@ -230,14 +306,28 @@ public class Player {
 
       screenX = parkourMain.screenWidth / 2 - parkourMain.tileSize / 2;
 
+      // Derive gravity and the impulse from the tuning in pixels per frame
+      double riseTime = jumpHeight / (jumpSpeed * FRAMES_PER_SECOND);
+
+      gravity = 2.0 * jumpHeight / (riseTime * riseTime);
+
+      // Compensate the half step the discrete rise loses to the integration
+      double gravityStep = gravity * TIME_STEP;
+
+      jumpVelocity =
+         (gravityStep + Math.sqrt(gravityStep * gravityStep +
+                                  8.0 * gravity * jumpHeight)) / 2.0;
+      maxFallSpeed = fallSpeed * FRAMES_PER_SECOND;
+
       getPlayer();
    }
 
    /**
     * Updates the player's state each frame.
     * <p>
-    * This method handles movement, collision detection, jumping,
-    * falling, momentum, animation cycling, and map completion checks.
+    * This method applies the physics of the player, which handles
+    * gravity, acceleration, friction, movement, collision detection,
+    * jumping, falling, animation cycling, and map completion checks.
     * </p>
     *
     * @since 1.0
@@ -259,47 +349,25 @@ public class Player {
          playerDirection = 2;
       }
 
-      collideLeft = false;
-      collideRight = false;
+      syncExternalTeleport();
 
-      detectCollisionUp();
-      detectCollisionDown();
-      detectCollisionLeft();
-      detectCollisionRight();
+      handleJump();
+      applyGravity();
+      applyHorizontalForces();
 
-      fall();
-      jump();
+      moveHorizontal();
+      moveVertical();
 
-      // Adjust movement to check for collisions at each step
-      if (goRight && !collideRight) {
-         for (int i = 0; i < walkSpeed; i++) {
-            worldX++;
-            detectCollisionRight();
-            if (collideRight) {
-               worldX--;
-               break;
-            }
-         }
-      }
+      updateCollisionFlags();
 
-      if (goLeft && !collideLeft) {
-         for (int i = 0; i < walkSpeed; i++) {
-            worldX--;
-            detectCollisionLeft();
-            if (collideLeft) {
-               worldX++;
-               break;
-            }
-         }
-      }
+      jumping = !collideDown && velocityY < 0;
+      falling = !collideDown && velocityY > 0;
 
       imageCount++;
       if (imageCount > 10) {
          imageNumber = (imageNumber == 1) ? 0 : 1;
          imageCount = 0;
       }
-
-      System.out.println("Player X: " + worldX + ", Player Y: " + worldY);
 
       if (worldX > parkourMain.mapManager.gameMaps.get(parkourMain.currentMap)
                       .endIndex) {
@@ -325,54 +393,6 @@ public class Player {
 
          worldX = 480;
          worldY = 376;
-      }
-
-      if (momentumRight) {
-         if (!momentumRight)
-            return;
-
-         int burst = calculateBurstSpeed(momentumCountRight);
-         for (int i = 0; i < burst; i++) {
-            worldX++;
-            detectCollisionRight();
-            if (collideRight) {
-               // hit wall: step back & kill momentum
-               worldX--;
-               momentumRight = false;
-               momentumCountRight = 0;
-               return;
-            }
-         }
-
-         // advance the counter (and expire if too long)
-         momentumCountRight++;
-         if (momentumCountRight >= MAX_MOMENTUM_TICKS) {
-            momentumRight = false;
-            momentumCountRight = 0;
-         }
-      }
-
-      if (momentumLeft) {
-         if (!momentumLeft)
-            return;
-
-         int burst = calculateBurstSpeed(momentumCountLeft);
-         for (int i = 0; i < burst; i++) {
-            worldX--;
-            detectCollisionLeft();
-            if (collideLeft) {
-               worldX++;
-               momentumLeft = false;
-               momentumCountLeft = 0;
-               return;
-            }
-         }
-
-         momentumCountLeft++;
-         if (momentumCountLeft >= MAX_MOMENTUM_TICKS) {
-            momentumLeft = false;
-            momentumCountLeft = 0;
-         }
       }
    }
 
@@ -410,54 +430,166 @@ public class Player {
    }
 
    /**
-    * Handles the player's jump logic.
+    * Applies a jump impulse when a jump is requested on the ground.
     * <p>
-    * Moves the player upward if a jump has been requested and
-    * the player has not reached the maximum jump height or
-    * collided with a tile above.
+    * The request is consumed every frame, so a jump only happens
+    * on a frame where the player stands on a solid tile.
     * </p>
     *
-    * @since 1.0
+    * @since 1.5
     */
-   private void jump() {
+   private void handleJump() {
 
-      if (!falling && askJump && worldY > maxJumpHeight && !collideUp) {
-         for (int i = 0; i < jumpSpeed; i++) {
-            worldY--;
-            detectCollisionUp();
-            if (collideUp || worldY <= maxJumpHeight) {
-               break;
-            }
-         }
+      if (askJump && collideDown) {
+         velocityY = -jumpVelocity;
          jumping = true;
-      } else {
-         jumping = false;
-         askJump = false;
+      }
+
+      askJump = false;
+   }
+
+   /**
+    * Accelerates the player downward with gravity.
+    * <p>
+    * The falling speed is limited to the terminal velocity of the
+    * player, which stands in for the drag of the air.
+    * </p>
+    *
+    * @since 1.5
+    */
+   private void applyGravity() {
+
+      velocityY += gravity * TIME_STEP;
+
+      if (velocityY > maxFallSpeed) {
+         velocityY = maxFallSpeed;
       }
    }
 
    /**
-    * Handles the player's falling logic.
+    * Accelerates and decelerates the player horizontally.
     * <p>
-    * Moves the player downward when not jumping and not
-    * colliding with a tile below.
+    * Input accelerates the player towards the walking speed, with
+    * the lower air acceleration giving reduced air control. With
+    * no input, friction slides the player to a stop, and the lower
+    * drag of the air keeps the momentum of a jump.
     * </p>
     *
-    * @since 1.0
+    * @since 1.5
     */
-   private void fall() {
+   private void applyHorizontalForces() {
 
-      if (!jumping && !collideDown) {
-         for (int i = 0; i < fallSpeed; i++) {
-            worldY++;
-            detectCollisionDown();
-            if (collideDown) {
-               break;
-            }
+      double maxSpeed = walkSpeed * FRAMES_PER_SECOND;
+
+      if (goLeft == goRight) {
+
+         double friction;
+         if (collideDown) {
+            friction = GROUND_FRICTION;
+         } else {
+            friction = AIR_DRAG;
          }
-         falling = true;
+
+         if (velocityX > 0) {
+            velocityX = Math.max(0, velocityX - friction * TIME_STEP);
+         } else {
+            velocityX = Math.min(0, velocityX + friction * TIME_STEP);
+         }
+
       } else {
-         falling = false;
+
+         double acceleration;
+         if (collideDown) {
+            acceleration = GROUND_ACCELERATION;
+         } else {
+            acceleration = AIR_ACCELERATION;
+         }
+
+         if (goLeft) {
+            velocityX -= acceleration * TIME_STEP;
+         } else {
+            velocityX += acceleration * TIME_STEP;
+         }
+      }
+
+      if (velocityX > maxSpeed) {
+         velocityX = maxSpeed;
+      } else if (velocityX < -maxSpeed) {
+         velocityX = -maxSpeed;
+      }
+   }
+
+   /**
+    * Moves the player horizontally by the current velocity.
+    * <p>
+    * The distance is applied one pixel at a time, so a solid tile
+    * stops the player on the pixel it is reached, and the sub-pixel
+    * distance is kept for the next frame.
+    * </p>
+    *
+    * @since 1.5
+    */
+   private void moveHorizontal() {
+
+      remainderX += velocityX * TIME_STEP;
+
+      int distance = (int)remainderX;
+
+      if (distance == 0) {
+         return;
+      }
+
+      remainderX -= distance;
+
+      int step = Integer.signum(distance);
+
+      for (int i = 0; i < Math.abs(distance); i++) {
+
+         worldX += step;
+
+         if (collidesAt(0, 0)) {
+            worldX -= step;
+            velocityX = 0;
+            remainderX = 0;
+            break;
+         }
+      }
+   }
+
+   /**
+    * Moves the player vertically by the current velocity.
+    * <p>
+    * The distance is applied one pixel at a time, so a solid tile
+    * stops a jump or a fall on the pixel it is reached, and the
+    * sub-pixel distance is kept for the next frame.
+    * </p>
+    *
+    * @since 1.5
+    */
+   private void moveVertical() {
+
+      remainderY += velocityY * TIME_STEP;
+
+      int distance = (int)remainderY;
+
+      if (distance == 0) {
+         return;
+      }
+
+      remainderY -= distance;
+
+      int step = Integer.signum(distance);
+
+      for (int i = 0; i < Math.abs(distance); i++) {
+
+         worldY += step;
+
+         if (collidesAt(0, 0)) {
+            worldY -= step;
+            velocityY = 0;
+            remainderY = 0;
+            break;
+         }
       }
    }
 
@@ -486,267 +618,103 @@ public class Player {
    }
 
    /**
-    * Detects collision above the player.
+    * Updates the collision flags around the player.
     * <p>
-    * Checks whether the tiles directly above the player are solid,
-    * and updates the {@code collideDown} flag accordingly.
+    * Each flag is set when a solid tile is within one pixel of that
+    * side of the player, so the flags do not depend on the direction
+    * the player is facing.
     * </p>
     *
-    * @since 1.0
+    * @since 1.5
     */
-   public void detectCollisionUp() {
+   private void updateCollisionFlags() {
 
-      if (worldY % parkourMain.tileSize == 0) {
-
-         if (worldX % parkourMain.tileSize == 0) {
-
-            tileNumber1 = parkourMain.tileManager
-                             .mapTileNumber[parkourMain.currentMap]
-                                           [worldX / parkourMain.tileSize]
-                                           [worldY / parkourMain.tileSize - 1];
-
-            if (parkourMain.tileManager.tile[tileNumber1].solidTile == true) {
-
-               collideDown = true;
-
-            } else {
-
-               collideDown = false;
-            }
-
-         } else {
-
-            tileNumber1 =
-               parkourMain.tileManager
-                  .mapTileNumber[parkourMain.currentMap]
-                                [(worldX - (worldX % parkourMain.tileSize)) /
-                                 parkourMain.tileSize]
-                                [worldY / parkourMain.tileSize - 1];
-            tileNumber2 =
-               parkourMain.tileManager
-                  .mapTileNumber[parkourMain.currentMap]
-                                [(worldX - (worldX % parkourMain.tileSize)) /
-                                    parkourMain.tileSize +
-                                 1][worldY / parkourMain.tileSize - 1];
-
-            if (parkourMain.tileManager.tile[tileNumber1].solidTile == true ||
-                parkourMain.tileManager.tile[tileNumber2].solidTile == true) {
-
-               collideDown = true;
-
-            } else {
-
-               collideDown = false;
-            }
-         }
-
-      } else {
-
-         collideDown = false;
-      }
+      collideUp = collidesAt(0, -1);
+      collideDown = collidesAt(0, 1);
+      collideLeft = collidesAt(-1, 0);
+      collideRight = collidesAt(1, 0);
    }
 
    /**
-    * Detects collision below the player.
-    * <p>
-    * Checks whether the tiles directly below the player are solid,
-    * and updates the {@code collideDown} flag accordingly.
-    * </p>
+    * Checks whether the player overlaps a solid tile when offset.
     *
-    * @since 1.0
+    * @param offsetX the horizontal offset in pixels
+    * @param offsetY the vertical offset in pixels
+    * @return {@code true} if any overlapped tile is solid
+    * @since 1.5
     */
-   public void detectCollisionDown() {
+   private boolean collidesAt(int offsetX, int offsetY) {
 
-      if (worldY % parkourMain.tileSize == 0) {
+      int size = parkourMain.tileSize;
 
-         if (worldX % parkourMain.tileSize == 0) {
+      int left = Math.floorDiv(worldX + offsetX, size);
+      int right = Math.floorDiv(worldX + offsetX + size - 1, size);
+      int top = Math.floorDiv(worldY + offsetY, size);
+      int bottom = Math.floorDiv(worldY + offsetY + size - 1, size);
 
-            tileNumber1 = parkourMain.tileManager
-                             .mapTileNumber[parkourMain.currentMap]
-                                           [worldX / parkourMain.tileSize]
-                                           [worldY / parkourMain.tileSize + 1];
-
-            if (parkourMain.tileManager.tile[tileNumber1].solidTile == true) {
-
-               collideDown = true;
-
-            } else {
-
-               collideDown = false;
-            }
-
-         } else {
-
-            tileNumber1 =
-               parkourMain.tileManager
-                  .mapTileNumber[parkourMain.currentMap]
-                                [(worldX - (worldX % parkourMain.tileSize)) /
-                                 parkourMain.tileSize]
-                                [worldY / parkourMain.tileSize + 1];
-            tileNumber2 =
-               parkourMain.tileManager
-                  .mapTileNumber[parkourMain.currentMap]
-                                [(worldX - (worldX % parkourMain.tileSize)) /
-                                    parkourMain.tileSize +
-                                 1][worldY / parkourMain.tileSize + 1];
-
-            if (parkourMain.tileManager.tile[tileNumber1].solidTile == true ||
-                parkourMain.tileManager.tile[tileNumber2].solidTile == true) {
-
-               collideDown = true;
-
-            } else {
-
-               collideDown = false;
-            }
-         }
-
-      } else {
-
-         collideDown = false;
-      }
-   }
-
-   /**
-    * Detects collision to the left of the player.
-    * <p>
-    * Checks whether the tiles to the left of the player are solid,
-    * and updates the {@code collideLeft} flag accordingly.
-    * </p>
-    *
-    * @since 1.0
-    */
-   public void detectCollisionLeft() {
-
-      if (playerDirection == 1) {
-
-         if (worldX % parkourMain.tileSize == 0) {
-
-            if (worldY % parkourMain.tileSize == 0) {
-
-               tileNumber1 =
-                  parkourMain.tileManager
-                     .mapTileNumber[parkourMain.currentMap]
-                                   [worldX / parkourMain.tileSize - 1]
-                                   [worldY / parkourMain.tileSize];
-
-               if (parkourMain.tileManager.tile[tileNumber1].solidTile ==
-                   true) {
-
-                  collideLeft = true;
-               }
-
-            } else {
-
-               tileNumber1 =
-                  parkourMain.tileManager
-                     .mapTileNumber[parkourMain.currentMap]
-                                   [worldX / parkourMain.tileSize - 1]
-                                   [(worldY - (worldY % parkourMain.tileSize)) /
-                                    parkourMain.tileSize];
-               tileNumber2 =
-                  parkourMain.tileManager
-                     .mapTileNumber[parkourMain.currentMap]
-                                   [worldX / parkourMain.tileSize - 1]
-                                   [(worldY - (worldY % parkourMain.tileSize)) /
-                                       parkourMain.tileSize +
-                                    1];
-
-               if (parkourMain.tileManager.tile[tileNumber1].solidTile ==
-                      true ||
-                   parkourMain.tileManager.tile[tileNumber2].solidTile ==
-                      true) {
-
-                  collideLeft = true;
-               }
+      for (int column = left; column <= right; column++) {
+         for (int row = top; row <= bottom; row++) {
+            if (isSolidTile(column, row)) {
+               return true;
             }
          }
       }
+
+      return false;
    }
 
    /**
-    * Detects collision to the right of the player.
-    * <p>
-    * Checks whether the tiles to the right of the player are solid,
-    * and updates the {@code collideRight} flag accordingly.
-    * </p>
+    * Checks whether the tile at the given coordinates is solid.
     *
-    * @since 1.0
+    * @param column the column of the tile
+    * @param row the row of the tile
+    * @return {@code true} if the tile is solid or outside the map
+    * @since 1.5
     */
-   public void detectCollisionRight() {
+   private boolean isSolidTile(int column, int row) {
 
-      if (playerDirection == 2) {
-
-         if (worldX % parkourMain.tileSize == 0) {
-
-            if (worldY % parkourMain.tileSize == 0) {
-
-               tileNumber1 =
-                  parkourMain.tileManager
-                     .mapTileNumber[parkourMain.currentMap]
-                                   [worldX / parkourMain.tileSize + 1]
-                                   [worldY / parkourMain.tileSize];
-
-               if (parkourMain.tileManager.tile[tileNumber1].solidTile ==
-                   true) {
-
-                  collideRight = true;
-               }
-
-            } else {
-
-               tileNumber1 =
-                  parkourMain.tileManager
-                     .mapTileNumber[parkourMain.currentMap]
-                                   [worldX / parkourMain.tileSize + 1]
-                                   [(worldY - (worldY % parkourMain.tileSize)) /
-                                    parkourMain.tileSize];
-               tileNumber2 =
-                  parkourMain.tileManager
-                     .mapTileNumber[parkourMain.currentMap]
-                                   [worldX / parkourMain.tileSize + 1]
-                                   [(worldY - (worldY % parkourMain.tileSize)) /
-                                       parkourMain.tileSize +
-                                    1];
-
-               if (parkourMain.tileManager.tile[tileNumber1].solidTile ==
-                      true ||
-                   parkourMain.tileManager.tile[tileNumber2].solidTile ==
-                      true) {
-
-                  collideRight = true;
-               }
-            }
-         }
+      if (column < 0 || row < 0 || column >= parkourMain.maxWorldColumn ||
+          row >= parkourMain.maxWorldRow) {
+         return true;
       }
+
+      int tileNumber =
+         parkourMain.tileManager
+            .mapTileNumber[parkourMain.currentMap][column][row];
+
+      return parkourMain.tileManager.tile[tileNumber].solidTile;
    }
 
    /**
-    * Calculates the burst speed for momentum based on the tick count.
+    * Clears the velocity and the sub-pixel movement of the player.
+    *
+    * @since 1.5
+    */
+   private void resetMotion() {
+
+      velocityX = 0;
+      velocityY = 0;
+      remainderX = 0;
+      remainderY = 0;
+   }
+
+   /**
+    * Clears the player's motion when the position is set externally.
     * <p>
-    * The speed decreases as the momentum count increases, simulating
-    * a deceleration effect. Speed is halved when sneaking.
+    * A teleport such as a respawn moves the player further than the
+    * physics can in one frame, which discards the old velocity.
     * </p>
     *
-    * @param count the current momentum tick count
-    * @return the burst speed in pixels per frame
-    * @since 1.3
+    * @since 1.5
     */
-   private int calculateBurstSpeed(int count) {
-      int speed;
-      if (count < 2)
-         speed = 6;
-      else if (count < 5)
-         speed = 4;
-      else if (count < 8)
-         speed = 2;
-      else
-         speed = 1;
+   private void syncExternalTeleport() {
 
-      // halve speed when sneaking
-      if (sneaking) {
-         speed = Math.max(1, speed / 2);
+      if (Math.abs(worldX - previousWorldX) > parkourMain.tileSize ||
+          Math.abs(worldY - previousWorldY) > parkourMain.tileSize) {
+         resetMotion();
       }
-      return speed;
+
+      previousWorldX = worldX;
+      previousWorldY = worldY;
    }
 }
